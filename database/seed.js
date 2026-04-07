@@ -1,48 +1,38 @@
-const db = require('./db'); // Ensure this points to your db.js file
+const db = require('./db');
 const bcrypt = require('bcryptjs');
 
 async function autoSeed() {
-  // Wait for the 'users' table to be created first
-  db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", (err, row) => {
-    if (err) {
-      console.error('Check seed error:', err.message);
-      return;
+  try {
+    // Check if users table has data
+    const result = await db.pool.query("SELECT COUNT(*) as count FROM users");
+    const count = parseInt(result.rows[0].count);
+
+    if (count === 0) {
+      console.log('🌱 Database is empty. Seeding initial users...');
+
+      const teacherPass = await bcrypt.hash('teacher123', 10);
+      const studentPass = await bcrypt.hash('student123', 10);
+
+      await db.pool.query(
+        "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
+        ['Dr. Sharma', 'teacher@knowgap.com', teacherPass, 'teacher']
+      );
+      await db.pool.query(
+        "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
+        ['Rahul Kumar', 'student@knowgap.com', studentPass, 'student']
+      );
+      await db.pool.query(
+        "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
+        ['Priya Singh', 'priya@knowgap.com', studentPass, 'student']
+      );
+
+      console.log('✅ Users seeded successfully!');
+    } else {
+      console.log('✅ Database already has data — skipping auto-seed.');
     }
-    
-    if (!row) {
-      console.log('⏳ Tables not ready yet. Retrying seed in 1 second...');
-      setTimeout(autoSeed, 1000);
-      return;
-    }
-
-    db.get("SELECT COUNT(*) as count FROM users", async (err, row) => {
-      if (err) {
-        console.error('Check seed error:', err.message);
-        return;
-      }
-
-      if (row && row.count === 0) {
-        console.log('🌱 Database is empty. Seeding initial users...');
-
-        const teacherPass = await bcrypt.hash('teacher123', 10);
-        const studentPass = await bcrypt.hash('student123', 10);
-
-        db.serialize(() => {
-          const stmt = db.prepare("INSERT OR IGNORE INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
-          
-          stmt.run('Dr. Sharma', 'teacher@knowgap.com', teacherPass, 'teacher');
-          stmt.run('Rahul Kumar', 'student@knowgap.com', studentPass, 'student');
-          stmt.run('Priya Singh', 'priya@knowgap.com', studentPass, 'student');
-          
-          stmt.finalize();
-        });
-
-        console.log('✅ Users seeded successfully!');
-      } else {
-        console.log('✅ Database already has data — skipping auto-seed.');
-      }
-    });
-  });
+  } catch (err) {
+    console.error('Seed error:', err.message);
+  }
 }
 
 // Execute autoSeed if run directly via `node seed.js`
