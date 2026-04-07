@@ -28,17 +28,32 @@
         <a href="/developers.html" class="nav-item">Developers</a>
       </div>
 
-      <div class="navbar-links" id="home-nav-links">
-      </div>
+      <div class="navbar-links" id="home-nav-links"></div>
+
+      <!-- Hamburger (mobile only) -->
+      <button class="hamburger" id="nav-hamburger" aria-label="Toggle menu" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+  <div class="mobile-nav-menu" id="mobile-nav-menu">
+    <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
+    <a href="/index.html" class="nav-item active">🏠 Home</a>
+    <a href="/about.html" class="nav-item">ℹ️ About</a>
+    <a href="/contact.html" class="nav-item">📬 Contact</a>
+    <a href="/developers.html" class="nav-item">👨‍💻 Developers</a>
+    <a href="/login.html" class="nav-item" style="margin-top:16px; background: var(--primary); color: white; text-decoration:none; border-radius:12px;">🚀 Login</a>
+  </div>
 
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-bg"></div>
 
-    <div class="container"
-      style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; padding-top: 80px;">
+    <div class="container">
+    <div class="hero-grid-layout">
 
       <!-- Left Side -->
       <div class="hero-content animate-up">
@@ -126,6 +141,7 @@
         </div>
       </div>
     </div>
+    </div>
   </section>
 
   <!-- Features Section -->
@@ -173,11 +189,25 @@
   <!-- Basic Page Logic -->
   <script src="/js/nav.js"></script>
   <script>
-
-    // JS Logic using separated files to avoid ~ template literals
     document.addEventListener("DOMContentLoaded", function () {
       initNavigation('home-nav-links');
     });
+
+    function toggleMobileNav() {
+      const hamburger = document.getElementById('nav-hamburger');
+      const overlay = document.getElementById('mobile-nav-overlay');
+      const menu = document.getElementById('mobile-nav-menu');
+      hamburger.classList.toggle('open');
+      overlay.classList.toggle('open');
+      menu.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+    function closeMobileNav() {
+      document.getElementById('nav-hamburger').classList.remove('open');
+      document.getElementById('mobile-nav-overlay').classList.remove('open');
+      document.getElementById('mobile-nav-menu').classList.remove('open');
+      document.body.style.overflow = '';
+    }
   </script>
 </body>
 

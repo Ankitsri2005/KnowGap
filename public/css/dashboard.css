@@ -5,6 +5,70 @@
   background: var(--bg-dark);
 }
 
+/* ── Mobile Header Bar ── */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  z-index: 200;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+.mobile-header-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+}
+.mobile-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
+}
+.mobile-hamburger:hover { background: var(--bg-input); }
+.mobile-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+.mobile-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.mobile-hamburger.open span:nth-child(2) { opacity: 0; }
+.mobile-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Sidebar Overlay (mobile) ── */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 88;
+  backdrop-filter: blur(3px);
+}
+.sidebar-backdrop.open { display: block; }
+
 .sidebar {
   background: var(--bg-card);
   border-right: 1px solid var(--border);
@@ -19,6 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .sidebar-logo {
@@ -154,13 +219,9 @@
   margin-bottom: 16px;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* result */
+/* ── Question Card ── */
 .question-card {
   background: var(--bg-card);
   padding: 32px;
@@ -176,15 +237,8 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .option-btn {
@@ -225,6 +279,7 @@
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .empty-state {
@@ -235,10 +290,7 @@
   border: 1px dashed var(--border);
 }
 
-.empty-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-}
+.empty-icon { font-size: 3rem; margin-bottom: 16px; }
 
 .priority-bar {
   height: 8px;
@@ -249,11 +301,58 @@
   position: relative;
 }
 
-.priority-fill {
-  height: 100%;
-  border-radius: 4px;
+.priority-fill { height: 100%; border-radius: 4px; }
+
+.topic-bar-container { width: 140px; }
+
+/* ═══════════════════════════════
+   RESPONSIVE — Tablet (≤ 1024px)
+   ═══════════════════════════════ */
+@media (max-width: 1024px) {
+  .main-content { padding: 40px 36px; }
 }
 
-.topic-bar-container {
-  width: 140px;
+/* ═══════════════════════════════
+   RESPONSIVE — Mobile (≤ 768px)
+   ═══════════════════════════════ */
+@media (max-width: 768px) {
+  /* Show mobile header */
+  .mobile-header { display: flex; }
+
+  /* Sidebar becomes a drawer */
+  .sidebar {
+    transform: translateX(-100%);
+    top: 0;
+    z-index: 90;
+    width: min(280px, 85vw);
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* Main content fills full width */
+  .main-content {
+    margin-left: 0;
+    padding: 76px 16px 24px; /* top = mobile header height + spacing */
+    max-width: 100%;
+  }
+
+  /* Stat cards: 2 columns on tablet, 1 on very small */
+  .stat-value { font-size: 1.6rem; }
+
+  /* Question cards */
+  .question-card { padding: 20px 16px; }
+  .option-btn { padding: 14px 16px; font-size: 0.95rem; }
+
+  /* Empty state */
+  .empty-state { padding: 32px 16px; }
+
+  /* Topic bar container */
+  .topic-bar-container { width: 80px; }
+}
+
+@media (max-width: 480px) {
+  .main-content { padding: 68px 12px 20px; }
+  .stat-card { padding: 16px; }
+  .stat-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+  .stat-value { font-size: 1.4rem; }
+  .stat-label { font-size: 0.75rem; }
 }

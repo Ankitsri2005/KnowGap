@@ -10,13 +10,24 @@
 </head>
 <body>
 
+  <!-- Mobile Header (visible only on small screens) -->
+  <header class="mobile-header" id="mobile-header">
+    <div class="mobile-header-logo" onclick="window.location.href='/index.html'">knowGap</div>
+    <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Sidebar Backdrop -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
   <div class="dashboard-layout">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo" onclick="window.location.href='/index.html'">knowGap</div>
       <div class="sidebar-section">Student Menu</div>
       
-      <button class="sidebar-link active" onclick="window.location.reload()">
+      <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
         <span class="icon">📊</span> Dashboard
       </button>
       
@@ -30,7 +41,6 @@
 
     <!-- Main Content -->
     <main class="main-content" id="main-content">
-      <!-- We use JavaScript to load your dashboard API data into here! -->
       <div class="loading-full"><div class="spinner"></div><p>Loading your dashboard...</p></div>
     </main>
   </div>
@@ -41,10 +51,8 @@
   <script src="/js/api.js"></script>
   <script src="/js/student.js"></script>
   <script>
-    // Traditional setup
     const user = JSON.parse(localStorage.getItem('user'));
     
-    // Security check: Send them back to login if they aren't logged in
     if (!user || user.role !== 'student') {
       window.location.href = "/login.html";
     } else {
@@ -57,9 +65,23 @@
       window.location.href = "/login.html";
     }
 
-    // Call the function from student.js to load the stats
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const hamburger = document.getElementById('mob-hamburger');
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-backdrop').classList.remove('open');
+      document.getElementById('mob-hamburger').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      // Load dashboard data immediately
       renderStudent();
     });
   </script>

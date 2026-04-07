@@ -13,13 +13,13 @@
 
   <div class="dashboard-layout" style="display: block; min-height: 100vh;">
     <!-- Top Navigation for Results -->
-    <div style="background: var(--bg-card); padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;">
-      <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.2rem;">knowGap Validation</div>
+    <div style="background: var(--bg-card); padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;">
+      <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: clamp(1rem, 4vw, 1.2rem);">knowGap Results</div>
       <button class="btn btn-secondary btn-sm" onclick="window.location.href='/student.html'">Back to Dashboard</button>
     </div>
 
     <!-- Main Content for the Results -->
-    <main class="container" id="app" style="padding: 40px 24px; max-width: 1000px; margin: 0 auto;">
+    <main class="container" id="app" style="padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 24px); max-width: 1000px; margin: 0 auto;">
       <!-- JavaScript will load the AI report here! -->
       <div class="loading-full"><div class="spinner"></div><p>AI is analyzing your learning gaps...</p></div>
     </main>
