@@ -16,10 +16,15 @@ app.use('/api/questions', require('./routes/questions'));
 app.use('/api/tests', require('./routes/tests'));
 app.use('/api/teacher', require('./routes/teacher'));
 
-// Serve frontend automatically falls back to express.static('public')
-
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`\n knowGap Server running at http://localhost:${PORT}`);
-  require('./database/seed.js');
+  
+  // This triggers the seeding logic once the server starts
+  try {
+    require('./database/seed.js');
+  } catch (err) {
+    console.error("Failed to run seed script:", err.message);
+  }
 });
