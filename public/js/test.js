@@ -155,7 +155,7 @@ function renderQuestion() {
       <div style="display:flex;gap:8px">
         ${current < total - 1
       ? `<button class="btn btn-primary" onclick="nextQuestion()">Next →</button>`
-      : `<button class="btn btn-success btn-lg" onclick="submitTest()">🧠 Submit & Analyze →</button>`
+      : `<button class="btn btn-success btn-lg" onclick="submitTest()">Submit & Analyze →</button>`
     }
       </div>
     </div>

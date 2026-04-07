@@ -29,7 +29,7 @@ async function renderResults(params) {
     document.getElementById('app').innerHTML = `
       <nav class="navbar">
         <div class="container">
-          <span class="navbar-brand" style="cursor:pointer" onclick="Router.go('student')">🧠 KnowGap AI</span>
+          <span class="navbar-brand" style="cursor:pointer" onclick="Router.go('student')">knowGap</span>
           <div class="navbar-links">
             <button class="btn btn-secondary btn-sm" onclick="window.location.href='/student.html'">📈 All Results</button>
             <button class="btn btn-primary btn-sm" onclick="Router.go('student')">Dashboard</button>

@@ -20,6 +20,6 @@ app.use('/api/teacher', require('./routes/teacher'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`\n KnowGap AI Server running at http://localhost:${PORT}`);
+  console.log(`\n knowGap Server running at http://localhost:${PORT}`);
   require('./database/seed.js');
 });
