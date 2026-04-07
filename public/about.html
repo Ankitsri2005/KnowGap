@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | KnowGap AI</title>
+  <meta name="description" content="Learn about KnowGap AI's mission to forensically identify learning gaps using AI-powered analysis.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/about.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="/index.html">
+        <span></span> KnowGap
+      </a>
+      <div class="navbar-menu">
+        <a href="/index.html" class="nav-item">Home</a>
+        <a href="/about.html" class="nav-item active">About</a>
+        <a href="/contact.html" class="nav-item">Contact</a>
+        <a href="/developers.html" class="nav-item">Developers</a>
+      </div>
+      <div class="navbar-links" id="about-nav-links"></div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="about-hero">
+    <div class="container animate-up">
+      <div class="badge badge-info" style="margin-bottom: 16px;">📖 Our Story</div>
+      <h1 class="hero-title">Our Mission: <span class="gradient-text">Closing the Gap</span></h1>
+      <p class="hero-sub" style="max-width: 800px; margin: 20px auto;">
+        KnowGap AI was founded on a simple realization: Most tests tell you <em>what</em> you got wrong, but they don't tell you <em>why</em> or how to fix it.
+      </p>
+    </div>
+  </section>
+
+  <!-- Forensic Approach -->
+  <section style="padding: 60px 0;">
+    <div class="container">
+      <div class="mission-grid">
+        <div>
+          <h2>The <span class="gradient-text">Forensic</span> Approach</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-top: 15px;">
+            We don't just grade papers. Our AI "forensically" maps every incorrect response to a foundational concept. If you miss a Calculus question, we check if the gap is actually in Algebra. By identifying the root cause, we save students hundreds of hours of inefficient studying.
+          </p>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-top: 15px;">
+            Our AI engine analyzes patterns across multiple dimensions — topic mastery, difficulty levels, and conceptual dependencies — to build a complete picture of each student's learning landscape.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div class="about-stat-card">
+            <div class="about-stat-number">98%</div>
+            <div style="color: var(--text-muted); margin-top: 8px;">Accuracy in Gap Detection</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-number">3x</div>
+            <div style="color: var(--text-muted); margin-top: 8px;">Faster Concept Mastery</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-number">500+</div>
+            <div style="color: var(--text-muted); margin-top: 8px;">Questions in Database</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-number">24/7</div>
+            <div style="color: var(--text-muted); margin-top: 8px;">Available Anytime</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Makes Us Different -->
+  <section class="about-feature" style="background: var(--bg-card);">
+    <div class="container">
+      <div style="text-align: center;">
+        <h2>What Makes Us <span class="gradient-text">Different</span></h2>
+        <p style="color: var(--text-secondary); margin-top: 12px;">More than just a test — a complete diagnostic system</p>
+      </div>
+      <div class="about-feature-grid">
+        <div class="about-feature-card">
+          <div class="about-feature-icon">🔬</div>
+          <h3 style="margin-bottom: 8px;">Root Cause Analysis</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">We trace every wrong answer back to its foundational gap, not just the surface error.</p>
+        </div>
+        <div class="about-feature-card">
+          <div class="about-feature-icon">📊</div>
+          <h3 style="margin-bottom: 8px;">Personalized Reports</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Each student gets a unique AI-generated report with customized study recommendations.</p>
+        </div>
+        <div class="about-feature-card">
+          <div class="about-feature-icon">📅</div>
+          <h3 style="margin-bottom: 8px;">Study Plans</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Week-by-week study plans automatically built around your specific weaknesses.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> KnowGap</span>
+      <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata KnowGap Forensic System</span>
+    </div>
+  </footer>
+
+  <script src="/js/nav.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      initNavigation('about-nav-links');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnowGap AI | Home</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="/index.html">
+        <span></span> KnowGap
+      </a>
+
+      <div class="navbar-menu">
+        <a href="/index.html" class="nav-item active">Home</a>
+        <a href="/about.html" class="nav-item">About</a>
+        <a href="/contact.html" class="nav-item">Contact</a>
+        <a href="/developers.html" class="nav-item">Developers</a>
+      </div>
+
+      <div class="navbar-links" id="home-nav-links">
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <div class="container"
+      style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; padding-top: 80px;">
+
+      <!-- Left Side -->
+      <div class="hero-content animate-up">
+        <div class="badge badge-info" style="margin-bottom: 16px;">🤖 AI-Powered Learning Analysis</div>
+        <h1 class="hero-title">Discover Your <span class="gradient-text">Learning Gaps</span> Instantly</h1>
+        <p class="hero-sub">
+          KnowGap forensically analyzes your test performance using AI to pinpoint exactly where your knowledge gaps are
+          — and builds a personalized study plan to fix them.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" onclick="window.location.href='/login.html'">🚀 Start Your
+            Assessment</button>
+          <button class="btn btn-outline btn-lg"
+            onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+        </div>
+
+        <div style="display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap;">
+          <div>
+            <div
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              500+</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Questions</div>
+          </div>
+          <div>
+            <div
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              AI</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Analysis</div>
+          </div>
+          <div>
+            <div
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              Real-time</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Results</div>
+          </div>
+          <div>
+            <div
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              Free</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Forever</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side (Visual Cards) -->
+      <div class="hero-visual" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="floating-card animate-float" style="animation-delay: 0.2s;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <div
+              style="width: 42px; height: 42px; border-radius: 10px; background: rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+              📊</div>
+            <div>
+              <div style="font-weight: 700;">AI Gap Report</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">Mathematics • 25 Questions</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 8px; font-size: 0.85rem; color: var(--text-secondary);">Topic Scores</div>
+
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 0.85rem; width: 70px;">Aptitude</span>
+            <div style="flex: 1; height: 6px; background: var(--bg-input); border-radius: 3px;">
+              <div style="height: 6px; width: 85%; background: var(--success); border-radius: 3px;"></div>
+            </div>
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--success);">85%</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 0.85rem; width: 70px;">DSA</span>
+            <div style="flex: 1; height: 6px; background: var(--bg-input); border-radius: 3px;">
+              <div style="height: 6px; width: 42%; background: var(--danger); border-radius: 3px;"></div>
+            </div>
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--danger);">42%</span>
+          </div>
+        </div>
+
+        <div class="floating-card" style="animation: glow 3s ease-in-out 1s infinite;">
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">🚨 Critical Gap Detected
+          </div>
+          <div style="font-weight: 700; margin-bottom: 4px;">DSA — Integration</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Study 3 hrs/day for 2 weeks to close this gap</div>
+          <div style="margin-top: 12px; display: flex; gap: 8px;">
+            <span class="badge badge-danger">Critical</span>
+            <span class="badge badge-info">Priority #1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" style="padding: 100px 0; background: var(--bg-card);">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 60px;">
+        <h2>How <span class="gradient-text">KnowGap AI</span> Works</h2>
+        <p style="color: var(--text-secondary); margin-top: 12px; font-size: 1.05rem;">Three steps to understand your
+          learning gaps completely</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card" style="text-align: center;">
+          <div class="feature-icon" style="margin: 0 auto 16px;">📝</div>
+          <h3 style="margin-bottom: 12px;">Take the Test</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Choose your subject and answer AI-curated
+            questions.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="feature-icon" style="margin: 0 auto 16px;">🤖</div>
+          <h3 style="margin-bottom: 12px;">AI Analysis</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Our engine maps every wrong answer to a specific
+            knowledge gap.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="feature-icon" style="margin: 0 auto 16px;">📈</div>
+          <h3 style="margin-bottom: 12px;">Get Your Plan</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Receive a forensic report and a week-by-week
+            study plan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <span
+        style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        KnowGap</span>
+      <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata KnowGap Forensic System</span>
+    </div>
+  </footer>
+
+  <!-- Basic Page Logic -->
+  <script src="/js/nav.js"></script>
+  <script>
+
+    // JS Logic using separated files to avoid ~ template literals
+    document.addEventListener("DOMContentLoaded", function () {
+      initNavigation('home-nav-links');
+    });
+  </script>
+</body>
+
+</html>

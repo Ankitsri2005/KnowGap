@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnowGap AI | Teacher Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo" onclick="window.location.href='/index.html'">🧠 KnowGap AI</div>
+      <div class="sidebar-section">Teacher Menu</div>
+      
+      <button class="sidebar-link active" onclick="window.location.reload()">
+        <span class="icon">📊</span> Class Overview
+      </button>
+      
+      <div class="sidebar-spacer"></div>
+      <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
+        <div id="teacher-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Teacher Account</div>
+        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <!-- We use JavaScript to load your dashboard API data into here! -->
+      <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/teacher.js"></script>
+  <script>
+    // Traditional setup
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Security check: Send them back to login if they aren't logged in
+    if (!user || user.role !== 'teacher') {
+      window.location.href = "/login.html";
+    } else {
+      document.getElementById('teacher-name').innerText = user.name;
+    }
+    
+    function logout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      window.location.href = "/login.html";
+    }
+
+    // Call the function from teacher.js to load the stats
+    document.addEventListener("DOMContentLoaded", () => {
+      // Load dashboard data immediately
+      renderTeacher();
+    });
+  </script>
+</body>
+</html>
