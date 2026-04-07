@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -37,3 +38,39 @@ app.listen(PORT, async () => {
     }
   });
 });
+=======
+const db = require('./db');
+const bcrypt = require('bcryptjs');
+
+// Auto-seed only if no users exist
+db.get("SELECT COUNT(*) as count FROM users", async (err, row) => {
+  if (err) {
+    console.error('Seed check error:', err);
+    return;
+  }
+
+  if (row && row.count === 0) {
+    console.log('🌱 First run — seeding database...');
+
+    const teacherPass = await bcrypt.hash('teacher123', 10);
+    const studentPass = await bcrypt.hash('student123', 10);
+
+    db.run(
+      `INSERT OR IGNORE INTO users (name,email,password,role) VALUES (?,?,?,?)`,
+      ['Dr. Sharma', 'teacher@knowgap.com', teacherPass, 'teacher']
+    );
+    db.run(
+      `INSERT OR IGNORE INTO users (name,email,password,role) VALUES (?,?,?,?)`,
+      ['Rahul Kumar', 'student@knowgap.com', studentPass, 'student']
+    );
+    db.run(
+      `INSERT OR IGNORE INTO users (name,email,password,role) VALUES (?,?,?,?)`,
+      ['Priya Singh', 'priya@knowgap.com', studentPass, 'student']
+    );
+
+    console.log('✅ Users seeded successfully!');
+  } else {
+    console.log('✅ Database already has data — skipping seed.');
+  }
+});
+>>>>>>> 39b1be5 (Initial commit for KnowGap_fixed)
