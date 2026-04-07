@@ -18,12 +18,15 @@ app.use('/api/teacher', require('./routes/teacher'));
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n knowGap Server running at http://localhost:${PORT}`);
   
   // This triggers the seeding logic once the server starts
   try {
-    require('./database/seed.js');
+    const seed = require('./database/seed.js');
+    if (typeof seed === 'function') {
+      seed();
+    }
   } catch (err) {
     console.error("Failed to run seed script:", err.message);
   }
