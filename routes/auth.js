@@ -9,6 +9,9 @@ router.post('/register', async (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) 
     return res.status(400).json({ error: 'All fields required' });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email))
+    return res.status(400).json({ error: 'Invalid email format' });
   if (!['student', 'teacher'].includes(role))
     return res.status(400).json({ error: 'Role must be student or teacher' });
 
@@ -32,6 +35,8 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email format' });
 
   try {
     const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);

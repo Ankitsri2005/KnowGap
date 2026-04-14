@@ -1,32 +1,39 @@
 /* ── AI RESULTS / GAP ANALYSIS PAGE ── */
-async function renderResults(params) {
-  const { sessionId } = params || Router.params;
-  let analysis = (params || Router.params).analysis;
-  document.getElementById('app').innerHTML = `<div class="loading-full" style="min-height:100vh"><div class="spinner"></div><p>Loading AI report...</p></div>`;
+async function renderResults(params)
+{
+    const
+    {
+        sessionId
+    } = params || Router.params;
+    let analysis = (params || Router.params).analysis;
+    document.getElementById('app').innerHTML = `<div class="loading-full" style="min-height:100vh"><div class="spinner"></div><p>Loading AI report...</p></div>`;
 
-  try {
-    if (!analysis) {
-      const res = await API.tests.result(sessionId);
-      analysis = {
-        overallScore: res.overall_score,
-        totalQuestions: res.total_questions,
-        correctAnswers: res.correct_answers,
-        wrongAnswers: res.total_questions - res.correct_answers,
-        performanceLevel: res.performance_level,
-        topicScores: res.topic_scores || [],
-        priorityTopics: res.priority_topics || [],
-        gapSummary: res.gap_summary || '',
-        studyPlan: typeof res.recommendations === 'object' ? res.recommendations : {},
-        insights: [],
-        performanceEmoji: getPerfEmoji(res.overall_score),
-        performanceColor: scoreColor(res.overall_score)
-      };
-    }
+    try
+    {
+        if (!analysis)
+        {
+            const res = await API.tests.result(sessionId);
+            analysis = {
+                overallScore: res.overall_score,
+                totalQuestions: res.total_questions,
+                correctAnswers: res.correct_answers,
+                wrongAnswers: res.total_questions - res.correct_answers,
+                performanceLevel: res.performance_level,
+                topicScores: res.topic_scores || [],
+                priorityTopics: res.priority_topics || [],
+                gapSummary: res.gap_summary || '',
+                studyPlan: typeof res.recommendations === 'object' ? res.recommendations :
+                {},
+                insights: [],
+                performanceEmoji: getPerfEmoji(res.overall_score),
+                performanceColor: scoreColor(res.overall_score)
+            };
+        }
 
-    const score = analysis.overallScore;
-    const degPct = Math.round(score * 3.6);
+        const score = analysis.overallScore;
+        const degPct = Math.round(score * 3.6);
 
-    document.getElementById('app').innerHTML = `
+        document.getElementById('app').innerHTML = `
       <nav class="navbar">
         <div class="container">
           <span class="navbar-brand" style="cursor:pointer" onclick="Router.go('student')">knowGap</span>
@@ -40,7 +47,7 @@ async function renderResults(params) {
       <div style="max-width:900px;margin:0 auto;padding:100px 24px 60px" class="animate-up">
 
         <!-- HERO SCORE -->
-        <div class="card" style="text-align:center;padding:48px;margin-bottom:24px;background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(6,182,212,.05));border-color:rgba(99,102,241,.3)">
+        <div class="card" style="text-align:center;padding:48px;margin-bottom:24px;border-color:var(--primary)">
           <div style="font-size:1rem;color:var(--text-muted);margin-bottom:8px">🤖 AI Gap Analysis Report</div>
           <h2 style="margin-bottom:32px">Your Performance Breakdown</h2>
           <div style="display:flex;align-items:center;justify-content:center;gap:60px;flex-wrap:wrap">
@@ -193,15 +200,31 @@ async function renderResults(params) {
           <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Report</button>
         </div>
       </div>`;
-  } catch(e) {
-    document.getElementById('app').innerHTML = `<div class="loading-full"><p>⚠️ ${e.message}</p><button class="btn btn-primary" onclick="Router.go('student')">Go Back</button></div>`;
-  }
+    }
+    catch (e)
+    {
+        document.getElementById('app').innerHTML = `<div class="loading-full"><p>⚠️ ${e.message}</p><button class="btn btn-primary" onclick="Router.go('student')">Go Back</button></div>`;
+    }
 }
 
-function getPerfEmoji(score) {
-  if (score >= 85) return '🏆';
-  if (score >= 70) return '👍';
-  if (score >= 50) return '📊';
-  if (score >= 35) return '⚠️';
-  return '🚨';
+function getPerfEmoji(score)
+{
+    if (score >= 85) return '🏆';
+    if (score >= 70) return '👍';
+    if (score >= 50) return '📊';
+    if (score >= 35) return '⚠️';
+    return '🚨';
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) window.location.href = "/login.html";
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('sessionId');
+    if (typeof Router !== 'undefined') {
+        Router.params = { sessionId };
+    }
+    if (typeof renderResults === 'function') {
+        renderResults({ sessionId });
+    }
+});

@@ -1,65 +1,483 @@
-
-.hero { min-height: 100vh; display: flex; align-items: center; position:relative; overflow:hidden; }
-.hero-bg {
-  position:absolute; inset:0; z-index:0;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.15) 0%, transparent 70%),
-              radial-gradient(ellipse 50% 40% at 80% 60%, rgba(6,182,212,0.1) 0%, transparent 60%),
-              var(--bg-dark);
-}
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  --grid-opacity: 0.03;
-  background-image:
-    linear-gradient(var(--grid-color, var(--text)) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color, var(--text)) 1px, transparent 1px);
-  background-size: clamp(32px, 6vw, 56px) clamp(32px, 6vw, 56px);
-  opacity: var(--grid-opacity);
+/* ── Hero ── */
+.hero
+{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero-title { font-size: clamp(2.2rem, 5vw, 4.5rem); margin-bottom: 24px; letter-spacing: -1px; }
-.hero-sub { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 540px; }
-.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-
-/* Hero two-column grid */
-.hero-grid-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  padding-top: 80px;
+.hero-bg
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 0;
+    background: var(--bg-dark);
 }
 
-@keyframes float { 0% {transform:translateY(0)} 50% {transform:translateY(-15px)} 100% {transform:translateY(0)} }
-@keyframes glow { 0% {box-shadow:0 0 20px rgba(239,68,68,0.1)} 50% {box-shadow:0 0 40px rgba(239,68,68,0.3)} 100% {box-shadow:0 0 20px rgba(239,68,68,0.1)} }
-
-.floating-card {
-  background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
-  border: 1px solid rgba(0,0,0,0.05); padding: 24px; border-radius: var(--radius);
-  box-shadow: var(--shadow); position: relative; z-index: 5;
+.hero-grid-layout
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    padding-top: 80px;
 }
-.animate-float { animation: float 6s ease-in-out infinite; }
-.feature-icon { width: 64px; height: 64px; border-radius: 16px; background: var(--bg-input); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+
+.hero-title
+{
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+}
+
+.hero-sub
+{
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 440px;
+}
+
+.hero-actions
+{
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* ── Hero Stats ── */
+.hero-stats
+{
+    display: flex;
+    gap: 32px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+}
+
+.hero-stat-value
+{
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.hero-stat-label
+{
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ── Floating Cards ── */
+.hero-visual
+{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.floating-card
+{
+    background: var(--bg-dark);
+    border: 1px solid #333;
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 5;
+    color: #fff;
+    max-width: 450px;
+}
+
+@keyframes float
+{
+    0%
+    {
+        transform: translateY(0);
+    }
+
+    50%
+    {
+        transform: translateY(-15px);
+    }
+
+    100%
+    {
+        transform: translateY(0);
+    }
+}
+
+.glow-card
+{
+}
+
+.floating-card-header
+{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.floating-card-icon
+{
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(192, 86, 33, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.floating-card-title
+{
+    font-weight: 700;
+}
+
+.floating-card-sub
+{
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.floating-card-label
+{
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+/* ── Score Rows ── */
+.score-row
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.score-topic
+{
+    font-size: 0.85rem;
+    width: 70px;
+}
+
+.score-bar-bg
+{
+    flex: 1;
+    height: 6px;
+    background: var(--bg-input);
+    border-radius: 3px;
+}
+
+.score-bar-fill
+{
+    height: 6px;
+    border-radius: 3px;
+}
+
+.success-fill
+{
+    background: var(--success);
+}
+
+.danger-fill
+{
+    background: var(--danger);
+}
+
+.score-pct
+{
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.success-text
+{
+    color: var(--success);
+}
+
+.danger-text
+{
+    color: var(--danger);
+}
+
+/* ── Gap Alert (floating card 2) ── */
+.gap-alert-label
+{
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.gap-alert-title
+{
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+    font-family: 'Playfair Display', serif;
+}
+
+.gap-alert-sub
+{
+    font-size: 0.85rem;
+    color: #ddd;
+    line-height: 1.5;
+}
+
+.gap-alert-badges
+{
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+.gap-alert-badges .badge {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+/* ── Features Section ── */
+.features-section
+{
+    padding: 100px 0;
+    background: var(--bg-card);
+}
+
+.features-header
+{
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.features-sub
+{
+    color: var(--text-secondary);
+    margin-top: 12px;
+    font-size: 1.05rem;
+}
+
+.feature-card
+{
+    background: transparent;
+    border: 1px solid transparent;
+    text-align: center;
+}
+
+.feature-card h3
+{
+    margin: 16px 0 12px;
+}
+
+.feature-card p
+{
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.feature-icon
+{
+    font-size: 3rem;
+    margin: 0 auto 10px;
+    color: var(--primary);
+    font-family: "Playfair Display", serif;
+    opacity: 0.7;
+}
+
+/* ── Badge spacing on pages ── */
+.badge
+{
+    margin-bottom: 16px;
+}
+
+/* ── Brand Accent ── */
+.brand-accent
+{
+    color: var(--primary);
+}
+
+/* ── Hero Eyebrow ── */
+.hero-eyebrow
+{
+    color: var(--primary);
+    background: none;
+    padding: 0;
+    letter-spacing: 2px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+/* ── Hero Title Accent (italic Fix Them.) ── */
+.hero-title-accent
+{
+    color: var(--primary);
+    font-style: italic;
+}
+
+/* ── Hero Outline Buttons ── */
+.btn-hero-outline
+{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.btn-hero-ghost
+{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+/* ── Score Bar Widths ── */
+.score-85 { width: 85%; }
+.score-42 { width: 42%; }
+
+/* ── Feature Body ── */
+.feature-body
+{
+    text-align: left;
+    background: var(--bg-card);
+    padding: 32px;
+    border-radius: 16px;
+}
+
+.feature-body h3
+{
+    margin-top: 0;
+}
+
+/* ── Feature Divider ── */
+.feature-divider
+{
+    width: 30px;
+    height: 3px;
+    background: var(--primary);
+    margin-top: 20px;
+}
+
+/* ── Features Section Eyebrow ── */
+.features-eyebrow
+{
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* ── Dark Footer ── */
+.dark-footer
+{
+    background: var(--bg-dark);
+    color: #fff;
+    border-top: none;
+}
+
+.footer-cta-text
+{
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.footer-cta-accent
+{
+    color: var(--primary);
+    font-style: italic;
+}
+
+.btn-footer-outline
+{
+    background: transparent;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.footer-bottom-row
+{
+    margin-top: 40px;
+    border-top: 1px solid #333;
+    padding-top: 20px;
+}
+
+.footer-brand-white
+{
+    color: #fff;
+}
+
+.footer-copy-dim
+{
+    color: #777;
+}
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-  .hero-grid-layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding-top: 96px;
-  }
-  .hero-visual { display: none !important; } /* hide right panel on mobile to keep it clean */
-  .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
-  .hero-sub { font-size: 1rem; }
-  .hero-actions { gap: 12px; }
+@media (max-width: 900px)
+{
+    .hero-grid-layout
+    {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-top: 96px;
+    }
+
+    .hero-visual
+    {
+        display: none;
+    }
+
+    .hero-title
+    {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .hero-sub
+    {
+        font-size: 1rem;
+    }
 }
 
-@media (max-width: 640px) {
-  .hero { min-height: auto; padding: 20px 0 48px; }
-  .hero-grid-layout { padding-top: 80px; gap: 32px; }
-  .hero-title { font-size: clamp(1.8rem, 9vw, 2.5rem); margin-bottom: 16px; }
-  .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
-  .btn-lg { padding: 14px 20px; font-size: 0.95rem; }
-  .floating-card { padding: 16px; }
+@media (max-width: 640px)
+{
+    .hero
+    {
+        min-height: auto;
+        padding: 20px 0 48px;
+    }
+
+    .hero-grid-layout
+    {
+        padding-top: 80px;
+        gap: 32px;
+    }
+
+    .hero-title
+    {
+        font-size: clamp(1.8rem, 9vw, 2.5rem);
+        margin-bottom: 16px;
+    }
+
+    .hero-sub
+    {
+        font-size: 0.95rem;
+        margin-bottom: 28px;
+    }
+
+    .floating-card
+    {
+        padding: 16px;
+    }
 }

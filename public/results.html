@@ -1,47 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>knowGap | Test Results</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>knowGap | Test Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
-  <div class="dashboard-layout" style="display: block; min-height: 100vh;">
-    <!-- Top Navigation for Results -->
-    <div style="background: var(--bg-card); padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;">
-      <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: clamp(1rem, 4vw, 1.2rem);">knowGap Results</div>
-      <button class="btn btn-secondary btn-sm" onclick="window.location.href='/student.html'">Back to Dashboard</button>
+    <div class="test-page-wrap">
+        <div class="test-topbar">
+            <div class="test-topbar-brand">know<span class="brand-accent">Gap</span> Results</div>
+            <button class="btn btn-secondary btn-sm" onclick="window.location.href='/student.html'">Back to Dashboard</button>
+        </div>
+
+        <main class="container test-main" id="app">
+            <div class="loading-full">
+                <div class="spinner"></div>
+                <p>AI is analyzing your learning gaps...</p>
+            </div>
+        </main>
     </div>
 
-    <!-- Main Content for the Results -->
-    <main class="container" id="app" style="padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 24px); max-width: 1000px; margin: 0 auto;">
-      <!-- JavaScript will load the AI report here! -->
-      <div class="loading-full"><div class="spinner"></div><p>AI is analyzing your learning gaps...</p></div>
-    </main>
-  </div>
+    <div id="toast-container"></div>
 
-  <div id="toast-container"></div>
-
-  <!-- Scripts -->
-  <script src="/js/api.js"></script>
-  <script src="/js/results.js"></script>
-  <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) window.location.href = "/login.html";
-
-    // Grab URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('sessionId');
-
-    document.addEventListener("DOMContentLoaded", () => {
-      Router.params = { sessionId };
-      renderResults({ sessionId });
-    });
-  </script>
+    <script src="/js/api.js"></script>
+    <script src="/js/results.js"></script>
+    <script src="/js/dashboard-ui.js"></script>
 </body>
+
 </html>

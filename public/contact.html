@@ -1,118 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us | knowGap</title>
-  <meta name="description" content="Get in touch with the knowGap team. We're here to help with your learning gap analysis questions.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet" href="/css/contact.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | knowGap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/contact.css">
 </head>
+
 <body>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">know<span class="brand-accent">Gap</span></a>
+            <div class="navbar-menu">
+                <a href="/index.html" class="nav-item">Home</a>
+                <a href="/about.html" class="nav-item">About</a>
+                <a href="/contact.html" class="nav-item active">Contact</a>
+                <a href="/developers.html" class="nav-item">Developers</a>
+            </div>
+            <div class="navbar-links" id="contact-nav-links"></div>
+        </div>
+    </nav>
+
+    <section class="contact-hero">
+        <div class="container animate-up">
+            <div class="badge badge-info">💬 Reach Out</div>
+            <h1 class="hero-title">Get in <span class="gradient-text">Touch</span></h1>
+            <p class="hero-sub">Have questions about the forensic analysis? We're here to help your learning journey.</p>
+        </div>
+    </section>
+
     <div class="container">
-      <a class="navbar-brand" href="/index.html">
-        <span></span> knowGap
-      </a>
-      <div class="navbar-menu">
-        <a href="/index.html" class="nav-item">Home</a>
-        <a href="/about.html" class="nav-item">About</a>
-        <a href="/contact.html" class="nav-item active">Contact</a>
-        <a href="/developers.html" class="nav-item">Developers</a>
-      </div>
-      <div class="navbar-links" id="contact-nav-links"></div>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="contact-hero">
-    <div class="container animate-up">
-      <div class="badge badge-info" style="margin-bottom: 16px;">💬 Reach Out</div>
-      <h1 class="hero-title">Get in <span class="gradient-text">Touch</span></h1>
-      <p class="hero-sub" style="max-width: 600px; margin: 16px auto 0;">
-        Have questions about the forensic analysis? We're here to help your learning journey.
-      </p>
-    </div>
-  </section>
-
-  <!-- Contact Form -->
-  <div class="container">
-    <div class="contact-container animate-up">
-      <form id="contactForm">
-        <div class="contact-group">
-          <label>Full Name</label>
-          <input type="text" class="contact-control" placeholder="John Doe" required>
+        <div class="contact-container animate-up">
+            <form id="contactForm">
+                <div class="contact-group">
+                    <label>Full Name</label>
+                    <input type="text" class="contact-control" placeholder="John Doe" required>
+                </div>
+                <div class="contact-group">
+                    <label>Email Address</label>
+                    <input type="email" class="contact-control" placeholder="john@example.com" required>
+                </div>
+                <div class="contact-group">
+                    <label>Subject</label>
+                    <input type="text" class="contact-control" placeholder="What's this about?">
+                </div>
+                <div class="contact-group">
+                    <label>Message</label>
+                    <textarea class="contact-control" placeholder="How can we help your learning journey?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full btn-lg">✉️ Send Message</button>
+            </form>
         </div>
-        <div class="contact-group">
-          <label>Email Address</label>
-          <input type="email" class="contact-control" placeholder="john@example.com" required>
+
+        <div class="contact-info">
+            <div class="contact-info-card">
+                <div class="contact-info-icon">📧</div>
+                <h3>Email</h3>
+                <p>support@knowgap.ai</p>
+            </div>
+            <div class="contact-info-card">
+                <div class="contact-info-icon">📍</div>
+                <h3>Location</h3>
+                <p>IEM, Kolkata, India</p>
+            </div>
+            <div class="contact-info-card">
+                <div class="contact-info-icon">⏰</div>
+                <h3>Response Time</h3>
+                <p>Within 24 hours</p>
+            </div>
         </div>
-        <div class="contact-group">
-          <label>Subject</label>
-          <input type="text" class="contact-control" placeholder="What's this about?">
-        </div>
-        <div class="contact-group">
-          <label>Message</label>
-          <textarea class="contact-control" placeholder="How can we help your learning journey?"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-full btn-lg">✉️ Send Message</button>
-      </form>
     </div>
 
-    <!-- Info Cards -->
-    <div class="contact-info" style="margin-bottom: 60px;">
-      <div class="contact-info-card">
-        <div style="font-size: 2rem; margin-bottom: 12px;">📧</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Email</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">support@knowgap.ai</p>
-      </div>
-      <div class="contact-info-card">
-        <div style="font-size: 2rem; margin-bottom: 12px;">📍</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Location</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">IEM, Kolkata, India</p>
-      </div>
-      <div class="contact-info-card">
-        <div style="font-size: 2rem; margin-bottom: 12px;">⏰</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Response Time</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Within 24 hours</p>
-      </div>
-    </div>
-  </div>
+    <footer class="main-footer">
+        <div class="container footer-inner">
+            <span class="footer-brand">knowGap</span>
+            <span class="footer-copy">IEM Kolkata — knowGap Forensic System</span>
+        </div>
+    </footer>
 
-  <!-- Footer -->
-  <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">knowGap</span>
-      <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata knowGap Forensic System</span>
-    </div>
-  </footer>
+    <div id="toast-container"></div>
 
-  <div id="toast-container"></div>
-
-  <script src="/js/nav.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      initNavigation('contact-nav-links');
-      
-      document.getElementById('contactForm').onsubmit = function(e) {
-        e.preventDefault();
-        // Show success message
-        var btn = e.target.querySelector('button[type="submit"]');
-        btn.innerText = '✅ Message Sent!';
-        btn.disabled = true;
-        btn.style.background = 'var(--success)';
-        setTimeout(function() {
-          btn.innerText = '✉️ Send Message';
-          btn.disabled = false;
-          btn.style.background = '';
-          e.target.reset();
-        }, 3000);
-      };
-    });
-  </script>
+    <script src="/js/nav.js"></script>
+    <script src="/js/home.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function()
+        {
+            initNavigation('contact-nav-links');
+            document.getElementById('contactForm').onsubmit = function(e)
+            {
+                e.preventDefault();
+                var btn = e.target.querySelector('button[type="submit"]');
+                btn.innerText = '✅ Message Sent!';
+                btn.disabled = true;
+                btn.classList.add('btn-sent');
+                setTimeout(function()
+                {
+                    btn.innerText = '✉️ Send Message';
+                    btn.disabled = false;
+                    btn.classList.remove('btn-sent');
+                    e.target.reset();
+                }, 3000);
+            };
+        });
+    </script>
 </body>
+
 </html>

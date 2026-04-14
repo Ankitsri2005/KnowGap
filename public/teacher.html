@@ -1,89 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>knowGap | Teacher Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>knowGap | Teacher Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
+
 <body>
 
-  <!-- Mobile Header (visible only on small screens) -->
-  <header class="mobile-header" id="mobile-header">
-    <div class="mobile-header-logo" onclick="window.location.href='/index.html'">knowGap</div>
-    <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
+    <header class="mobile-header" id="mobile-header">
+        <div class="mobile-header-logo" onclick="window.location.href='/index.html'">know<span class="brand-accent">Gap</span></div>
+        <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
 
-  <!-- Sidebar Backdrop -->
-  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
-  <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo" onclick="window.location.href='/index.html'">knowGap</div>
-      <div class="sidebar-section">Teacher Menu</div>
-      
-      <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
-        <span class="icon">📊</span> Class Overview
-      </button>
-      
-      <div class="sidebar-spacer"></div>
-      <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
-        <div id="teacher-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">Teacher Account</div>
-        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()">Logout</button>
-      </div>
-    </aside>
+    <div class="dashboard-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo" onclick="window.location.href='/index.html'">know<span class="brand-accent">Gap</span></div>
+            <div class="sidebar-section">Teacher Menu</div>
+            <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
+                <span class="icon">📊</span> Class Overview
+            </button>
+            <div class="sidebar-spacer"></div>
+            <div class="sidebar-footer">
+                <div id="teacher-name" class="sidebar-user-name">Loading...</div>
+                <div class="sidebar-user-role">Teacher Account</div>
+                <button class="btn btn-secondary btn-sm btn-full sidebar-logout" onclick="logout()">Logout</button>
+            </div>
+        </aside>
 
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
-      <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
-    </main>
-  </div>
+        <main class="main-content" id="main-content">
+            <div class="loading-full">
+                <div class="spinner"></div>
+                <p>Loading teacher dashboard...</p>
+            </div>
+        </main>
+    </div>
 
-  <div id="toast-container"></div>
+    <div id="toast-container"></div>
 
-  <!-- Scripts -->
-  <script src="/js/api.js"></script>
-  <script src="/js/teacher.js"></script>
-  <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    
-    if (!user || user.role !== 'teacher') {
-      window.location.href = "/login.html";
-    } else {
-      document.getElementById('teacher-name').innerText = user.name;
-    }
-    
-    function logout() {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      window.location.href = "/login.html";
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('sidebar-backdrop');
-      const hamburger = document.getElementById('mob-hamburger');
-      sidebar.classList.toggle('open');
-      backdrop.classList.toggle('open');
-      hamburger.classList.toggle('open');
-      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-    }
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('sidebar-backdrop').classList.remove('open');
-      document.getElementById('mob-hamburger').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      renderTeacher();
-    });
-  </script>
+    <script src="/js/api.js"></script>
+    <script src="/js/teacher.js"></script>
+    <script src="/js/dashboard-ui.js"></script>
 </body>
+
 </html>

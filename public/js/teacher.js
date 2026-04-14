@@ -1,25 +1,28 @@
 /* ── TEACHER DASHBOARD ── */
 
 // Subject icon helper (also used in student.js)
-function subjectIcon(name) {
-  const n = (name || '').toLowerCase();
-  if (n.includes('math')) return '📐';
-  if (n.includes('physics')) return '⚛️';
-  if (n.includes('computer') || n.includes('cs')) return '💻';
-  if (n.includes('chem')) return '🧪';
-  if (n.includes('bio')) return '🧬';
-  if (n.includes('english')) return '📖';
-  return '📚';
+function subjectIcon(name)
+{
+    const n = (name || '').toLowerCase();
+    if (n.includes('math')) return '📐';
+    if (n.includes('physics')) return '⚛️';
+    if (n.includes('computer') || n.includes('cs')) return '💻';
+    if (n.includes('chem')) return '🧪';
+    if (n.includes('bio')) return '🧬';
+    if (n.includes('english')) return '📖';
+    return '📚';
 }
 
-async function renderTeacher() {
-  const app = document.getElementById('main-content');
-  if (!app) return;
-  app.innerHTML = `<div class="loading-full"><div class="spinner"></div><p>Loading dashboard...</p></div>`;
+async function renderTeacher()
+{
+    const app = document.getElementById('main-content');
+    if (!app) return;
+    app.innerHTML = `<div class="loading-full"><div class="spinner"></div><p>Loading dashboard...</p></div>`;
 
-  try {
-    const data = await API.teacher.overview();
-    app.innerHTML = `
+    try
+    {
+        const data = await API.teacher.overview();
+        app.innerHTML = `
       <div style="margin-bottom:32px">
         <h2>Welcome, <span class="gradient-text">${State.user.name}</span> 👩‍🏫</h2>
         <p style="color:var(--text-secondary);margin-top:4px">Here's your classroom overview</p>
@@ -81,15 +84,21 @@ async function renderTeacher() {
             </div>`}
         </div>
       </div>`;
-  } catch (e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 }
 
 /* ── TEACHER: Students List ── */
-async function renderTeacherStudents() {
-  document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
-  try {
-    const students = await API.teacher.students();
-    document.getElementById('main-content').innerHTML = `
+async function renderTeacherStudents()
+{
+    document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
+    try
+    {
+        const students = await API.teacher.students();
+        document.getElementById('main-content').innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
         <h2>👨‍🎓 All Students</h2>
         <input id="search-students" type="text" class="form-input" placeholder="Search students..." style="max-width:260px" oninput="filterStudents(this.value)"/>
@@ -116,23 +125,31 @@ async function renderTeacherStudents() {
           </tbody>
         </table>
       </div>`;
-  } catch(e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 }
 
-window.filterStudents = function(q) {
-  document.querySelectorAll('#students-tbody tr').forEach(row => {
-    row.style.display = row.dataset.name.includes(q.toLowerCase()) ? '' : 'none';
-  });
+window.filterStudents = function(q)
+{
+    document.querySelectorAll('#students-tbody tr').forEach(row =>
+    {
+        row.style.display = row.dataset.name.includes(q.toLowerCase()) ? '' : 'none';
+    });
 };
 
-window.viewStudent = async function(id, name) {
-  document.getElementById('main-content').innerHTML = `
+window.viewStudent = async function(id, name)
+{
+    document.getElementById('main-content').innerHTML = `
     <button class="btn btn-secondary btn-sm" style="margin-bottom:20px" onclick="renderTeacherStudents()">← Back to Students</button>
     <h2 style="margin-bottom:20px">📊 ${name}'s Performance</h2>
     <div class="loading-full"><div class="spinner"></div></div>`;
-  try {
-    const tests = await API.teacher.student(id);
-    document.getElementById('main-content').innerHTML = `
+    try
+    {
+        const tests = await API.teacher.student(id);
+        document.getElementById('main-content').innerHTML = `
       <button class="btn btn-secondary btn-sm" style="margin-bottom:20px" onclick="renderTeacherStudents()">← Back to Students</button>
       <h2 style="margin-bottom:20px">📊 ${name}'s Performance</h2>
       ${tests.length === 0 ? '<div class="empty-state"><div class="empty-icon">📭</div><p>No tests taken yet</p></div>' : `
@@ -156,15 +173,21 @@ window.viewStudent = async function(id, name) {
             </div>
           `).join('')}
         </div>`}`;
-  } catch(e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
 /* ── TEACHER: Question Bank ── */
-async function renderQuestionBank() {
-  document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
-  try {
-    const subjects = await API.subjects.all();
-    document.getElementById('main-content').innerHTML = `
+async function renderQuestionBank()
+{
+    document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
+    try
+    {
+        const subjects = await API.subjects.all();
+        document.getElementById('main-content').innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
         <h2>❓ Question Bank</h2>
         <button class="btn btn-primary" onclick="showAddQuestion()">+ Add Question</button>
@@ -177,15 +200,21 @@ async function renderQuestionBank() {
       </div>
       <div id="qb-list"></div>
       <div id="add-q-modal" style="display:none"></div>`;
-  } catch(e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 }
 
-window.loadQuestions = async function(subjectId) {
-  if (!subjectId) return;
-  document.getElementById('qb-list').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
-  try {
-    const qs = await API.questions.manage(subjectId);
-    document.getElementById('qb-list').innerHTML = `
+window.loadQuestions = async function(subjectId)
+{
+    if (!subjectId) return;
+    document.getElementById('qb-list').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
+    try
+    {
+        const qs = await API.questions.manage(subjectId);
+        document.getElementById('qb-list').innerHTML = `
       <div style="margin-top:16px;color:var(--text-muted);font-size:.85rem;margin-bottom:10px">${qs.length} questions found</div>
       <div class="card" style="padding:0;overflow:hidden">
         <table class="table">
@@ -204,22 +233,33 @@ window.loadQuestions = async function(subjectId) {
           </tbody>
         </table>
       </div>`;
-  } catch(e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
-window.deleteQuestion = async function(id) {
-  if (!confirm('Delete this question?')) return;
-  try {
-    await API.questions.delete(id);
-    toast('Question deleted', 'success');
-    document.getElementById('qb-subject').dispatchEvent(new Event('change'));
-  } catch(e) { toast(e.message, 'error'); }
+window.deleteQuestion = async function(id)
+{
+    if (!confirm('Delete this question?')) return;
+    try
+    {
+        await API.questions.delete(id);
+        toast('Question deleted', 'success');
+        document.getElementById('qb-subject').dispatchEvent(new Event('change'));
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
-window.showAddQuestion = async function() {
-  const subjects = await API.subjects.all();
-  document.getElementById('add-q-modal').style.display = 'block';
-  document.getElementById('add-q-modal').innerHTML = `
+window.showAddQuestion = async function()
+{
+    const subjects = await API.subjects.all();
+    document.getElementById('add-q-modal').style.display = 'block';
+    document.getElementById('add-q-modal').innerHTML = `
     <div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
@@ -264,64 +304,78 @@ window.showAddQuestion = async function() {
     </div>`;
 };
 
-window.loadTopicsForQ = async function(sid) {
-  if (!sid) return;
-  const topics = await API.subjects.topics(sid);
-  document.getElementById('aq-topic').innerHTML = topics.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+window.loadTopicsForQ = async function(sid)
+{
+    if (!sid) return;
+    const topics = await API.subjects.topics(sid);
+    document.getElementById('aq-topic').innerHTML = topics.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
 };
 
-window.submitNewQuestion = async function() {
-  const body = {
-    subject_id: parseInt(document.getElementById('aq-subject').value),
-    topic_id: parseInt(document.getElementById('aq-topic').value),
-    question_text: document.getElementById('aq-text').value.trim(),
-    option_a: document.getElementById('aq-optA').value.trim(),
-    option_b: document.getElementById('aq-optB').value.trim(),
-    option_c: document.getElementById('aq-optC').value.trim(),
-    option_d: document.getElementById('aq-optD').value.trim(),
-    correct_answer: document.getElementById('aq-answer').value,
-    difficulty: document.getElementById('aq-diff').value
-  };
-  if (!body.subject_id || !body.topic_id || !body.question_text || !body.option_a) return toast('Fill all fields', 'error');
-  try {
-    await API.questions.add(body);
-    toast('Question added! ✅', 'success');
-    document.getElementById('add-q-modal').style.display = 'none';
-    if (document.getElementById('qb-subject').value) loadQuestions(document.getElementById('qb-subject').value);
-  } catch(e) { toast(e.message, 'error'); }
+window.submitNewQuestion = async function()
+{
+    const body = {
+        subject_id: parseInt(document.getElementById('aq-subject').value),
+        topic_id: parseInt(document.getElementById('aq-topic').value),
+        question_text: document.getElementById('aq-text').value.trim(),
+        option_a: document.getElementById('aq-optA').value.trim(),
+        option_b: document.getElementById('aq-optB').value.trim(),
+        option_c: document.getElementById('aq-optC').value.trim(),
+        option_d: document.getElementById('aq-optD').value.trim(),
+        correct_answer: document.getElementById('aq-answer').value,
+        difficulty: document.getElementById('aq-diff').value
+    };
+    if (!body.subject_id || !body.topic_id || !body.question_text || !body.option_a) return toast('Fill all fields', 'error');
+    try
+    {
+        await API.questions.add(body);
+        toast('Question added! ✅', 'success');
+        document.getElementById('add-q-modal').style.display = 'none';
+        if (document.getElementById('qb-subject').value) loadQuestions(document.getElementById('qb-subject').value);
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
 /* ── TEACHER: Manage Subjects ── */
-async function renderManageSubjects() {
-  document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
-  try {
-    const subjects = await API.subjects.all();
-    document.getElementById('main-content').innerHTML = `
+async function renderManageSubjects()
+{
+    document.getElementById('main-content').innerHTML = `<div class="loading-full"><div class="spinner"></div></div>`;
+    try
+    {
+        const subjects = await API.subjects.all();
+        document.getElementById('main-content').innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
         <h2>📚 Manage Subjects</h2>
         <button class="btn btn-primary" onclick="showAddSubject()">+ Add Subject</button>
       </div>
       <div class="grid-3">
         ${subjects.map(s=>`
-          <div class="card">
-            <div style="font-size:2rem;margin-bottom:12px">${subjectIcon(s.name)}</div>
-            <h3 style="margin-bottom:6px">${s.name}</h3>
-            <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:16px">${s.description||''}</p>
-            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-              <span class="badge badge-info">📋 ${s.topic_count} Topics</span>
-              <span class="badge badge-warning">❓ ${s.question_count} Questions</span>
+          <div class="card" style="cursor:pointer;position:relative;overflow:hidden;padding:24px;border-radius:16px;background:#fff;border:1px solid var(--border);border-top:4px solid var(--primary);box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+            <div style="font-size:2rem;margin-bottom:16px">${subjectIcon(s.name)}</div>
+            <h3 style="margin-bottom:8px;font-family:'Playfair Display', serif;color:#000;font-size:1.3rem">${s.name}</h3>
+            <p style="color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:20px;min-height:40px">${s.description||'Manage topics and questions.'}</p>
+            <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+              <span class="badge" style="background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:20px;padding:4px 12px;font-size:0.75rem;font-weight:700">📋 ${s.topic_count} TOPICS</span>
+              <span class="badge" style="background:#ffedd5;color:#c2410c;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;font-weight:700">❓ ${s.question_count} QUESTIONS</span>
             </div>
-            <button class="btn btn-secondary btn-sm btn-full" onclick="showAddTopic(${s.id},'${s.name}')">+ Add Topic</button>
+            <button class="btn btn-secondary btn-sm" style="width:100%;border-radius:8px;font-weight:600;padding:10px" onclick="showAddTopic(${s.id},'${s.name}')">+ Add Topic</button>
           </div>
         `).join('')}
       </div>
       <div id="subject-modal"></div>`;
-  } catch(e) { toast(e.message, 'error'); }
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 }
 
-window.showAddSubject = function() {
-  const container = document.createElement('div');
-  container.innerHTML = `
+window.showAddSubject = function()
+{
+    const container = document.createElement('div');
+    container.innerHTML = `
     <div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px" onclick="this.parentElement.remove()">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;width:100%;max-width:420px" onclick="event.stopPropagation()">
         <h3 style="margin-bottom:20px">➕ Add Subject</h3>
@@ -330,24 +384,35 @@ window.showAddSubject = function() {
         <button class="btn btn-primary btn-full" onclick="addSubject()">Create Subject</button>
       </div>
     </div>`;
-  document.body.appendChild(container);
+    document.body.appendChild(container);
 };
 
-window.addSubject = async function() {
-  const name = document.getElementById('new-subj-name').value.trim();
-  const description = document.getElementById('new-subj-desc').value.trim();
-  if (!name) return toast('Name required', 'error');
-  try {
-    await API.subjects.create({ name, description });
-    toast('Subject created!', 'success');
-    document.querySelector('[onclick*="stopPropagation"]').closest('[style*="fixed"]').parentElement.remove();
-    renderManageSubjects();
-  } catch(e) { toast(e.message, 'error'); }
+window.addSubject = async function()
+{
+    const name = document.getElementById('new-subj-name').value.trim();
+    const description = document.getElementById('new-subj-desc').value.trim();
+    if (!name) return toast('Name required', 'error');
+    try
+    {
+        await API.subjects.create(
+        {
+            name,
+            description
+        });
+        toast('Subject created!', 'success');
+        document.querySelector('[onclick*="stopPropagation"]').closest('[style*="fixed"]').parentElement.remove();
+        renderManageSubjects();
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
-window.showAddTopic = function(subjectId, subjectName) {
-  const container = document.createElement('div');
-  container.innerHTML = `
+window.showAddTopic = function(subjectId, subjectName)
+{
+    const container = document.createElement('div');
+    container.innerHTML = `
     <div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px" onclick="this.parentElement.remove()">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;width:100%;max-width:420px" onclick="event.stopPropagation()">
         <h3 style="margin-bottom:6px">➕ Add Topic</h3>
@@ -356,17 +421,36 @@ window.showAddTopic = function(subjectId, subjectName) {
         <button class="btn btn-primary btn-full" onclick="addTopic(${subjectId})">Create Topic</button>
       </div>
     </div>`;
-  document.body.appendChild(container);
+    document.body.appendChild(container);
 };
 
-window.addTopic = async function(subjectId) {
-  const name = document.getElementById('new-topic-name').value.trim();
-  if (!name) return toast('Topic name required', 'error');
-  try {
-    await API.subjects.addTopic(subjectId, { name });
-    toast('Topic added!', 'success');
-    document.querySelectorAll('[style*="fixed"]').forEach(el => el.parentElement.remove());
-    renderManageSubjects();
-  } catch(e) { toast(e.message, 'error'); }
+window.addTopic = async function(subjectId)
+{
+    const name = document.getElementById('new-topic-name').value.trim();
+    if (!name) return toast('Topic name required', 'error');
+    try
+    {
+        await API.subjects.addTopic(subjectId,
+        {
+            name
+        });
+        toast('Topic added!', 'success');
+        document.querySelectorAll('[style*="fixed"]').forEach(el => el.parentElement.remove());
+        renderManageSubjects();
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+    }
 };
 
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'teacher') {
+        window.location.href = "/login.html";
+    } else {
+        const nameEl = document.getElementById('teacher-name');
+        if (nameEl) nameEl.innerText = user.name;
+    }
+    if (typeof renderTeacher === 'function') renderTeacher();
+});

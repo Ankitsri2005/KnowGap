@@ -1,29 +1,108 @@
+.auth-wrap
+{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    padding: 24px;
+}
 
+.auth-card
+{
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow);
+}
 
-.auth-wrap {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 60%), var(--bg-dark);
-  padding: 24px;
+.auth-logo
+{
+    text-align: center;
+    margin-bottom: 32px;
 }
-.auth-card {
-  width: 100%; max-width: 440px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
-  border: 1px solid rgba(0,0,0,0.05); border-radius: var(--radius-lg);
-  padding: 40px; box-shadow: var(--shadow);
-}
-.auth-logo { text-align: center; margin-bottom: 32px; }
-.auth-tabs { display: flex; gap: 8px; background: var(--bg-input); padding: 6px; border-radius: 12px; margin-bottom: 24px; }
-.auth-tab {
-  flex: 1; padding: 12px; text-align: center; font-weight: 600; font-size: 0.9rem;
-  color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: var(--transition);
-  border: none; background: transparent; outline: none;
-}
-.auth-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-.auth-tab:hover:not(.active) { color: var(--text); }
 
-.divider {
-  display: flex; align-items: center; text-align: center; margin: 24px 0;
-  color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+.auth-tagline
+{
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 6px;
 }
-.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-.divider:not(:empty)::before { margin-right: 16px; }
-.divider:not(:empty)::after { margin-left: 16px; }
+
+.auth-tabs
+{
+    display: flex;
+    gap: 8px;
+    background: var(--bg-input);
+    padding: 6px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.auth-tab
+{
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: var(--transition);
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.auth-tab.active
+{
+    background: var(--bg-card);
+    color: var(--text);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.auth-tab:hover:not(.active)
+{
+    color: var(--text);
+}
+
+.auth-back-link
+{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-back-link a
+{
+    color: var(--primary-light);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+/* ── Responsive adjustments for login ── */
+@media (max-width: 480px) {
+    .auth-wrap {
+        padding: 16px;
+    }
+    .auth-card {
+        padding: 24px 20px;
+    }
+    .auth-logo {
+        margin-bottom: 24px;
+    }
+    .auth-logo h1 {
+        font-size: 1.8rem;
+    }
+    .auth-tab {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+    .form-input {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+}

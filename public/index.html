@@ -2,213 +2,167 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>knowGap | Home</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/home.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>knowGap | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 
 <body>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="container">
-      <a class="navbar-brand" href="/index.html">
-        <span></span> knowGap
-      </a>
-
-      <div class="navbar-menu">
-        <a href="/index.html" class="nav-item active">Home</a>
-        <a href="/about.html" class="nav-item">About</a>
-        <a href="/contact.html" class="nav-item">Contact</a>
-        <a href="/developers.html" class="nav-item">Developers</a>
-      </div>
-
-      <div class="navbar-links" id="home-nav-links"></div>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="hamburger" id="nav-hamburger" aria-label="Toggle menu" onclick="toggleMobileNav()">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Mobile Navigation -->
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
-  <div class="mobile-nav-menu" id="mobile-nav-menu">
-    <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
-    <a href="/index.html" class="nav-item active">🏠 Home</a>
-    <a href="/about.html" class="nav-item">ℹ️ About</a>
-    <a href="/contact.html" class="nav-item">📬 Contact</a>
-    <a href="/developers.html" class="nav-item">👨‍💻 Developers</a>
-    <a href="/login.html" class="nav-item" style="margin-top:16px; background: var(--primary); color: white; text-decoration:none; border-radius:12px;">🚀 Login</a>
-  </div>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-
-    <div class="container">
-    <div class="hero-grid-layout">
-
-      <!-- Left Side -->
-      <div class="hero-content animate-up">
-        <div class="badge badge-info" style="margin-bottom: 16px;">🤖 AI-Powered Learning Analysis</div>
-        <h1 class="hero-title">Discover Your <span class="gradient-text">Learning Gaps</span> Instantly</h1>
-        <p class="hero-sub">
-          knowGap forensically analyzes your test performance using AI to pinpoint exactly where your knowledge gaps are
-          — and builds a personalized study plan to fix them.
-        </p>
-
-        <div class="hero-actions">
-          <button class="btn btn-primary btn-lg" onclick="window.location.href='/login.html'">🚀 Start Your
-            Assessment</button>
-          <button class="btn btn-outline btn-lg"
-            onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See How It Works</button>
-        </div>
-
-        <div style="display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap;">
-          <div>
-            <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
-              500+</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Questions</div>
-          </div>
-          <div>
-            <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
-              AI</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Analysis</div>
-          </div>
-          <div>
-            <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
-              Real-time</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Results</div>
-          </div>
-          <div>
-            <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
-              Free</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Forever</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Side (Visual Cards) -->
-      <div class="hero-visual" style="display: flex; flex-direction: column; gap: 16px;">
-        <div class="floating-card animate-float" style="animation-delay: 0.2s;">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-            <div
-              style="width: 42px; height: 42px; border-radius: 10px; background: rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-              📊</div>
-            <div>
-              <div style="font-weight: 700;">AI Gap Report</div>
-              <div style="font-size: 0.8rem; color: var(--text-secondary);">Mathematics • 25 Questions</div>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">know<span class="brand-accent">Gap</span></a>
+            <div class="navbar-menu">
+                <a href="/index.html" class="nav-item active">Home</a>
+                <a href="/about.html" class="nav-item">About</a>
+                <a href="/contact.html" class="nav-item">Contact</a>
+                <a href="/developers.html" class="nav-item">Developers</a>
             </div>
-          </div>
-          <div style="margin-bottom: 8px; font-size: 0.85rem; color: var(--text-secondary);">Topic Scores</div>
+            <div class="navbar-links" id="home-nav-links"></div>
+            <button class="hamburger" id="nav-hamburger" onclick="toggleMobileNav()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
 
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 0.85rem; width: 70px;">Aptitude</span>
-            <div style="flex: 1; height: 6px; background: var(--bg-input); border-radius: 3px;">
-              <div style="height: 6px; width: 85%; background: var(--success); border-radius: 3px;"></div>
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+        <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
+        <a href="/index.html" class="nav-item active">🏠 Home</a>
+        <a href="/about.html" class="nav-item">ℹ️ About</a>
+        <a href="/contact.html" class="nav-item">📬 Contact</a>
+        <a href="/developers.html" class="nav-item">👨‍💻 Developers</a>
+        <a href="/login.html" class="nav-item mobile-login-btn">🚀 Login</a>
+    </div>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-grid-layout">
+
+                <div class="hero-content animate-up">
+                    <div class="hero-eyebrow">—— AI-POWERED LEARNING</div>
+                    <h1 class="hero-title">Know Your Gaps.<br><i class="hero-title-accent">Fix Them.</i></h1>
+                    <p class="hero-sub">
+                        knowGap forensically analyses your test performance and builds a laser-focused study plan — so you stop guessing and start growing.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-hero-outline" onclick="window.location.href='/login.html'">Start Assessment</button>
+                        <button class="btn btn-hero-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">How It Works</button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">500+</div>
+                            <div class="hero-stat-label">Questions</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">AI</div>
+                            <div class="hero-stat-label">Analysis</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">Real-time</div>
+                            <div class="hero-stat-label">Results</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">Free</div>
+                            <div class="hero-stat-label">Forever</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="floating-card animate-float">
+                        <div class="floating-card-header">
+                            <div class="floating-card-icon">📊</div>
+                            <div>
+                                <div class="floating-card-title">AI Gap Report</div>
+                                <div class="floating-card-sub">Mathematics • 25 Questions</div>
+                            </div>
+                        </div>
+                        <div class="floating-card-label">Topic Scores</div>
+                        <div class="score-row">
+                            <span class="score-topic">Aptitude</span>
+                            <div class="score-bar-bg">
+                                <div class="score-bar-fill success-fill score-85"></div>
+                            </div>
+                            <span class="score-pct success-text">85%</span>
+                        </div>
+                        <div class="score-row">
+                            <span class="score-topic">DSA</span>
+                            <div class="score-bar-bg">
+                                <div class="score-bar-fill danger-fill score-42"></div>
+                            </div>
+                            <span class="score-pct danger-text">42%</span>
+                        </div>
+                    </div>
+
+                    <div class="floating-card glow-card">
+                        <div class="gap-alert-label">🚨 Critical Gap Detected</div>
+                        <div class="gap-alert-title">DSA — Integration</div>
+                        <div class="gap-alert-sub">Study 3 hrs/day for 2 weeks to close this gap</div>
+                        <div class="gap-alert-badges">
+                            <span class="badge badge-danger">Critical</span>
+                            <span class="badge badge-info">Priority #1</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--success);">85%</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 0.85rem; width: 70px;">DSA</span>
-            <div style="flex: 1; height: 6px; background: var(--bg-input); border-radius: 3px;">
-              <div style="height: 6px; width: 42%; background: var(--danger); border-radius: 3px;"></div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="features-header">
+                <div class="features-eyebrow">How It Works</div>
+                <h2>Three steps to clarity</h2>
+                <p class="features-sub">From taking the test to a full personalised study plan — in minutes.</p>
             </div>
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--danger);">42%</span>
-          </div>
+            <div class="grid-3">
+                <div class="card feature-card">
+                    <div class="feature-icon">01</div>
+                    <div class="feature-body">
+                        <h3>Take the Test</h3>
+                        <p>Pick your subject and answer AI-curated questions at your own pace.</p>
+                        <div class="feature-divider"></div>
+                    </div>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">02</div>
+                    <div class="feature-body">
+                        <h3>AI Analysis</h3>
+                        <p>Every wrong answer is mapped to a precise knowledge gap instantly.</p>
+                        <div class="feature-divider"></div>
+                    </div>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">03</div>
+                    <div class="feature-body">
+                        <h3>Get Your Plan</h3>
+                        <p>Receive a forensic report with a week-by-week study schedule.</p>
+                        <div class="feature-divider"></div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="floating-card" style="animation: glow 3s ease-in-out 1s infinite;">
-          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">🚨 Critical Gap Detected
-          </div>
-          <div style="font-weight: 700; margin-bottom: 4px;">DSA — Integration</div>
-          <div style="font-size: 0.85rem; color: var(--text-muted);">Study 3 hrs/day for 2 weeks to close this gap</div>
-          <div style="margin-top: 12px; display: flex; gap: 8px;">
-            <span class="badge badge-danger">Critical</span>
-            <span class="badge badge-info">Priority #1</span>
-          </div>
+    <footer class="main-footer dark-footer">
+        <div class="container footer-inner">
+            <span class="footer-cta-text">Ready to close your <i class="footer-cta-accent">knowledge gaps?</i></span>
+            <button class="btn btn-footer-outline" onclick="window.location.href='/login.html'">Start for Free →</button>
         </div>
-      </div>
-    </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" style="padding: 100px 0; background: var(--bg-card);">
-    <div class="container">
-      <div style="text-align: center; margin-bottom: 60px;">
-        <h2>How <span class="gradient-text">knowGap</span> Works</h2>
-        <p style="color: var(--text-secondary); margin-top: 12px; font-size: 1.05rem;">Three steps to understand your
-          learning gaps completely</p>
-      </div>
-
-      <div class="grid-3">
-        <div class="card" style="text-align: center;">
-          <div class="feature-icon" style="margin: 0 auto 16px;">📝</div>
-          <h3 style="margin-bottom: 12px;">Take the Test</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Choose your subject and answer AI-curated
-            questions.</p>
+        <div class="container footer-inner footer-bottom-row">
+            <span class="navbar-brand footer-brand-white">know<span class="brand-accent">Gap</span></span>
+            <span class="footer-copy footer-copy-dim">IEM Kolkata — knowGap Forensic System</span>
         </div>
-        <div class="card" style="text-align: center;">
-          <div class="feature-icon" style="margin: 0 auto 16px;">🤖</div>
-          <h3 style="margin-bottom: 12px;">AI Analysis</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Our engine maps every wrong answer to a specific
-            knowledge gap.</p>
-        </div>
-        <div class="card" style="text-align: center;">
-          <div class="feature-icon" style="margin: 0 auto 16px;">📈</div>
-          <h3 style="margin-bottom: 12px;">Get Your Plan</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Receive a forensic report and a week-by-week
-            study plan.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- Footer -->
-  <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span
-        style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        knowGap</span>
-      <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata knowGap Forensic System</span>
-    </div>
-  </footer>
-
-  <!-- Basic Page Logic -->
-  <script src="/js/nav.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      initNavigation('home-nav-links');
-    });
-
-    function toggleMobileNav() {
-      const hamburger = document.getElementById('nav-hamburger');
-      const overlay = document.getElementById('mobile-nav-overlay');
-      const menu = document.getElementById('mobile-nav-menu');
-      hamburger.classList.toggle('open');
-      overlay.classList.toggle('open');
-      menu.classList.toggle('open');
-      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-    }
-    function closeMobileNav() {
-      document.getElementById('nav-hamburger').classList.remove('open');
-      document.getElementById('mobile-nav-overlay').classList.remove('open');
-      document.getElementById('mobile-nav-menu').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-  </script>
+    <script src="/js/nav.js"></script>
+    <script src="/js/home.js"></script>
 </body>
 
 </html>
