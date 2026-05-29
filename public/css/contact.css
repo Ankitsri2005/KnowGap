@@ -1,8 +1,7 @@
-.contact-hero { padding: 120px 0 40px; text-align: center; }
-.contact-container {
-  max-width: 600px; margin: 0 auto 60px; padding: 40px;
-  background: var(--bg-card); border-radius: 20px;
-  border: 1px solid var(--border); box-shadow: var(--shadow);
+.contact-hero
+{
+    padding: 120px 0 40px;
+    text-align: center;
 }
 .contact-container:hover { box-shadow: var(--shadow-glow); border-color: var(--border-glow); }
 .contact-group { margin-bottom: 20px; }

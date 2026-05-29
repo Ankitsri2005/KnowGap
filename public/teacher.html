@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
+
 <body>
 
   <!-- Mobile Header (visible only on small screens) -->
@@ -18,8 +20,7 @@
     </button>
   </header>
 
-  <!-- Sidebar Backdrop -->
-  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
   <div class="dashboard-layout">
     <!-- Sidebar -->
@@ -54,13 +55,15 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
-      <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
-    </main>
-  </div>
+        <main class="main-content" id="main-content">
+            <div class="loading-full">
+                <div class="spinner"></div>
+                <p>Loading teacher dashboard...</p>
+            </div>
+        </main>
+    </div>
 
-  <div id="toast-container"></div>
+    <div id="toast-container"></div>
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
@@ -115,4 +118,5 @@
     });
   </script>
 </body>
+
 </html>

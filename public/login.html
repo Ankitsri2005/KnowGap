@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,71 +10,46 @@
   <link rel="stylesheet" href="css/login.css">
   <script src="js/api.js"></script> 
 </head>
+
 <body>
 
-  <div class="auth-wrap">
-    
-    <!-- White glowing card container -->
-    <div class="auth-card animate-up">
-      
-      <div class="auth-logo">
-        <div style="font-size: 2.5rem; margin-bottom: 8px;"></div>
-        <h1 class="gradient-text">knowGap </h1>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px;">AI-Powered Learning Gap Analysis</p>
-      </div>
+    <div class="auth-wrap">
+        <div class="auth-card animate-up">
 
-      <!-- Tab Buttons -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
-        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
-      </div>
+            <div class="auth-logo">
+                <h1 class="navbar-brand">know<span class="brand-accent">Gap</span></h1>
+                <p class="auth-tagline">AI Learning Diagnostics</p>
+            </div>
 
-      <!-- LOGIN FORM -->
-      <div id="form-login">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input id="login-email" type="email" class="form-input" placeholder="you@example.com"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input id="login-password" type="password" class="form-input" placeholder="Your password"/>
-        </div>
-        <button class="btn btn-primary btn-full btn-lg" id="btn-login" onclick="doLogin()">🔐 Login to knowGap</button>
-        
-      </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+            </div>
 
-      <!-- REGISTER FORM -->
-      <div id="form-register" style="display: none;">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input id="reg-name" type="text" class="form-input" placeholder="Your full name"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input id="reg-email" type="email" class="form-input" placeholder="you@example.com"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input id="reg-password" type="password" class="form-input" placeholder="Min 6 characters"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">I am a...</label>
-          <select id="reg-role" class="form-input form-select">
-            <option value="student">👨‍🎓 Student</option>
-            <option value="teacher">👩‍🏫 Teacher</option>
-          </select>
-        </div>
-        <button class="btn btn-primary btn-full btn-lg" id="btn-register" onclick="doRegister()">🚀 Create My Account</button>
-      </div>
+            <div id="form-login">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input id="login-email" type="email" class="form-input" placeholder="you@example.com" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input id="login-password" type="password" class="form-input" placeholder="Your password" />
+                </div>
+                <button class="btn btn-primary btn-full btn-lg" id="btn-login" onclick="doLogin()">🔐 Login to knowGap</button>
+            </div>
 
       <p style="text-align: center; margin-top: 20px;">
         <a href="index.html" style="color: var(--primary); text-decoration: none; font-size: 0.85rem;">← Back to Home</a>
       </p>
 
-    </div>
-  </div>
+            <p class="auth-back-link">
+                <a href="/index.html">← Back to Home</a>
+            </p>
 
-  <div id="toast-container"></div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
 
   <!-- Traditional page logic scripts -->
   <script>
@@ -152,4 +128,5 @@
     }
   </script>
 </body>
+
 </html>
