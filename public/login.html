@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knowGap | Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <script src="/js/api.js"></script> 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/login.css">
+  <script src="js/api.js"></script> 
 </head>
 <body>
 
@@ -67,7 +67,7 @@
       </div>
 
       <p style="text-align: center; margin-top: 20px;">
-        <a href="/index.html" style="color: var(--primary-light); text-decoration: none; font-size: 0.85rem;">← Back to Home</a>
+        <a href="index.html" style="color: var(--primary); text-decoration: none; font-size: 0.85rem;">← Back to Home</a>
       </p>
 
     </div>
@@ -109,9 +109,11 @@
         // Save the details to browser memory
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
+
+        console.log(113, res)
         
         // Redirect standard HTML link!
-        window.location.href = (res.user.role === 'teacher') ? '/teacher.html' : '/student.html';
+        window.location.href = (res.user.role === 'teacher') ? 'teacher.html' : 'student.html';
         
       } catch (e) {
         alert("Error: " + e.message);
@@ -141,7 +143,7 @@
         localStorage.setItem('token', res.token);
         
         // Redirect standard HTML link!
-        window.location.href = (res.user.role === 'teacher') ? '/teacher.html' : '/student.html';
+        window.location.href = (res.user.role === 'teacher') ? 'teacher.html' : 'student.html';
       } catch (e) {
         alert("Error: " + e.message);
         btn.disabled = false;

@@ -1,40 +1,87 @@
-require('dotenv').config();
 const express = require('express');
+const dotenv = require('dotenv');
 const cors = require('cors');
-const path = require('path');
-const db = require('./database/db');
+
+const connectDB = require('./config/db');
+
+dotenv.config();
+
+connectDB();
 
 const app = express();
 
+
+// Middleware
 app.use(cors());
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve Frontend
+app.use(express.static('public'));
+
+app.use(express.urlencoded({
+  extended: true
+}));
+
+
+// Route Imports
+const authRoutes =
+  require('./routes/auth');
+
+const subjectRoutes =
+  require('./routes/subjects');
+
+const questionRoutes =
+  require('./routes/questions');
+
+const teacherRoutes =
+  require('./routes/teacher');
+
+const testRoutes =
+  require('./routes/tests');
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/subjects', require('./routes/subjects'));
-app.use('/api/questions', require('./routes/questions'));
-app.use('/api/tests', require('./routes/tests'));
-app.use('/api/teacher', require('./routes/teacher'));
+app.use('/api/auth', authRoutes);
 
+app.use('/api/subjects', subjectRoutes);
+
+app.use('/api/questions', questionRoutes);
+
+app.use('/api/teacher', teacherRoutes);
+
+app.use('/api/tests', testRoutes);
+
+
+
+// Default Route — index.html is served by express.static above
+
+
+// 404 Route
+app.use((req, res) => {
+
+  res.status(404).json({
+    error: 'Route not found'
+  });
+});
+
+
+// Error Handler
+app.use((err, req, res, next) => {
+
+  console.error(err.stack);
+
+  res.status(500).json({
+    error: 'Server Error'
+  });
+});
+
+
+// Start Server
 const PORT = process.env.PORT || 3000;
 
-// Initialize DB tables first, then start server
-db.initDB().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n knowGap Server running at http://localhost:${PORT}`);
-    
-    // Seed after tables are ready
-    try {
-      const seed = require('./database/seed.js');
-      if (typeof seed === 'function') {
-        seed();
-      }
-    } catch (err) {
-      console.error("Failed to run seed script:", err.message);
-    }
-  });
-}).catch(err => {
-  console.error('Failed to initialize database:', err.message);
-  process.exit(1);
+app.listen(PORT, () => {
+
+  console.log(
+    `Server running on http://localhost:${PORT}`
+  );
 });

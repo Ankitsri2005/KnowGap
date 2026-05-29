@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knowGap | Teacher Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 
   <!-- Mobile Header (visible only on small screens) -->
   <header class="mobile-header" id="mobile-header">
-    <div class="mobile-header-logo" onclick="window.location.href='/index.html'">knowGap</div>
+    <div class="mobile-header-logo" onclick="window.location.href='index.html'">knowGap</div>
     <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
       <span></span><span></span><span></span>
     </button>
@@ -24,14 +24,29 @@
   <div class="dashboard-layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo" onclick="window.location.href='/index.html'">knowGap</div>
+      <div class="sidebar-logo" onclick="window.location.href='index.html'">knowGap</div>
       <div class="sidebar-section">Teacher Menu</div>
       
-      <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
+      <button class="sidebar-link active" id="nav-overview" onclick="navTo('overview')">
         <span class="icon">📊</span> Class Overview
       </button>
-      
-      <div class="sidebar-spacer"></div>
+
+      <button class="sidebar-link" id="nav-classroom" onclick="navTo('classroom')">
+        <span class="icon">🏫</span> My Classroom
+      </button>
+
+      <button class="sidebar-link" id="nav-students" onclick="navTo('students')">
+        <span class="icon">👨‍🎓</span> Students
+      </button>
+
+      <button class="sidebar-link" id="nav-questions" onclick="navTo('questions')">
+        <span class="icon">❓</span> Question Bank
+      </button>
+
+      <button class="sidebar-link" id="nav-subjects" onclick="navTo('subjects')">
+        <span class="icon">📚</span> Manage Subjects
+      </button>
+
       <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
         <div id="teacher-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
         <div style="font-size: 0.75rem; color: var(--text-muted);">Teacher Account</div>
@@ -48,13 +63,13 @@
   <div id="toast-container"></div>
 
   <!-- Scripts -->
-  <script src="/js/api.js"></script>
-  <script src="/js/teacher.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/teacher.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     
     if (!user || user.role !== 'teacher') {
-      window.location.href = "/login.html";
+      window.location.href = "login.html";
     } else {
       document.getElementById('teacher-name').innerText = user.name;
     }
@@ -62,7 +77,7 @@
     function logout() {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      window.location.href = "/login.html";
+      window.location.href = "login.html";
     }
 
     function toggleSidebar() {
@@ -79,6 +94,20 @@
       document.getElementById('sidebar-backdrop').classList.remove('open');
       document.getElementById('mob-hamburger').classList.remove('open');
       document.body.style.overflow = '';
+    }
+
+    function navTo(page) {
+      // Update active nav
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      const btn = document.getElementById('nav-' + page);
+      if (btn) btn.classList.add('active');
+      closeSidebar();
+
+      if (page === 'overview') renderTeacher();
+      else if (page === 'classroom') renderClassroom();
+      else if (page === 'students') renderTeacherStudents();
+      else if (page === 'questions') renderQuestionBank();
+      else if (page === 'subjects') renderManageSubjects();
     }
 
     document.addEventListener("DOMContentLoaded", () => {

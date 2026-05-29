@@ -1,6 +1,6 @@
 /* ── API & Utility Layer ── */
 const API = {
-  base: '/api',
+  base: 'http://localhost:3000/api',
   token: () => localStorage.getItem('token'),
 
   async req(method, path, body) {
@@ -50,6 +50,16 @@ const API = {
     student: (id) => API.get(`/teacher/students/${id}`),
     subjectStats: () => API.get('/teacher/stats/subjects'),
     distribution: () => API.get('/teacher/stats/distribution')
+  },
+  classroom: {
+    list: () => API.get('/classroom'),
+    get: (id) => API.get(`/classroom/${id}`),
+    create: (b) => API.post('/classroom', b),
+    addStudent: (id, b) => API.post(`/classroom/${id}/students`, b),
+    removeStudent: (id, sid) => API.delete(`/classroom/${id}/students/${sid}`),
+    addSubject: (id, b) => API.post(`/classroom/${id}/subjects`, b),
+    removeSubject: (id, sid) => API.delete(`/classroom/${id}/subjects/${sid}`),
+    my: () => API.get('/classroom/my/info')
   }
 };
 
@@ -68,15 +78,15 @@ const State = {
 const Router = {
   go(page, params = {}) {
     let url = '/';
-    if (page === 'home') url = '/index.html';
-    else if (page === 'auth') url = '/login.html';
-    else if (page === 'student') url = '/student.html';
-    else if (page === 'teacher') url = '/teacher.html';
+    if (page === 'home') url = 'index.html';
+    else if (page === 'auth') url = 'login.html';
+    else if (page === 'student') url = 'student.html';
+    else if (page === 'teacher') url = 'teacher.html';
     else if (page === 'taketest') {
       url = `/taketest.html?subjectId=${params.subjectId}&subjectName=${params.subjectName}`;
     }
     else if (page === 'results') {
-      url = `/results.html?sessionId=${params.sessionId}`;
+      url = `results.html?sessionId=${params.sessionId}`;
     }
     window.location.href = url;
   }

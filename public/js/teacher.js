@@ -48,15 +48,23 @@ async function renderTeacher() {
           </div>
           ${data.recentTests.length === 0 ? '<div class="empty-state" style="padding:30px"><div class="empty-icon">📭</div><p>No tests yet</p></div>' :
             `<table class="table">
-              <thead><tr><th>Student</th><th>Subject</th><th>Score</th><th>Date</th></tr></thead>
-              <tbody>${data.recentTests.map(t => `
+              <thead><tr><th>Student</th><th>Subject</th><th>Score</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody>${data.recentTests.map(t => {
+                const sName = t.student_id?.name || 'Student';
+                const subjName = t.subject_id?.name || 'Subject';
+                return `
                 <tr>
-                  <td><strong>${t.student_name}</strong></td>
-                  <td>${t.subject_name}</td>
+                  <td><strong>${sName}</strong></td>
+                  <td>${subjName}</td>
                   <td><span style="font-weight:700;color:${scoreColor(t.score_percentage)}">${Math.round(t.score_percentage)}%</span></td>
                   <td style="color:var(--text-muted)">${timeAgo(t.completed_at)}</td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="window.location.href='results.html?sessionId=${t._id}'" style="padding:4px 8px;font-size:0.75rem;">
+                      View Gaps
+                    </button>
+                  </td>
                 </tr>
-              `).join('')}</tbody>
+              `}).join('')}</tbody>
             </table>`}
         </div>
 
@@ -68,16 +76,21 @@ async function renderTeacher() {
           ${data.criticalStudents.length === 0 ?
             '<div class="empty-state" style="padding:30px"><div class="empty-icon">✅</div><p>No critical students!</p></div>' :
             `<div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-              ${data.criticalStudents.map(s => `
-                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px">
-                  <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--danger)">${s.name[0]}</div>
-                  <div style="flex:1">
-                    <div style="font-weight:600;font-size:.9rem">${s.name}</div>
-                    <div style="font-size:.75rem;color:var(--text-muted)">${s.subject_name}</div>
+              ${data.criticalStudents.map(s => {
+                const sName = s.student_id?.name || 'Student';
+                const subjName = s.subject_id?.name || 'Subject';
+                return `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;cursor:pointer" onclick="viewStudent('${s.student_id?._id || s.student_id}', '${sName.replace(/'/g, "\\'")}')">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--danger)">${sName[0]}</div>
+                    <div>
+                      <div style="font-weight:600;font-size:.9rem;color:var(--text)">${sName}</div>
+                      <div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${subjName}</div>
+                    </div>
                   </div>
-                  <span style="color:var(--danger);font-weight:800">${Math.round(s.overall_score)}%</span>
+                  <span style="color:var(--danger);font-weight:800;font-size:1rem">${Math.round(s.overall_score)}%</span>
                 </div>
-              `).join('')}
+              `}).join('')}
             </div>`}
         </div>
       </div>`;
@@ -102,7 +115,7 @@ async function renderTeacherStudents() {
               <tr data-name="${s.name.toLowerCase()}">
                 <td>
                   <div style="display:flex;align-items:center;gap:10px">
-                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">${s.name[0]}</div>
+                    <div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">${s.name[0]}</div>
                     <strong>${s.name}</strong>
                   </div>
                 </td>
@@ -140,18 +153,23 @@ window.viewStudent = async function(id, name) {
           ${tests.map(t => `
             <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
               <div>
-                <div style="font-weight:700">${t.subject_name}</div>
-                <div style="font-size:.85rem;color:var(--text-muted)">${timeAgo(t.completed_at)} · ${t.total_questions} questions</div>
-                ${t.priority_topics ? (() => {
-                  try { const pt = JSON.parse(t.priority_topics); return pt.length ? `<div style="margin-top:6px;font-size:.8rem;color:var(--danger)">⚠ Gaps: ${pt.slice(0,2).map(p=>p.name).join(', ')}</div>` : ''; } catch { return ''; }
-                })() : ''}
+                <div style="font-weight:700;font-size:1.1rem;color:var(--text)">${t.subject_name}</div>
+                <div style="font-size:.85rem;color:var(--text-muted);margin-top:4px">${timeAgo(t.completed_at)} · ${t.total_questions} questions</div>
+                ${t.priority_topics && t.priority_topics.length ? `
+                  <div style="margin-top:8px;font-size:.8rem;color:#ef4444;font-weight:600">
+                    ⚠ Gaps: ${t.priority_topics.slice(0,3).map(p => p.name).join(', ')}
+                  </div>
+                ` : ''}
               </div>
-              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
                 <div style="text-align:center">
                   <div style="font-size:1.8rem;font-weight:800;color:${scoreColor(t.overall_score||0)}">${t.overall_score||0}%</div>
                   <div style="font-size:.75rem;color:var(--text-muted)">Score</div>
                 </div>
-                <span class="badge ${scoreBadge(t.overall_score||0)}">${t.performance_level||'N/A'}</span>
+                <span class="badge ${scoreBadge(t.overall_score||0)}" style="padding:6px 12px;border-radius:6px">${t.performance_level||'N/A'}</span>
+                <button class="btn btn-secondary btn-sm" onclick="window.location.href='results.html?sessionId=${t._id}'" style="display:flex;align-items:center;gap:6px">
+                  🤖 View AI Report
+                </button>
               </div>
             </div>
           `).join('')}

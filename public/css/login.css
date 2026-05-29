@@ -1,13 +1,12 @@
 
-
 .auth-wrap {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 60%), var(--bg-dark);
+  background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(var(--primary-rgb), 0.08) 0%, transparent 60%), var(--bg-dark);
   padding: 24px;
 }
 .auth-card {
-  width: 100%; max-width: 440px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
-  border: 1px solid rgba(0,0,0,0.05); border-radius: var(--radius-lg);
+  width: 100%; max-width: 440px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
   padding: 40px; box-shadow: var(--shadow);
 }
 .auth-logo { text-align: center; margin-bottom: 32px; }
@@ -17,7 +16,7 @@
   color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: var(--transition);
   border: none; background: transparent; outline: none;
 }
-.auth-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.auth-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 2px 8px rgba(17, 24, 39, 0.08); }
 .auth-tab:hover:not(.active) { color: var(--text); }
 
 .divider {

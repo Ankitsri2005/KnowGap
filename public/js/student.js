@@ -48,8 +48,8 @@ async function renderStudent() {
       <div class="grid-3" style="margin-bottom:40px">
         ${subjects.length === 0 ? '<div class="empty-state"><div class="empty-icon">📭</div><p>No subjects available yet. Ask your teacher to add some!</p></div>' :
           subjects.map(s => `
-          <div class="card" style="cursor:pointer;position:relative;overflow:hidden" onclick="window.location.href='/taketest.html?subjectId=${s.id}&subjectName=${s.name}'">
-            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary))"></div>
+          <div class="card" style="cursor:pointer;position:relative;overflow:hidden" onclick="window.location.href='taketest.html?subjectId=${s._id}&subjectName=${s.name}'">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary-light))"></div>
             <div style="font-size:2rem;margin-bottom:12px">${subjectIcon(s.name)}</div>
             <h3 style="margin-bottom:8px">${s.name}</h3>
             <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:16px">${s.description || 'Challenge yourself!'}</p>
@@ -77,7 +77,7 @@ async function renderStudent() {
                   <td><span class="badge ${scoreBadge(t.overall_score || 0)}">${t.performance_level || 'N/A'}</span></td>
                   <td>${t.correct_answers}/${t.total_questions}</td>
                   <td style="color:var(--text-muted)">${timeAgo(t.completed_at)}</td>
-                  <td><button class="btn btn-secondary btn-sm" onclick="window.location.href='/results.html?sessionId=${t.id}'">View Report</button></td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="window.location.href='results.html?sessionId=${t.id}'">View Report</button></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -98,7 +98,7 @@ async function renderStudentHistory() {
     const history = await API.tests.history();
     app.innerHTML = `
       <h2 style="margin-bottom:24px">📈 My Test History</h2>
-      ${history.length === 0 ? `<div class="empty-state"><div class="empty-icon">📭</div><p>No tests taken yet. <a href="#" onclick="renderStudent()" style="color:var(--primary-light)">Take your first test!</a></p></div>` : `
+      ${history.length === 0 ? `<div class="empty-state"><div class="empty-icon">📭</div><p>No tests taken yet. <a href="#" onclick="renderStudent()" style="color:var(--primary)">Take your first test!</a></p></div>` : `
         <div style="display:flex;flex-direction:column;gap:16px">
           ${history.map(t => `
             <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
@@ -112,7 +112,7 @@ async function renderStudentHistory() {
                   <div style="font-size:.75rem;color:var(--text-muted)">Score</div>
                 </div>
                 <span class="badge ${scoreBadge(t.overall_score||0)}">${t.performance_level||'N/A'}</span>
-                <button class="btn btn-primary btn-sm" onclick="window.location.href='/results.html?sessionId=${t.id}'">View AI Report →</button>
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='results.html?sessionId=${t.id}'">View AI Report →</button>
               </div>
             </div>
           `).join('')}

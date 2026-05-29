@@ -1,83 +1,268 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const db = require('../database/db');
+
+const Subject = require('../models/Subject');
+const Topic = require('../models/Topic');
+const Question = require('../models/Question');
+
+const {auth, teacherOnly} = require('../middleware/authMiddleware');
+
 const router = express.Router();
 
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  try { req.user = jwt.verify(token, process.env.JWT_SECRET); next(); }
-  catch { res.status(401).json({ error: 'Invalid token' }); }
-}
-function teacherOnly(req, res, next) {
-  if (req.user.role !== 'teacher') return res.status(403).json({ error: 'Teachers only' });
-  next();
-}
-
-// Get all subjects
+// ==========================
+// GET ALL SUBJECTS
+// ==========================
 router.get('/', auth, async (req, res) => {
+
   try {
-    const result = await db.query(`SELECT s.*, u.name as teacher_name,
-      (SELECT COUNT(*) FROM topics t WHERE t.subject_id = s.id) as topic_count,
-      (SELECT COUNT(*) FROM questions q WHERE q.subject_id = s.id) as question_count
-      FROM subjects s LEFT JOIN users u ON s.created_by = u.id
-      ORDER BY s.name`);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    const subjects = await Subject.find()
+      .populate('created_by', 'name')
+      .lean();
+
+    // Add topic count & question count
+    const updatedSubjects = await Promise.all(
+
+      subjects.map(async (subject) => {
+
+        const topic_count = await Topic.countDocuments({
+          subject_id: subject._id
+        });
+
+        const question_count = await Question.countDocuments({
+          subject_id: subject._id
+        });
+
+        return {
+          ...subject,
+          teacher_name: subject.created_by?.name || 'Unknown',
+          topic_count,
+          question_count
+        };
+      })
+    );
+
+    res.json(updatedSubjects);
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
-// Create subject (teacher)
+// ==========================
+// CREATE SUBJECT
+// ==========================
 router.post('/', auth, teacherOnly, async (req, res) => {
-  const { name, description } = req.body;
-  if (!name) return res.status(400).json({ error: 'Subject name required' });
+
   try {
-    const result = await db.query(
-      `INSERT INTO subjects (name, description, created_by) VALUES ($1, $2, $3) RETURNING id`,
-      [name, description, req.user.id]
-    );
-    res.json({ id: result.rows[0].id, name, description });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to create subject' });
+
+    const {
+      name,
+      description
+    } = req.body;
+
+    if (!name) {
+
+      return res.status(400).json({
+        error: 'Subject name required'
+      });
+    }
+
+    const existingSubject = await Subject.findOne({ name });
+
+    if (existingSubject) {
+
+      return res.status(409).json({
+        error: 'Subject already exists'
+      });
+    }
+
+    const subject = await Subject.create({
+      name,
+      description,
+      created_by: req.user.id
+    });
+
+    res.status(201).json({
+      id: subject._id,
+      name: subject.name,
+      description: subject.description
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: 'Failed to create subject'
+    });
   }
 });
 
-// Get topics for a subject
+router.post('/bulksubjects', auth, teacherOnly, async (req, res) => {
+
+  try {
+
+    const subjects = req.body;
+
+    // Check if body is array
+    if (!Array.isArray(subjects) || subjects.length === 0) {
+
+      return res.status(400).json({
+        error: 'Please provide an array of subjects'
+      });
+    }
+
+    // Check empty names
+    for (const subject of subjects) {
+
+      if (!subject.name) {
+
+        return res.status(400).json({
+          error: 'Subject name required'
+        });
+      }
+    }
+
+    // Get all subject names
+    const subjectNames = subjects.map(subject => subject.name);
+
+    // Check duplicates in database
+    const existingSubjects = await Subject.find({
+      name: { $in: subjectNames }
+    });
+
+    if (existingSubjects.length > 0) {
+
+      return res.status(409).json({
+        error: 'Some subjects already exist',
+        existing: existingSubjects.map(sub => sub.name)
+      });
+    }
+
+    // Prepare data
+    const subjectData = subjects.map(subject => ({
+      name: subject.name,
+      description: subject.description,
+      created_by: req.user.id
+    }));
+
+    // Insert multiple subjects
+    const savedSubjects = await Subject.insertMany(subjectData);
+
+    res.status(201).json({
+      message: 'Subjects added successfully',
+      subjects: savedSubjects
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: 'Failed to create subjects'
+    });
+  }
+});
+
+// ==========================
+// GET TOPICS OF SUBJECT
+// ==========================
 router.get('/:id/topics', auth, async (req, res) => {
+
   try {
-    const result = await db.query(
-      `SELECT t.*, (SELECT COUNT(*) FROM questions q WHERE q.topic_id = t.id) as question_count
-      FROM topics t WHERE t.subject_id = $1`, [req.params.id]
+
+    const topics = await Topic.find({
+      subject_id: req.params.id
+    }).lean();
+
+    const updatedTopics = await Promise.all(
+
+      topics.map(async (topic) => {
+
+        const question_count = await Question.countDocuments({
+          topic_id: topic._id
+        });
+
+        return {
+          ...topic,
+          question_count
+        };
+      })
     );
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.json(updatedTopics);
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
-// Add topic (teacher)
+// ==========================
+// ADD TOPIC
+// ==========================
 router.post('/:id/topics', auth, teacherOnly, async (req, res) => {
-  const { name } = req.body;
-  if (!name) return res.status(400).json({ error: 'Topic name required' });
+
   try {
-    const result = await db.query(
-      `INSERT INTO topics (name, subject_id) VALUES ($1, $2) RETURNING id`,
-      [name, req.params.id]
-    );
-    res.json({ id: result.rows[0].id, name, subject_id: req.params.id });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to create topic' });
+
+    const { name } = req.body;
+
+    if (!name) {
+
+      return res.status(400).json({
+        error: 'Topic name required'
+      });
+    }
+
+    const topic = await Topic.create({
+      name,
+      subject_id: req.params.id
+    });
+
+    res.status(201).json({
+      id: topic._id,
+      name: topic.name,
+      subject_id: topic.subject_id
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: 'Failed to create topic'
+    });
   }
 });
 
-// Delete subject (teacher)
+// ==========================
+// DELETE SUBJECT
+// ==========================
 router.delete('/:id', auth, teacherOnly, async (req, res) => {
+
   try {
-    await db.query(`DELETE FROM subjects WHERE id = $1`, [req.params.id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    // Delete subject
+    await Subject.findByIdAndDelete(req.params.id);
+
+    // Delete related topics
+    await Topic.deleteMany({
+      subject_id: req.params.id
+    });
+
+    // Delete related questions
+    await Question.deleteMany({
+      subject_id: req.params.id
+    });
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 

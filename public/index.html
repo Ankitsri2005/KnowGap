@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knowGap | Home</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/home.css">
 </head>
 
 <body>
@@ -17,15 +17,15 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="container">
-      <a class="navbar-brand" href="/index.html">
+      <a class="navbar-brand" href="index.html">
         <span></span> knowGap
       </a>
 
       <div class="navbar-menu">
-        <a href="/index.html" class="nav-item active">Home</a>
-        <a href="/about.html" class="nav-item">About</a>
-        <a href="/contact.html" class="nav-item">Contact</a>
-        <a href="/developers.html" class="nav-item">Developers</a>
+        <a href="index.html" class="nav-item active">Home</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+        <a href="developers.html" class="nav-item">Developers</a>
       </div>
 
       <div class="navbar-links" id="home-nav-links"></div>
@@ -41,11 +41,11 @@
   <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
   <div class="mobile-nav-menu" id="mobile-nav-menu">
     <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
-    <a href="/index.html" class="nav-item active">🏠 Home</a>
-    <a href="/about.html" class="nav-item">ℹ️ About</a>
-    <a href="/contact.html" class="nav-item">📬 Contact</a>
-    <a href="/developers.html" class="nav-item">👨‍💻 Developers</a>
-    <a href="/login.html" class="nav-item" style="margin-top:16px; background: var(--primary); color: white; text-decoration:none; border-radius:12px;">🚀 Login</a>
+    <a href="index.html" class="nav-item active">🏠 Home</a>
+    <a href="about.html" class="nav-item">ℹ️ About</a>
+    <a href="contact.html" class="nav-item">📬 Contact</a>
+    <a href="developers.html" class="nav-item">👨‍💻 Developers</a>
+    <a href="public/login.html" class="nav-item" style="margin-top:16px; background: var(--primary); color: white; text-decoration:none; border-radius:12px;">🚀 Login</a>
   </div>
 
   <!-- Hero Section -->
@@ -65,7 +65,7 @@
         </p>
 
         <div class="hero-actions">
-          <button class="btn btn-primary btn-lg" onclick="window.location.href='/login.html'">🚀 Start Your
+          <button class="btn btn-primary btn-lg" onclick="window.location.href='login.html'">🚀 Start Your
             Assessment</button>
           <button class="btn btn-outline btn-lg"
             onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See How It Works</button>
@@ -74,25 +74,25 @@
         <div style="display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap;">
           <div>
             <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Playfair Display', Georgia, serif; color: var(--primary);">
               500+</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Questions</div>
           </div>
           <div>
             <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Playfair Display', Georgia, serif; color: var(--primary);">
               AI</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Analysis</div>
           </div>
           <div>
             <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Playfair Display', Georgia, serif; color: var(--primary);">
               Real-time</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Results</div>
           </div>
           <div>
             <div
-              style="font-size: 1.4rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary-light);">
+              style="font-size: 1.4rem; font-weight: 800; font-family: 'Playfair Display', Georgia, serif; color: var(--primary);">
               Free</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Forever</div>
           </div>
@@ -104,7 +104,7 @@
         <div class="floating-card animate-float" style="animation-delay: 0.2s;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
             <div
-              style="width: 42px; height: 42px; border-radius: 10px; background: rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+              style="width: 42px; height: 42px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
               📊</div>
             <div>
               <div style="font-weight: 700;">AI Gap Report</div>
@@ -180,14 +180,14 @@
   <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
     <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
       <span
-        style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; color: var(--primary);">
         knowGap</span>
       <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata knowGap Forensic System</span>
     </div>
   </footer>
 
   <!-- Basic Page Logic -->
-  <script src="/js/nav.js"></script>
+  <script src="js/nav.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       initNavigation('home-nav-links');
