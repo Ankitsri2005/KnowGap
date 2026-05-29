@@ -1,6 +1,6 @@
 /* ── API & Utility Layer ── */
 const API = {
-  base: 'http://localhost:3000/api',
+  base: '/api',
   token: () => localStorage.getItem('token'),
 
     async req(method, path, body)
