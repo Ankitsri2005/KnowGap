@@ -52,16 +52,18 @@ function renderTopicSelection(topics, subjectId, subjectName) {
         <p style="color:var(--text-secondary);margin-top:8px">Select topics to include in your test (select all for full assessment)</p>
       </div>
       <div id="topic-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
-        ${topics.map(t => `
-          <label style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s" id="tl-${t.id}">
-            <input type="checkbox" id="topic-${t.id}" value="${t.id}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic('${t.id}',this)" checked/>
+        ${topics.map(t => {
+          const tid = t.id || t._id;
+          return `
+          <label style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s" id="tl-${tid}">
+            <input type="checkbox" id="topic-${tid}" value="${tid}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic('${tid}',this)" checked/>
             <div style="flex:1">
               <div style="font-weight:600">${t.name}</div>
               <div style="font-size:.8rem;color:var(--text-muted)">${t.question_count} questions available</div>
             </div>
             <span class="badge badge-info">${t.question_count} Q</span>
-          </label>
-        `).join('')}
+          </label>`;
+        }).join('')}
       </div>
       <div style="margin-bottom:20px">
         <label class="form-label">Number of Questions: <strong id="q-count-label">20</strong></label>
@@ -70,7 +72,7 @@ function renderTopicSelection(topics, subjectId, subjectName) {
       <button class="btn btn-primary btn-full btn-lg" onclick="startTest('${subjectId}')">🚀 Start Test →</button>
     </div>`;
 
-  topics.forEach(t => selected.add(t.id));
+  topics.forEach(t => selected.add(String(t.id || t._id)));
   window._selectedTopics = selected;
 }
 
@@ -88,7 +90,6 @@ window.toggleTopic = function (id, cb) {
 };
 
 async function startTest(subjectId) {
-  console.log(91, subjectId)
   const topics = Array.from(window._selectedTopics || []);
   if (!topics.length) return toast('Select at least one topic', 'error');
   const limit = document.getElementById('q-count')?.value || 20;

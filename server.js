@@ -125,7 +125,11 @@ const startServer = async () => {
       const result = await seedIfEmpty();
       if (result.seeded) {
         console.log(
-          `Seeded ${result.subjectCount} subjects (empty database on startup).`
+          `Seeded ${result.subjectCount} subjects, ${result.questionCount} questions.`
+        );
+      } else if (result.upgraded) {
+        console.log(
+          `Upgraded ${result.questionCount} placeholder questions to the curated bank.`
         );
       }
     }

@@ -186,8 +186,11 @@ router.get('/:id/topics', auth, async (req, res) => {
         });
 
         return {
-          ...topic,
-          question_count
+          id: topic._id.toString(),
+          _id: topic._id,
+          name: topic.name,
+          subject_id: topic.subject_id,
+          question_count,
         };
       })
     );

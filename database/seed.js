@@ -31,9 +31,9 @@ async function seedDatabase() {
     const teacher = await ensureSeedTeacher();
     console.log('Using teacher:', teacher.email);
 
-    await createSubjectsAndQuestions(teacher._id);
+    const { subjects, questions } = await createSubjectsAndQuestions(teacher._id);
 
-    console.log('Database seeded successfully');
+    console.log(`Database seeded: ${subjects} subjects, ${questions} questions`);
     process.exit(0);
   } catch (error) {
     console.error(error);
