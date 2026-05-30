@@ -6,23 +6,21 @@
   <title>About | knowGap</title>
   <meta name="description" content="Learn about knowGap's mission to forensically identify learning gaps using AI-powered analysis.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet" href="/css/about.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/about.css">
 </head>
 <body>
 
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="container">
-      <a class="navbar-brand" href="/index.html">
-        <span></span> knowGap
-      </a>
+      <a class="navbar-brand" href="index.html">know<span class="brand-accent">Gap</span></a>
       <div class="navbar-menu">
-        <a href="/index.html" class="nav-item">Home</a>
-        <a href="/about.html" class="nav-item active">About</a>
-        <a href="/contact.html" class="nav-item">Contact</a>
-        <a href="/developers.html" class="nav-item">Developers</a>
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="about.html" class="nav-item active">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+        <a href="developers.html" class="nav-item">Developers</a>
       </div>
       <div class="navbar-links" id="about-nav-links"></div>
     </div>
@@ -102,17 +100,18 @@
   </section>
 
   <!-- Footer -->
-  <footer style="padding: 32px 0; border-top: 1px solid var(--border); background: var(--bg-card);">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> knowGap</span>
-      <span style="color: var(--text-muted); font-size: 0.85rem;">IEM kolkata knowGap Forensic System</span>
+  <footer class="site-footer">
+    <div class="container">
+      <span class="site-footer-brand">know<span class="brand-accent">Gap</span></span>
+      <span class="site-footer-copy">IEM kolkata knowGap Forensic System</span>
     </div>
   </footer>
 
-  <script src="/js/nav.js"></script>
+  <script src="js/mobile-nav.js"></script>
+  <script src="js/nav.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      initNavigation('about-nav-links');
+    document.addEventListener('DOMContentLoaded', function () {
+      initSiteNav({ navContainerId: 'about-nav-links', activePage: 'about' });
     });
   </script>
 </body>

@@ -1,40 +1,101 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
 const path = require('path');
-const db = require('./database/db');
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+const connectDB = require('./config/db');
+const { validateEnv } = require('./config/env');
+
+dotenv.config();
+validateEnv();
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
-app.use(cors());
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
+function getCorsOptions() {
+  const allowed = process.env.ALLOWED_ORIGINS
+    ?.split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  if (!allowed?.length) {
+    return { origin: true };
+  }
+
+  return {
+    origin(origin, callback) {
+      if (!origin || allowed.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+  };
+}
+
+app.use(cors(getCorsOptions()));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    uptime: process.uptime(),
+  });
+});
+
+const authRoutes = require('./routes/auth');
+const subjectRoutes = require('./routes/subjects');
+const questionRoutes = require('./routes/questions');
+const teacherRoutes = require('./routes/teacher');
+const testRoutes = require('./routes/tests');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/teacher', teacherRoutes);
+app.use('/api/tests', testRoutes);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/subjects', require('./routes/subjects'));
-app.use('/api/questions', require('./routes/questions'));
-app.use('/api/tests', require('./routes/tests'));
-app.use('/api/teacher', require('./routes/teacher'));
-
-const PORT = process.env.PORT || 3000;
-
-// Initialize DB tables first, then start server
-db.initDB().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n knowGap Server running at http://localhost:${PORT}`);
-    
-    // Seed after tables are ready
-    try {
-      const seed = require('./database/seed.js');
-      if (typeof seed === 'function') {
-        seed();
-      }
-    } catch (err) {
-      console.error("Failed to run seed script:", err.message);
-    }
-  });
-}).catch(err => {
-  console.error('Failed to initialize database:', err.message);
-  process.exit(1);
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Route not found' });
+  }
+  res.status(404).send('Page not found');
 });
+
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ error: 'CORS not allowed' });
+  }
+
+  if (isProduction) {
+    console.error(err.message);
+  } else {
+    console.error(err.stack);
+  }
+
+  res.status(500).json({ error: 'Server Error' });
+});
+
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
+  try {
+    await connectDB();
+  } catch (error) {
+    console.error('MongoDB connection failed:', error.message);
+    process.exit(1);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} (${isProduction ? 'production' : 'development'})`);
+  });
+};
+
+startServer();

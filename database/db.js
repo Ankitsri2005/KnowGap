@@ -1,9 +1,13 @@
+/**
+ * @deprecated Legacy PostgreSQL helper — the app uses MongoDB (config/db.js + Mongoose).
+ * Not imported by server.js. Install `pg` locally only if you still need this script.
+ */
 const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: { rejectUnauthorized: false }
 });
 
 // Initialize tables

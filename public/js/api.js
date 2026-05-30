@@ -1,6 +1,9 @@
 /* ── API & Utility Layer ── */
 const API = {
-  base: '/api',
+  // Same-origin in production; override via window.API_BASE_URL if needed
+  base: (typeof window !== 'undefined' && window.API_BASE_URL)
+    ? String(window.API_BASE_URL).replace(/\/$/, '')
+    : '/api',
   token: () => localStorage.getItem('token'),
 
   async req(method, path, body) {
@@ -68,15 +71,15 @@ const State = {
 const Router = {
   go(page, params = {}) {
     let url = '/';
-    if (page === 'home') url = '/index.html';
-    else if (page === 'auth') url = '/login.html';
-    else if (page === 'student') url = '/student.html';
-    else if (page === 'teacher') url = '/teacher.html';
+    if (page === 'home') url = 'index.html';
+    else if (page === 'auth') url = 'login.html';
+    else if (page === 'student') url = 'student.html';
+    else if (page === 'teacher') url = 'teacher.html';
     else if (page === 'taketest') {
       url = `/taketest.html?subjectId=${params.subjectId}&subjectName=${params.subjectName}`;
     }
     else if (page === 'results') {
-      url = `/results.html?sessionId=${params.sessionId}`;
+      url = `results.html?sessionId=${params.sessionId}`;
     }
     window.location.href = url;
   }
@@ -108,11 +111,11 @@ function el(tag, cls, html) {
 }
 
 function scoreColor(s) {
-  if (s >= 85) return '#10b981';
-  if (s >= 70) return '#3b82f6';
-  if (s >= 50) return '#f59e0b';
-  if (s >= 35) return '#f97316';
-  return '#ef4444';
+  if (s >= 85) return '#2D6A4F';
+  if (s >= 70) return '#5C8F6F';
+  if (s >= 50) return '#C48A2A';
+  if (s >= 35) return '#B3541E';
+  return '#E05D44';
 }
 
 function scoreBadge(s) {

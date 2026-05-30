@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knowGap | Student Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 
   <!-- Mobile Header (visible only on small screens) -->
   <header class="mobile-header" id="mobile-header">
-    <div class="mobile-header-logo" onclick="window.location.href='/index.html'">knowGap</div>
+    <div class="mobile-header-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
     <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
       <span></span><span></span><span></span>
     </button>
@@ -24,7 +24,7 @@
   <div class="dashboard-layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo" onclick="window.location.href='/index.html'">knowGap</div>
+      <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
       <div class="sidebar-section">Student Menu</div>
       
       <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
@@ -48,13 +48,13 @@
   <div id="toast-container"></div>
 
   <!-- Scripts -->
-  <script src="/js/api.js"></script>
-  <script src="/js/student.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/student.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     
     if (!user || user.role !== 'student') {
-      window.location.href = "/login.html";
+      window.location.href = "login.html";
     } else {
       document.getElementById('student-name').innerText = user.name;
     }
@@ -62,7 +62,7 @@
     function logout() {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      window.location.href = "/login.html";
+      window.location.href = "login.html";
     }
 
     function toggleSidebar() {

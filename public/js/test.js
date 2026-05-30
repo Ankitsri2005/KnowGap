@@ -54,7 +54,7 @@ function renderTopicSelection(topics, subjectId, subjectName) {
       <div id="topic-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
         ${topics.map(t => `
           <label style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s" id="tl-${t.id}">
-            <input type="checkbox" id="topic-${t.id}" value="${t.id}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic(${t.id},this)" checked/>
+            <input type="checkbox" id="topic-${t.id}" value="${t.id}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic('${t.id}',this)" checked/>
             <div style="flex:1">
               <div style="font-weight:600">${t.name}</div>
               <div style="font-size:.8rem;color:var(--text-muted)">${t.question_count} questions available</div>
@@ -67,7 +67,7 @@ function renderTopicSelection(topics, subjectId, subjectName) {
         <label class="form-label">Number of Questions: <strong id="q-count-label">20</strong></label>
         <input type="range" id="q-count" min="10" max="30" value="20" style="width:100%;accent-color:var(--primary)" oninput="document.getElementById('q-count-label').textContent=this.value"/>
       </div>
-      <button class="btn btn-primary btn-full btn-lg" onclick="startTest(${subjectId})">🚀 Start Test →</button>
+      <button class="btn btn-primary btn-full btn-lg" onclick="startTest('${subjectId}')">🚀 Start Test →</button>
     </div>`;
 
   topics.forEach(t => selected.add(t.id));
@@ -79,7 +79,7 @@ window.toggleTopic = function (id, cb) {
   if (cb.checked) {
     window._selectedTopics.add(id);
     label.style.borderColor = 'var(--primary)';
-    label.style.background = 'rgba(99,102,241,.08)';
+    label.style.background = 'var(--accent-soft)';
   } else {
     window._selectedTopics.delete(id);
     label.style.borderColor = 'var(--border)';
@@ -88,6 +88,7 @@ window.toggleTopic = function (id, cb) {
 };
 
 async function startTest(subjectId) {
+  console.log(91, subjectId)
   const topics = Array.from(window._selectedTopics || []);
   if (!topics.length) return toast('Select at least one topic', 'error');
   const limit = document.getElementById('q-count')?.value || 20;
@@ -166,7 +167,7 @@ function renderQuestion() {
       <div style="display:flex;flex-wrap:wrap;gap:6px">
         ${questions.map((_, i) => `
           <button onclick="jumpTo(${i})" style="width:32px;height:32px;border-radius:8px;border:1.5px solid ${i === current ? 'var(--primary)' : answers[questions[i].id] ? 'var(--success)' : 'var(--border)'
-      };background:${i === current ? 'rgba(99,102,241,.2)' : answers[questions[i].id] ? 'rgba(16,185,129,.15)' : 'var(--bg-input)'
+      };background:${i === current ? 'var(--accent-soft)' : answers[questions[i].id] ? 'rgba(45,106,79,.15)' : 'var(--bg-input)'
       };color:var(--text);cursor:pointer;font-size:.8rem;font-weight:600">${i + 1}</button>
         `).join('')}
       </div>
@@ -208,11 +209,31 @@ async function submitTest() {
   wrap.innerHTML = `<div class="loading-full" style="min-height:400px"><div class="spinner"></div><p style="margin-top:16px">🤖 AI is analyzing your answers...</p><p style="color:var(--text-muted);font-size:.9rem;margin-top:8px">Identifying gaps · Building study plan · Calculating scores</p></div>`;
 
   try {
-    const payload = questions.map(q => ({ questionId: q.id, selectedAnswer: answers[q.id] || null }));
-    const res = await API.tests.submit(sessionId, { answers: payload });
+    const payload = questions.map(q => ({
+      questionId: q.id,
+      selectedAnswer: answers[q.id] || null
+    }));
+    
+    const res = await API.tests.submit(
+      sessionId,
+      { answers: payload }
+    );
+
+    if (res.analysis) {
+      sessionStorage.setItem(
+        `knowgap_result_${res.sessionId}`,
+        JSON.stringify(res.analysis)
+      );
+    }
+
     toast('Analysis complete! 🎉', 'success');
-    Router.go('results', { sessionId, analysis: res.analysis });
+
+    window.location.href =
+      `results.html?sessionId=${res.sessionId}`;
+
   } catch (e) {
-    toast(e.message, 'error');
+
+  toast(e.message, 'error');
+  Router.go('student'); 
   }
 }

@@ -68,14 +68,18 @@ function analyzeGaps(answers, subject) {
 
   // 1. Calculate overall performance
   const totalQuestions = answers.length;
-  const correctAnswers = answers.filter(a => a.isCorrect).length;
+  const correctAnswers = answers.filter(
+    a => a.isCorrect ?? a.is_correct
+  ).length;
   const overallScore = Math.round((correctAnswers / totalQuestions) * 100);
 
   // 2. Group answers by topic
   const topicMap = {};
   answers.forEach(answer => {
-    const topicId = answer.topicId;
-    const topicName = answer.topicName;
+    const topicId =
+      answer.topicId ?? answer.topic_id ?? 'unknown';
+    const topicName =
+      answer.topicName ?? answer.topic_name ?? 'General';
     if (!topicMap[topicId]) {
       topicMap[topicId] = {
         id: topicId,
@@ -87,14 +91,17 @@ function analyzeGaps(answers, subject) {
       };
     }
     topicMap[topicId].total++;
-    if (answer.isCorrect) {
+    const isCorrect =
+      answer.isCorrect ?? answer.is_correct ?? false;
+
+    if (isCorrect) {
       topicMap[topicId].correct++;
     } else {
       topicMap[topicId].wrong.push(answer.questionText);
     }
     const diff = answer.difficulty || 'medium';
     topicMap[topicId].difficulties[diff].total++;
-    if (answer.isCorrect) topicMap[topicId].difficulties[diff].correct++;
+    if (isCorrect) topicMap[topicId].difficulties[diff].correct++;
   });
 
   // 3. Calculate topic scores and classify gaps
