@@ -100,6 +100,12 @@ async function renderResults(params) {
     const recTopics = getRecommendationTopics(analysis);
     const studyPlan = analysis.studyPlan;
 
+    const degPct =
+      Math.round(score * 3.6);
+
+    // =========================================
+    // RENDER PAGE
+    // =========================================
     document.getElementById('app').innerHTML = `
       <div class="results-page animate-up">
 
@@ -114,7 +120,9 @@ async function renderResults(params) {
                   <div style="font-size:2rem;font-weight:900;color:${color}">${score}%</div>
                   <div style="font-size:.7rem;color:var(--text-muted)">Overall</div>
                 </div>
+
               </div>
+
               <div style="margin-top:16px">
                 <span style="font-size:1.5rem">${analysis.performanceEmoji || getPerfEmoji(score)}</span>
                 <div style="font-weight:700;font-size:1.1rem;margin-top:4px;color:${color}">${analysis.performanceLevel}</div>
@@ -132,13 +140,69 @@ async function renderResults(params) {
                   <span style="color:var(--text-secondary)">${label}</span>
                   <strong>${val ?? '—'}</strong>
                 </div>
-              `).join('')}
+
+              </div>
+
             </div>
+
+            <!-- STATS -->
+            <div style="text-align:left">
+
+              ${[
+                [
+                  '📝 Total Questions',
+                  analysis.totalQuestions
+                ],
+
+                [
+                  '✅ Correct Answers',
+                  analysis.correctAnswers
+                ],
+
+                [
+                  '❌ Wrong Answers',
+                  analysis.wrongAnswers
+                ],
+
+                [
+                  '🎯 Score',
+                  score + '%'
+                ]
+
+              ].map(([label, val]) => `
+
+                <div
+                  style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:40px;
+                    padding:10px 0;
+                    border-bottom:1px solid var(--border)
+                  "
+                >
+
+                  <span
+                    style="
+                      color:var(--text-secondary)
+                    "
+                  >
+                    ${label}
+                  </span>
+
+                  <strong>${val}</strong>
+
+                </div>
+
+              `).join('')}
+
+            </div>
+
           </div>
 
           <div class="results-summary" style="border-left-color:${color}">
             <p>${escapeHtml(analysis.gapSummary || 'Analysis complete.')}</p>
           </div>
+
         </div>
 
         ${priority.length ? `
@@ -364,9 +428,14 @@ function escapeHtml(str) {
 }
 
 function getPerfEmoji(score) {
+
   if (score >= 85) return '🏆';
+
   if (score >= 70) return '👍';
+
   if (score >= 50) return '📊';
+
   if (score >= 35) return '⚠️';
+
   return '🚨';
 }

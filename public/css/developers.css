@@ -21,36 +21,39 @@
   margin-bottom: 25px;
 }
 
-.team-title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 12px;
-  line-height: 1.2;
+.team-title
+{
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
 }
 
-.team-subtitle {
-  font-size: 1.8rem;
-  color: var(--primary);
-  margin-bottom: 16px;
-  font-weight: 600;
+.team-subtitle
+{
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin-bottom: 16px;
+    font-weight: 600;
 }
 
-.team-description {
-  max-width: 700px;
-  margin: auto;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 50px;
+.team-description
+{
+    max-width: 700px;
+    margin: 0 auto 50px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
 }
 
-/* ── Stats ── */
-.team-stats {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  flex-wrap: wrap;
+/* ── Team Stats ── */
+.team-stats
+{
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
 }
 
 .team-hero .stat-card {
@@ -92,12 +95,13 @@
 }
 
 /* ── Developer Grid ── */
-.developer-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: 50px;
-  margin-bottom: 60px;
+.developer-grid
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+    margin-bottom: 60px;
 }
 
 .developer-card {
@@ -136,12 +140,12 @@
   background: var(--bg-input);
 }
 
-.developer-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  border-radius: 50%;
+.developer-card p
+{
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
 }
 
 .developer-card h3 {
@@ -161,18 +165,20 @@
   font-family: 'Inter', sans-serif;
 }
 
-.developer-card p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  margin-bottom: 20px;
+.developer-role
+{
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 16px;
 }
 
-.tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+.tech-stack
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .tech-stack span {
@@ -186,27 +192,28 @@
 }
 
 /* ── Footer ── */
-.footer {
-  margin-top: 20px;
-  padding: 25px 0;
-  border-top: 1px solid var(--border);
-  background: var(--bg-card);
+.dev-footer
+{
+    margin-top: 20px;
+    padding: 25px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+    text-align: center;
 }
 
-.footer-bottom {
-  text-align: center;
-}
-
-.footer-bottom p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
+.dev-footer p
+{
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* ── Responsive ── */
-@media (max-width: 992px) {
-  .developer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 992px)
+{
+    .developer-grid
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {

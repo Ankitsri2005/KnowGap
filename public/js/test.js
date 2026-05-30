@@ -1,49 +1,74 @@
 // ── needed here because taketest.html doesn't load student.js ──
-function subjectIcon(name) {
-  const n = (name || '').toLowerCase();
-  if (n.includes('math')) return '📐';
-  if (n.includes('physics')) return '⚛️';
-  if (n.includes('computer') || n.includes('cs')) return '💻';
-  if (n.includes('chem')) return '🧪';
-  if (n.includes('bio')) return '🧬';
-  if (n.includes('english')) return '📖';
-  return '📚';
+function subjectIcon(name)
+{
+    const n = (name || '').toLowerCase();
+    if (n.includes('math')) return '📐';
+    if (n.includes('physics')) return '⚛️';
+    if (n.includes('computer') || n.includes('cs')) return '💻';
+    if (n.includes('chem')) return '🧪';
+    if (n.includes('bio')) return '🧬';
+    if (n.includes('english')) return '📖';
+    return '📚';
 }
 
 /* ── TEST TAKING PAGE ── */
 let testState = {
-  sessionId: null, questions: [], answers: {}, current: 0,
-  subjectId: null, subjectName: '', startTime: null
+    sessionId: null,
+    questions: [],
+    answers:
+    {},
+    current: 0,
+    subjectId: null,
+    subjectName: '',
+    startTime: null
 };
 
-async function renderTakeTest(params) {
-  if (!State.user) return Router.go('auth');
-  const { subjectId, subjectName } = params || Router.params;
-  if (!subjectId) return Router.go('student');
+async function renderTakeTest(params)
+{
+    if (!State.user) return Router.go('auth');
+    const
+    {
+        subjectId,
+        subjectName
+    } = params || Router.params;
+    if (!subjectId) return Router.go('student');
 
-  testState = { sessionId: null, questions: [], answers: {}, current: 0, subjectId, subjectName, startTime: null };
+    testState = {
+        sessionId: null,
+        questions: [],
+        answers:
+        {},
+        current: 0,
+        subjectId,
+        subjectName,
+        startTime: null
+    };
 
-  document.getElementById('app').innerHTML = `
+    document.getElementById('app').innerHTML = `
     <div class="auth-wrap" style="align-items:flex-start;padding-top:80px">
       <div style="width:100%;max-width:700px" id="test-wrap">
         <div class="loading-full"><div class="spinner"></div><p>Preparing your test for ${subjectName}...</p></div>
       </div>
     </div>`;
 
-  try {
-    const topics = await API.subjects.topics(subjectId);
-    renderTopicSelection(topics, subjectId, subjectName);
-  } catch (e) {
-    toast(e.message, 'error');
-    Router.go('student');
-  }
+    try
+    {
+        const topics = await API.subjects.topics(subjectId);
+        renderTopicSelection(topics, subjectId, subjectName);
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+        Router.go('student');
+    }
 }
 
-function renderTopicSelection(topics, subjectId, subjectName) {
-  const wrap = document.getElementById('test-wrap');
-  const selected = new Set();
+function renderTopicSelection(topics, subjectId, subjectName)
+{
+    const wrap = document.getElementById('test-wrap');
+    const selected = new Set();
 
-  wrap.innerHTML = `
+    wrap.innerHTML = `
     <button class="btn btn-secondary btn-sm" style="margin-bottom:20px" onclick="Router.go('student')">← Back</button>
     <div class="card-glass" style="padding:32px">
       <div style="text-align:center;margin-bottom:28px">
@@ -95,36 +120,58 @@ async function startTest(subjectId) {
   if (!topics.length) return toast('Select at least one topic', 'error');
   const limit = document.getElementById('q-count')?.value || 20;
 
-  const wrap = document.getElementById('test-wrap');
-  wrap.innerHTML = `<div class="loading-full"><div class="spinner"></div><p>Loading questions...</p></div>`;
+    const wrap = document.getElementById('test-wrap');
+    wrap.innerHTML = `<div class="loading-full"><div class="spinner"></div><p>Loading questions...</p></div>`;
 
-  try {
-    const session = await API.tests.start({ subject_id: subjectId });
-    const questions = await API.questions.forSubject(subjectId, { topics: topics.join(','), limit });
-    if (!questions.length) { toast('No questions found for selected topics', 'error'); return Router.go('student'); }
+    try
+    {
+        const session = await API.tests.start(
+        {
+            subject_id: subjectId
+        });
+        const questions = await API.questions.forSubject(subjectId,
+        {
+            topics: topics.join(','),
+            limit
+        });
+        if (!questions.length)
+        {
+            toast('No questions found for selected topics', 'error');
+            return Router.go('student');
+        }
 
-    testState.sessionId = session.sessionId;
-    testState.questions = questions;
-    testState.startTime = Date.now();
-    testState.current = 0;
-    testState.answers = {};
+        testState.sessionId = session.sessionId;
+        testState.questions = questions;
+        testState.startTime = Date.now();
+        testState.current = 0;
+        testState.answers = {};
 
-    renderQuestion();
-  } catch (e) {
-    toast(e.message, 'error');
-    Router.go('student');
-  }
+        renderQuestion();
+    }
+    catch (e)
+    {
+        toast(e.message, 'error');
+        Router.go('student');
+    }
 }
 
-function renderQuestion() {
-  const { questions, current, answers, subjectName } = testState;
-  const q = questions[current];
-  const total = questions.length;
-  const pct = Math.round((current / total) * 100);
-  const elapsed = Math.floor((Date.now() - testState.startTime) / 1000);
-  const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
+function renderQuestion()
+{
+    const
+    {
+        questions,
+        current,
+        answers,
+        subjectName
+    } = testState;
+    const q = questions[current];
+    const total = questions.length;
+    const pct = Math.round((current / total) * 100);
+    const elapsed = Math.floor((Date.now() - testState.startTime) / 1000);
+    const mins = Math.floor(elapsed / 60),
+        secs = elapsed % 60;
 
-  document.getElementById('test-wrap').innerHTML = `
+    document.getElementById('test-wrap').innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-weight:700">${subjectName} Test</div>
@@ -174,30 +221,41 @@ function renderQuestion() {
         `).join('')}
       </div>
       <div style="display:flex;gap:16px;margin-top:10px;font-size:.75rem;color:var(--text-muted)">
-        <span>⬜ Unanswered</span><span style="color:var(--success)">🟩 Answered</span><span style="color:var(--primary)">🟦 Current</span>
+        <span>⬜ Unanswered</span><span style="color:var(--success)">🟩 Answered</span><span style="color:var(--primary)">🟧 Current</span>
       </div>
     </div>`;
 }
 
-window.selectAnswer = function (opt) {
-  const q = testState.questions[testState.current];
-  testState.answers[q.id] = opt;
-  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById(`opt-${opt}`).classList.add('selected');
+window.selectAnswer = function(opt)
+{
+    const q = testState.questions[testState.current];
+    testState.answers[q.id] = opt;
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById(`opt-${opt}`).classList.add('selected');
 };
 
-window.nextQuestion = function () {
-  if (testState.current < testState.questions.length - 1) { testState.current++; renderQuestion(); }
+window.nextQuestion = function()
+{
+    if (testState.current < testState.questions.length - 1)
+    {
+        testState.current++;
+        renderQuestion();
+    }
 };
 
-window.prevQuestion = function () {
-  if (testState.current > 0) { testState.current--; renderQuestion(); }
+window.prevQuestion = function()
+{
+    if (testState.current > 0)
+    {
+        testState.current--;
+        renderQuestion();
+    }
 };
 
-window.jumpTo = function (i) { testState.current = i; renderQuestion(); };
-
-window.confirmQuit = function () {
-  if (confirm('Quit test? Progress will be lost.')) Router.go('student');
+window.jumpTo = function(i)
+{
+    testState.current = i;
+    renderQuestion();
 };
 
 let _submitting = false;
@@ -215,8 +273,19 @@ async function submitTest() {
     if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
   }
 
-  const wrap = document.getElementById('test-wrap');
-  wrap.innerHTML = `<div class="loading-full" style="min-height:400px"><div class="spinner"></div><p style="margin-top:16px">🤖 AI is analyzing your answers...</p><p style="color:var(--text-muted);font-size:.9rem;margin-top:8px">Identifying gaps · Building study plan · Calculating scores</p></div>`;
+async function submitTest()
+{
+    const
+    {
+        sessionId,
+        questions,
+        answers
+    } = testState;
+    const unanswered = questions.filter(q => !answers[q.id]).length;
+    if (unanswered > 0)
+    {
+        if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+    }
 
   _submitting = true;
   try {
