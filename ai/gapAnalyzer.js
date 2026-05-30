@@ -61,10 +61,18 @@ const STUDY_STRATEGIES = {
  * @param {Object} subject - Subject information
  * @returns {Object} Complete gap analysis report
  */
-function analyzeGaps(answers, subject) {
-  if (!answers || answers.length === 0) {
+function analyzeGaps(rawAnswers, subject) {
+  if (!rawAnswers || rawAnswers.length === 0) {
     return { error: 'No answers to analyze' };
   }
+
+  const answers = rawAnswers.map((a) => ({
+    topicId: a.topicId || a.topic_id,
+    topicName: a.topicName || a.topic_name || 'General',
+    isCorrect: a.isCorrect ?? a.is_correct ?? false,
+    questionText: a.questionText || a.question_text || '',
+    difficulty: a.difficulty || 'medium'
+  }));
 
   // 1. Calculate overall performance
   const totalQuestions = answers.length;

@@ -1,40 +1,67 @@
-require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const path = require('path');
-const db = require('./database/db');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+const connectDB = require('./config/db');
+
+dotenv.config();
+
+connectDB();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/subjects', require('./routes/subjects'));
-app.use('/api/questions', require('./routes/questions'));
-app.use('/api/tests', require('./routes/tests'));
-app.use('/api/teacher', require('./routes/teacher'));
+const authRoutes = require('./routes/auth');
+const subjectRoutes = require('./routes/subjects');
+const questionRoutes = require('./routes/questions');
+const teacherRoutes = require('./routes/teacher');
+const testRoutes = require('./routes/tests');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/teacher', teacherRoutes);
+app.use('/api/tests', testRoutes);
+
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'KnowGap API is running'
+  });
+});
+
+const publicDir = path.join(__dirname, 'public');
+app.use(express.static(publicDir));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
+
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'API route not found' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Server Error' });
+});
 
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 'localhost';
 
-// Initialize DB tables first, then start server
-db.initDB().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n knowGap Server running at http://localhost:${PORT}`);
-    
-    // Seed after tables are ready
-    try {
-      const seed = require('./database/seed.js');
-      if (typeof seed === 'function') {
-        seed();
-      }
-    } catch (err) {
-      console.error("Failed to run seed script:", err.message);
-    }
-  });
-}).catch(err => {
-  console.error('Failed to initialize database:', err.message);
-  process.exit(1);
+app.listen(PORT, () => {
+  const url = `http://${HOST}:${PORT}`;
+  console.log('');
+  console.log('  ✓ knowGap is running');
+  console.log(`  Website:  ${url}`);
+  console.log(`  Login:    ${url}/login.html`);
+  console.log(`  API:      ${url}/api`);
+  console.log('');
+  console.log('  Demo teacher: teacher@gmail.com / 123456');
+  console.log('  (Run "npm run seed" in KnowGap folder if database is empty)');
+  console.log('');
 });

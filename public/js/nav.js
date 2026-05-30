@@ -22,9 +22,9 @@ function initNavigation(navContainerId) {
     dashBtn.innerText = 'Dashboard';
     dashBtn.onclick = function() {
       if (user.role === 'teacher') {
-        window.location.href = '/teacher.html';
+        window.location.href = 'teacher.html';
       } else {
-        window.location.href = '/student.html';
+        window.location.href = 'student.html';
       }
     };
 
@@ -45,13 +45,13 @@ function initNavigation(navContainerId) {
     const loginBtn = document.createElement('button');
     loginBtn.className = 'btn btn-secondary btn-sm';
     loginBtn.innerText = 'Login';
-    loginBtn.onclick = function() { window.location.href = '/login.html'; };
+    loginBtn.onclick = function() { window.location.href = 'login.html'; };
 
     const startBtn = document.createElement('button');
     startBtn.className = 'btn btn-primary btn-sm';
     startBtn.innerText = 'Get Started';
     startBtn.style.marginLeft = '10px';
-    startBtn.onclick = function() { window.location.href = '/login.html'; };
+    startBtn.onclick = function() { window.location.href = 'login.html'; };
 
     navLinksContainer.appendChild(loginBtn);
     navLinksContainer.appendChild(startBtn);

@@ -51,8 +51,8 @@ async function renderTeacher() {
               <thead><tr><th>Student</th><th>Subject</th><th>Score</th><th>Date</th></tr></thead>
               <tbody>${data.recentTests.map(t => `
                 <tr>
-                  <td><strong>${t.student_name}</strong></td>
-                  <td>${t.subject_name}</td>
+                  <td><strong>${t.student_id?.name || 'Unknown'}</strong></td>
+                  <td>${t.subject_id?.name || 'Unknown'}</td>
                   <td><span style="font-weight:700;color:${scoreColor(t.score_percentage)}">${Math.round(t.score_percentage)}%</span></td>
                   <td style="color:var(--text-muted)">${timeAgo(t.completed_at)}</td>
                 </tr>
@@ -68,16 +68,42 @@ async function renderTeacher() {
           ${data.criticalStudents.length === 0 ?
             '<div class="empty-state" style="padding:30px"><div class="empty-icon">✅</div><p>No critical students!</p></div>' :
             `<div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-              ${data.criticalStudents.map(s => `
-                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px">
-                  <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--danger)">${s.name[0]}</div>
-                  <div style="flex:1">
-                    <div style="font-weight:600;font-size:.9rem">${s.name}</div>
-                    <div style="font-size:.75rem;color:var(--text-muted)">${s.subject_name}</div>
-                  </div>
-                  <span style="color:var(--danger);font-weight:800">${Math.round(s.overall_score)}%</span>
+            ${data.criticalStudents.map(s => {
+
+            const studentName =
+              s.student_id?.name ||
+              s.name ||
+              'Unknown';
+
+            const subjectName =
+              s.subject_id?.name ||
+              s.subject_name ||
+              'Unknown Subject';
+
+            return `
+              <div class="critical-student-row">
+
+                <div class="critical-student-avatar">
+                  ${studentName.charAt(0)}
                 </div>
-              `).join('')}
+
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:.9rem">
+                    ${studentName}
+                  </div>
+
+                  <div style="font-size:.75rem;color:var(--text-muted)">
+                    ${subjectName}
+                  </div>
+                </div>
+
+                <span style="color:var(--danger);font-weight:800">
+                  ${Math.round(s.overall_score || 0)}%
+                </span>
+
+              </div>
+            `;
+          }).join('')}
             </div>`}
         </div>
       </div>`;
@@ -102,7 +128,7 @@ async function renderTeacherStudents() {
               <tr data-name="${s.name.toLowerCase()}">
                 <td>
                   <div style="display:flex;align-items:center;gap:10px">
-                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">${s.name[0]}</div>
+                    <div style="width:36px;height:36px;border-radius:50%;background:var(--tag-bg);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">${s.name[0]}</div>
                     <strong>${s.name}</strong>
                   </div>
                 </td>

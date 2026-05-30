@@ -1,179 +1,469 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const db = require('../database/db');
+
+const TestSession = require('../models/TestSession');
+const TestAnswer = require('../models/TestAnswer');
+const Question = require('../models/Question');
+const Subject = require('../models/Subject');
+const GapAnalysis = require('../models/GapAnalysis');
+
 const { analyzeGaps } = require('../ai/gapAnalyzer');
+
+const {auth, teacherOnly} = require('../middleware/authMiddleware');
+
 const router = express.Router();
 
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  try { req.user = jwt.verify(token, process.env.JWT_SECRET); next(); }
-  catch { res.status(401).json({ error: 'Invalid token' }); }
-}
 
-// Start a test session
+// ======================================
+// START TEST SESSION
+// ======================================
 router.post('/start', auth, async (req, res) => {
-  if (req.user.role !== 'student') return res.status(403).json({ error: 'Students only' });
-  const subject_id = parseInt(req.body.subject_id, 10);
-  if (!subject_id || isNaN(subject_id)) return res.status(400).json({ error: 'Valid Subject ID required' });
 
   try {
-    const result = await db.query(
-      `INSERT INTO test_sessions (student_id, subject_id) VALUES ($1, $2) RETURNING id`,
-      [req.user.id, subject_id]
-    );
-    res.json({ sessionId: result.rows[0].id });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to start session: ' + err.message });
-  }
-});
 
-// Submit test answers and get AI analysis
-router.post('/:sessionId/submit', auth, async (req, res) => {
-  if (req.user.role !== 'student') return res.status(403).json({ error: 'Students only' });
-  const { answers } = req.body; // [{questionId, selectedAnswer}]
-  const sessionId = parseInt(req.params.sessionId, 10);
+    if (req.user.role !== 'student') {
 
-  if (!answers || !Array.isArray(answers) || answers.length === 0)
-    return res.status(400).json({ error: 'Answers required' });
-
-  try {
-    // Get session info
-    const sessionResult = await db.query(
-      `SELECT ts.*, s.name as subject_name FROM test_sessions ts 
-      JOIN subjects s ON ts.subject_id = s.id
-      WHERE ts.id = $1 AND ts.student_id = $2`, [sessionId, req.user.id]
-    );
-    const session = sessionResult.rows[0];
-    if (!session) return res.status(404).json({ error: 'Session not found' });
-    if (session.status === 'completed') return res.status(400).json({ error: 'Test already submitted' });
-
-    const questionIds = answers.map(a => a.questionId);
-    const placeholders = questionIds.map((_, i) => `$${i + 1}`).join(',');
-    const questionsResult = await db.query(
-      `SELECT q.*, t.name as topic_name FROM questions q 
-      JOIN topics t ON q.topic_id = t.id
-      WHERE q.id IN (${placeholders})`, questionIds
-    );
-    const questions = questionsResult.rows;
-
-    const qMap = {};
-    questions.forEach(q => qMap[q.id] = q);
-
-    let correct = 0;
-    const answerRecords = [];
-    const analyzeData = [];
-
-    answers.forEach(({ questionId, selectedAnswer }) => {
-      const q = qMap[questionId];
-      if (!q) return;
-      const isCorrect = q.correct_answer === selectedAnswer ? 1 : 0;
-      if (isCorrect) correct++;
-      answerRecords.push([sessionId, questionId, selectedAnswer, isCorrect]);
-      analyzeData.push({
-        questionId: q.id,
-        questionText: q.question_text,
-        topicId: q.topic_id,
-        topicName: q.topic_name,
-        difficulty: q.difficulty,
-        studentAnswer: selectedAnswer,
-        correctAnswer: q.correct_answer,
-        isCorrect: isCorrect === 1
+      return res.status(403).json({
+        error: 'Students only'
       });
-    });
-
-    const totalQ = answerRecords.length;
-    const scorePercent = totalQ > 0 ? Math.round((correct / totalQ) * 100) : 0;
-
-    // Insert answers
-    for (const r of answerRecords) {
-      await db.query(
-        `INSERT INTO test_answers (session_id, question_id, student_answer, is_correct) VALUES ($1, $2, $3, $4)`,
-        r
-      );
     }
 
-    // Update session
-    await db.query(
-      `UPDATE test_sessions SET status='completed', completed_at=CURRENT_TIMESTAMP, 
-      total_questions=$1, correct_answers=$2, score_percentage=$3 WHERE id=$4`,
-      [totalQ, correct, scorePercent, sessionId]
-    );
+    const { subject_id } = req.body;
 
-    // AI Analysis
-    const subject = { id: session.subject_id, name: session.subject_name };
-    const analysisResult = analyzeGaps(analyzeData, subject);
+    if (!subject_id) {
 
-    // Save gap analysis
-    await db.query(
-      `INSERT INTO gap_analysis 
-      (session_id, student_id, subject_id, overall_score, performance_level, gap_summary, topic_scores, recommendations, priority_topics)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      ON CONFLICT (session_id) DO UPDATE SET
-        overall_score=$4, performance_level=$5, gap_summary=$6, topic_scores=$7, recommendations=$8, priority_topics=$9`,
-      [
-        sessionId, req.user.id, session.subject_id,
-        analysisResult.overallScore,
-        analysisResult.performanceLevel,
-        analysisResult.gapSummary,
-        JSON.stringify(analysisResult.topicScores),
-        JSON.stringify(analysisResult.studyPlan),
-        JSON.stringify(analysisResult.priorityTopics)
-      ]
-    );
+      return res.status(400).json({
+        error: 'Subject ID required'
+      });
+    }
+
+    // IMPORTANT
+    const session =
+      await TestSession.create({
+
+        student_id: req.user.id,
+
+        subject_id: subject_id,
+
+        status: 'pending'
+      });
 
     res.json({
+
       success: true,
-      sessionId: parseInt(sessionId),
+
+      sessionId: session._id
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      error: error.message
+    });
+  }
+});
+
+
+// ======================================
+// SUBMIT TEST
+// ======================================
+router.post('/:sessionId/submit', auth, async (req, res) => {
+
+  try {
+
+    // ======================================
+    // ONLY STUDENTS
+    // ======================================
+    if (req.user.role !== 'student') {
+
+      return res.status(403).json({
+        error: 'Students only'
+      });
+    }
+
+    const { answers } = req.body;
+
+    // ======================================
+    // VALIDATE ANSWERS
+    // ======================================
+    if (
+      !answers ||
+      !Array.isArray(answers) ||
+      answers.length === 0
+    ) {
+
+      return res.status(400).json({
+        error: 'Answers required'
+      });
+    }
+
+    // ======================================
+    // FIND SESSION
+    // ======================================
+    const session = await TestSession.findOne({
+
+      _id: req.params.sessionId,
+
+      student_id: req.user.id
+
+    }).populate('subject_id');
+
+    if (!session) {
+
+      return res.status(404).json({
+        error: 'Session not found'
+      });
+    }
+
+    if (session.status === 'completed') {
+
+      return res.status(400).json({
+        error: 'Test already submitted'
+      });
+    }
+
+    // ======================================
+    // GET QUESTIONS
+    // ======================================
+    const question_ids = answers.map(
+      a => a.questionId
+    );
+
+    const questions = await Question.find({
+
+      _id: { $in: question_ids }
+
+    })
+      .populate('topic_id', 'name')
+
+      .lean();
+
+    // ======================================
+    // CREATE QUESTION MAP
+    // ======================================
+    const qMap = {};
+
+    questions.forEach(q => {
+
+      qMap[q._id.toString()] = q;
+    });
+
+    let correct = 0;
+
+    const analyzeData = [];
+
+    // ======================================
+    // SAVE ANSWERS
+    // ======================================
+    for (const answer of answers) {
+
+      const q =
+        qMap[String(answer.questionId)];
+
+      if (!q) continue;
+
+      const selected =
+        answer.selectedAnswer == null || answer.selectedAnswer === ''
+          ? null
+          : answer.selectedAnswer;
+
+      const is_correct =
+        selected != null && q.correct_answer === selected;
+
+      if (is_correct) correct++;
+
+      // Save Answer (schema requires a string; unanswered uses sentinel)
+      await TestAnswer.create({
+
+        session_id: session._id,
+
+        question_id: q._id,
+
+        student_answer: selected ?? 'UNANSWERED',
+
+        is_correct: is_correct
+      });
+
+      // Analysis Data
+      analyzeData.push({
+
+        question_id: q._id,
+
+        questionText:
+          q.question_text,
+
+        topic_id:
+          q.topic_id?._id,
+
+        topic_name:
+          q.topic_id?.name,
+
+        difficulty:
+          q.difficulty,
+
+        student_answer: selected,
+
+        correct_answer:
+          q.correct_answer,
+
+        is_correct
+      });
+    }
+
+    // ======================================
+    // SCORE
+    // ======================================
+    const totalQ = answers.length;
+
+    const scorePercent =
+      totalQ > 0
+        ? Math.round(
+            (correct / totalQ) * 100
+          )
+        : 0;
+
+    // ======================================
+    // UPDATE SESSION
+    // ======================================
+    session.status = 'completed';
+
+    session.completed_at = new Date();
+
+    session.total_questions = totalQ;
+
+    session.correct_answers = correct;
+
+    session.score_percentage = scorePercent;
+
+    await session.save();
+
+    // ======================================
+    // AI GAP ANALYSIS
+    // ======================================
+    const analysisResult = analyzeGaps(
+
+      analyzeData,
+
+      {
+        id: session.subject_id._id,
+
+        name: session.subject_id.name
+      }
+    );
+
+    // ======================================
+    // SAVE GAP ANALYSIS
+    // ======================================
+    await GapAnalysis.findOneAndUpdate(
+
+      {
+        session_id: session._id
+      },
+
+      {
+        session_id: session._id,
+
+        student_id: req.user.id,
+
+        subject_id:
+          session.subject_id._id,
+
+        overall_score: scorePercent,
+
+        performance_level:
+          analysisResult.performanceLevel,
+
+        gap_summary:
+          analysisResult.gapSummary,
+
+        topic_scores:
+          analysisResult.topicScores,
+
+        recommendations:
+          analysisResult.studyPlan,
+
+        priority_topics:
+          analysisResult.priorityTopics
+      },
+
+      {
+        upsert: true,
+        new: true
+      }
+    );
+
+    // ======================================
+    // RESPONSE
+    // ======================================
+    res.json({
+
+      success: true,
+
+      sessionId: session._id,
+
       analysis: analysisResult
     });
-  } catch (err) {
-    console.error('Submit error:', err.message);
-    res.status(500).json({ error: 'Failed to submit test' });
-  }
-});
 
-// Get test result / analysis
-router.get('/:sessionId/result', auth, async (req, res) => {
-  try {
-    const result = await db.query(
-      `SELECT ga.*, ts.total_questions, ts.correct_answers, ts.completed_at,
-      s.name as subject_name, u.name as student_name
-      FROM gap_analysis ga
-      JOIN test_sessions ts ON ga.session_id = ts.id
-      JOIN subjects s ON ga.subject_id = s.id
-      JOIN users u ON ga.student_id = u.id
-      WHERE ga.session_id = $1`, [req.params.sessionId]
-    );
-    const row = result.rows[0];
-    if (!row) return res.status(404).json({ error: 'Result not found' });
-    res.json({
-      ...row,
-      topic_scores: JSON.parse(row.topic_scores || '[]'),
-      recommendations: JSON.parse(row.recommendations || '{}'),
-      priority_topics: JSON.parse(row.priority_topics || '[]')
+  } catch (error) {
+
+    console.log('===================');
+
+    console.log(error);
+
+    console.log('===================');
+
+    res.status(500).json({
+
+      error:
+        error.message ||
+        'Failed to submit test'
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 });
 
-// Get student's test history
-router.get('/history', auth, async (req, res) => {
-  const studentId = req.user.role === 'student' ? req.user.id : req.query.studentId;
+
+// ======================================
+// GET TEST RESULT
+// ======================================
+  router.get('/:sessionId/result', auth, async (req, res) => {
+
   try {
-    const result = await db.query(
-      `SELECT ts.*, s.name as subject_name, ga.performance_level, ga.overall_score
-      FROM test_sessions ts
-      JOIN subjects s ON ts.subject_id = s.id
-      LEFT JOIN gap_analysis ga ON ts.id = ga.session_id
-      WHERE ts.student_id = $1 AND ts.status = 'completed'
-      ORDER BY ts.completed_at DESC`, [studentId]
+
+    // GAP ANALYSIS
+    const result = await GapAnalysis.findOne({
+
+      session_id: req.params.sessionId
+
+    })
+      .populate('student_id', 'name')
+
+      .populate('subject_id', 'name')
+
+      .populate('session_id');
+
+    if (!result) {
+
+      return res.status(404).json({
+        error: 'Result not found'
+      });
+    }
+
+    // TEST SESSION
+    const session = await TestSession.findById(
+      req.params.sessionId
     );
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    if (!session) {
+
+      return res.status(404).json({
+        error: 'Session not found'
+      });
+    }
+
+    
+    console.log('SESSION DATA');
+    console.log(session);
+
+    // RESPONSE FOR FRONTEND
+    res.json({
+
+      overall_score:
+        session.score_percentage || 0,
+
+      performanceLevel:
+        result.performance_level || 'Beginner',
+
+      gapSummary:
+        result.gap_summary || '',
+
+      topicScores:
+        result.topic_scores || [],
+
+      recommendations:
+        result.recommendations || [],
+
+      priorityTopics:
+        result.priority_topics || [],
+
+      totalQuestions:
+        session.total_questions || 0,
+
+      correctAnswers:
+        session.correct_answers || 0,
+
+      wrongAnswers:
+        (session.total_questions || 0) -
+        (session.correct_answers || 0),
+
+      scorePercentage:
+        session.score_percentage || 0,
+
+      subjectName:
+        result.subject_id?.name || 'Subject'
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
+
+
+// ======================================
+// TEST HISTORY
+// ======================================
+router.get('/history', auth, async (req, res) => {
+
+  try {
+
+    const student_id =
+      req.user.role === 'student'
+        ? req.user.id
+        : req.query.student_id;
+
+    const history = await TestSession.find({
+      student_id: student_id,
+      status: 'completed'
+    })
+      .populate('subject_id', 'name')
+      .sort({ completed_at: -1 })
+      .lean();
+
+    const formatted = await Promise.all(
+
+      history.map(async session => {
+
+        const analysis =
+          await GapAnalysis.findOne({
+            session_id: session._id
+          });
+
+        return {
+          ...session,
+          subject_name:
+            session.subject_id?.name,
+          performance_level:
+            analysis?.performance_level,
+          overall_score:
+            analysis?.overall_score
+        };
+      })
+    );
+
+    res.json(formatted);
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
+  }
+});
+
 
 module.exports = router;

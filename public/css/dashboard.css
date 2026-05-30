@@ -2,7 +2,7 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-dark);
+  background: var(--bg-body);
 }
 
 /* ── Mobile Header Bar ── */
@@ -13,23 +13,26 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 200;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
 }
+
 .mobile-header-logo {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.3rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 700;
+  color: #fff;
   cursor: pointer;
 }
+
+.mobile-header-logo .brand-accent {
+  color: var(--primary);
+}
+
 .mobile-hamburger {
   display: flex;
   flex-direction: column;
@@ -39,39 +42,63 @@
   width: 40px;
   height: 40px;
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 10px;
   cursor: pointer;
   padding: 0;
   transition: var(--transition);
 }
-.mobile-hamburger:hover { background: var(--bg-input); }
+
+.mobile-hamburger:hover { background: rgba(255, 255, 255, 0.08); }
 .mobile-hamburger span {
   display: block;
   width: 18px;
   height: 2px;
-  background: var(--text);
+  background: #fff;
   border-radius: 2px;
   transition: var(--transition);
 }
-.mobile-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.mobile-hamburger.open span:nth-child(2) { opacity: 0; }
-.mobile-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* ── Sidebar toggle (CSS-only) ── */
+.sidebar-toggle {
+  position: fixed;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
 
-/* ── Sidebar Overlay (mobile) ── */
+#sidebar-toggle:checked ~ .mobile-header .mobile-hamburger span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+#sidebar-toggle:checked ~ .mobile-header .mobile-hamburger span:nth-child(2) {
+  opacity: 0;
+}
+#sidebar-toggle:checked ~ .mobile-header .mobile-hamburger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 .sidebar-backdrop {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   z-index: 88;
   backdrop-filter: blur(3px);
+  cursor: pointer;
 }
-.sidebar-backdrop.open { display: block; }
+
+#sidebar-toggle:checked ~ .sidebar-backdrop {
+  display: block;
+  animation: sidebarBackdropIn 0.28s ease forwards;
+}
+
+body:has(#sidebar-toggle:checked) {
+  overflow: hidden;
+}
 
 .sidebar {
-  background: var(--bg-card);
-  border-right: 1px solid var(--border);
+  background: var(--bg-sidebar);
+  border-right: none;
   padding: 32px 20px;
   position: fixed;
   top: 0;
@@ -83,25 +110,36 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes sidebarBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sidebarSlideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
 
 .sidebar-logo {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 700;
+  color: #fff;
   padding: 16px 12px 32px;
   cursor: pointer;
+}
+
+.sidebar-logo .brand-accent {
+  color: var(--primary);
 }
 
 .sidebar-section {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 12px 12px 8px;
@@ -114,7 +152,7 @@
   padding: 14px 16px;
   border-radius: 12px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.65);
   transition: var(--transition);
   font-size: 1rem;
   font-weight: 500;
@@ -122,19 +160,21 @@
   background: none;
   width: 100%;
   text-align: left;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .sidebar-link:hover {
-  background: var(--bg-input);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
   padding-left: 20px;
 }
 
 .sidebar-link.active {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--primary-light);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: none;
+  transform: none;
 }
 
 .sidebar-link .icon {
@@ -148,12 +188,37 @@
   min-height: 40px;
 }
 
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer .user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.sidebar-footer .user-role {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.sidebar .btn-secondary {
+  background: var(--bg-dark);
+  color: var(--text);
+  border: 1px solid var(--border);
+  margin-top: 12px;
+}
+
 .main-content {
   margin-left: 280px;
   padding: 56px 64px;
   min-height: 100vh;
   flex: 1;
   max-width: 1400px;
+  background: var(--bg-body);
 }
 
 /* ── Stat Cards ── */
@@ -163,19 +228,20 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
   transition: var(--transition);
+  box-shadow: var(--shadow);
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-glow);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: var(--border-glow);
 }
 
 .stat-icon {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: var(--bg-input);
+  background: var(--tag-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,13 +252,14 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin-bottom: 4px;
+  color: var(--primary);
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -229,6 +296,7 @@
   border: 1px solid var(--border);
   margin-bottom: 24px;
   display: block;
+  box-shadow: var(--shadow);
 }
 
 .question-card.active {
@@ -259,12 +327,12 @@
 }
 
 .option-btn:hover {
-  background: rgba(99, 102, 241, 0.05);
-  border-color: rgba(99, 102, 241, 0.2);
+  background: var(--primary-alpha-05);
+  border-color: var(--primary-alpha-20);
 }
 
 .option-btn.selected {
-  background: rgba(99, 102, 241, 0.1);
+  background: var(--primary-alpha-10);
   border-color: var(--primary);
 }
 
@@ -305,6 +373,30 @@
 
 .topic-bar-container { width: 140px; }
 
+/* Critical student row */
+.critical-student-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--critical-row-bg);
+  border: 1px solid rgba(217, 83, 79, 0.12);
+  border-radius: 10px;
+}
+
+.critical-student-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--critical-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
 /* ═══════════════════════════════
    RESPONSIVE — Tablet (≤ 1024px)
    ═══════════════════════════════ */
@@ -316,36 +408,38 @@
    RESPONSIVE — Mobile (≤ 768px)
    ═══════════════════════════════ */
 @media (max-width: 768px) {
-  /* Show mobile header */
   .mobile-header { display: flex; }
 
-  /* Sidebar becomes a drawer */
   .sidebar {
     transform: translateX(-100%);
     top: 0;
     z-index: 90;
     width: min(280px, 85vw);
   }
-  .sidebar.open { transform: translateX(0); }
 
-  /* Main content fills full width */
+  #sidebar-toggle:checked ~ .dashboard-layout .sidebar {
+    transform: translateX(0);
+    animation: sidebarSlideIn 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  #sidebar-toggle:checked ~ .dashboard-layout .sidebar .sidebar-link {
+    animation: sidebarLinkIn 0.35s ease backwards;
+  }
+
+  #sidebar-toggle:checked ~ .dashboard-layout .sidebar .sidebar-link:nth-of-type(1) {
+    animation-delay: 0.08s;
+  }
+
   .main-content {
     margin-left: 0;
-    padding: 76px 16px 24px; /* top = mobile header height + spacing */
+    padding: 76px 16px 24px;
     max-width: 100%;
   }
 
-  /* Stat cards: 2 columns on tablet, 1 on very small */
   .stat-value { font-size: 1.6rem; }
-
-  /* Question cards */
   .question-card { padding: 20px 16px; }
   .option-btn { padding: 14px 16px; font-size: 0.95rem; }
-
-  /* Empty state */
   .empty-state { padding: 32px 16px; }
-
-  /* Topic bar container */
   .topic-bar-container { width: 80px; }
 }
 
@@ -355,4 +449,24 @@
   .stat-icon { width: 40px; height: 40px; font-size: 1.2rem; }
   .stat-value { font-size: 1.4rem; }
   .stat-label { font-size: 0.75rem; }
+}
+
+@keyframes sidebarLinkIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sidebar-toggle:checked ~ .sidebar-backdrop,
+  #sidebar-toggle:checked ~ .dashboard-layout .sidebar,
+  #sidebar-toggle:checked ~ .dashboard-layout .sidebar .sidebar-link {
+    animation: none !important;
+  }
+  .sidebar { transition: transform 0.15s ease; }
 }

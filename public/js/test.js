@@ -52,25 +52,27 @@ function renderTopicSelection(topics, subjectId, subjectName) {
         <p style="color:var(--text-secondary);margin-top:8px">Select topics to include in your test (select all for full assessment)</p>
       </div>
       <div id="topic-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
-        ${topics.map(t => `
-          <label style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s" id="tl-${t.id}">
-            <input type="checkbox" id="topic-${t.id}" value="${t.id}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic(${t.id},this)" checked/>
+        ${topics.map(t => {
+          const tid = t.id || t._id;
+          return `
+          <label style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s" id="tl-${tid}">
+            <input type="checkbox" id="topic-${tid}" value="${tid}" style="width:18px;height:18px;accent-color:var(--primary)" onchange="toggleTopic('${tid}',this)" checked/>
             <div style="flex:1">
               <div style="font-weight:600">${t.name}</div>
               <div style="font-size:.8rem;color:var(--text-muted)">${t.question_count} questions available</div>
             </div>
             <span class="badge badge-info">${t.question_count} Q</span>
           </label>
-        `).join('')}
+        `}).join('')}
       </div>
       <div style="margin-bottom:20px">
         <label class="form-label">Number of Questions: <strong id="q-count-label">20</strong></label>
         <input type="range" id="q-count" min="10" max="30" value="20" style="width:100%;accent-color:var(--primary)" oninput="document.getElementById('q-count-label').textContent=this.value"/>
       </div>
-      <button class="btn btn-primary btn-full btn-lg" onclick="startTest(${subjectId})">🚀 Start Test →</button>
+      <button class="btn btn-primary btn-full btn-lg" onclick="startTest('${subjectId}')">🚀 Start Test →</button>
     </div>`;
 
-  topics.forEach(t => selected.add(t.id));
+  topics.forEach(t => selected.add(t.id || t._id));
   window._selectedTopics = selected;
 }
 
@@ -79,7 +81,7 @@ window.toggleTopic = function (id, cb) {
   if (cb.checked) {
     window._selectedTopics.add(id);
     label.style.borderColor = 'var(--primary)';
-    label.style.background = 'rgba(99,102,241,.08)';
+    label.style.background = 'rgba(192, 90, 43, 0.08)';
   } else {
     window._selectedTopics.delete(id);
     label.style.borderColor = 'var(--border)';
@@ -88,6 +90,7 @@ window.toggleTopic = function (id, cb) {
 };
 
 async function startTest(subjectId) {
+  console.log(91, subjectId)
   const topics = Array.from(window._selectedTopics || []);
   if (!topics.length) return toast('Select at least one topic', 'error');
   const limit = document.getElementById('q-count')?.value || 20;
@@ -166,7 +169,7 @@ function renderQuestion() {
       <div style="display:flex;flex-wrap:wrap;gap:6px">
         ${questions.map((_, i) => `
           <button onclick="jumpTo(${i})" style="width:32px;height:32px;border-radius:8px;border:1.5px solid ${i === current ? 'var(--primary)' : answers[questions[i].id] ? 'var(--success)' : 'var(--border)'
-      };background:${i === current ? 'rgba(99,102,241,.2)' : answers[questions[i].id] ? 'rgba(16,185,129,.15)' : 'var(--bg-input)'
+      };background:${i === current ? 'rgba(192, 90, 43, 0.2)' : answers[questions[i].id] ? 'rgba(46, 125, 79, 0.15)' : 'var(--bg-input)'
       };color:var(--text);cursor:pointer;font-size:.8rem;font-weight:600">${i + 1}</button>
         `).join('')}
       </div>
@@ -197,8 +200,16 @@ window.confirmQuit = function () {
   if (confirm('Quit test? Progress will be lost.')) Router.go('student');
 };
 
+let _submitting = false;
+
 async function submitTest() {
+  if (_submitting) return;
   const { sessionId, questions, answers } = testState;
+  if (!sessionId) {
+    toast('Test session expired. Please start again.', 'error');
+    return Router.go('student');
+  }
+
   const unanswered = questions.filter(q => !answers[q.id]).length;
   if (unanswered > 0) {
     if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
@@ -207,12 +218,29 @@ async function submitTest() {
   const wrap = document.getElementById('test-wrap');
   wrap.innerHTML = `<div class="loading-full" style="min-height:400px"><div class="spinner"></div><p style="margin-top:16px">🤖 AI is analyzing your answers...</p><p style="color:var(--text-muted);font-size:.9rem;margin-top:8px">Identifying gaps · Building study plan · Calculating scores</p></div>`;
 
+  _submitting = true;
   try {
-    const payload = questions.map(q => ({ questionId: q.id, selectedAnswer: answers[q.id] || null }));
-    const res = await API.tests.submit(sessionId, { answers: payload });
+    const payload = questions.map(q => ({
+      questionId: q.id,
+      selectedAnswer: answers[q.id] || null
+    }));
+
+    const res = await API.tests.submit(
+      sessionId,
+      { answers: payload }
+    );
+
+    const sid = res.sessionId?._id || res.sessionId;
+    if (res.analysis) {
+      sessionStorage.setItem(`kg-results-${sid}`, JSON.stringify(res.analysis));
+    }
+
     toast('Analysis complete! 🎉', 'success');
-    Router.go('results', { sessionId, analysis: res.analysis });
+    Router.go('results', { sessionId: sid });
+
   } catch (e) {
     toast(e.message, 'error');
+    _submitting = false;
+    renderQuestion();
   }
 }

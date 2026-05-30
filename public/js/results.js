@@ -1,201 +1,366 @@
 /* ── AI RESULTS / GAP ANALYSIS PAGE ── */
+
 async function renderResults(params) {
-  const { sessionId } = params || Router.params;
-  let analysis = (params || Router.params).analysis;
-  document.getElementById('app').innerHTML = `<div class="loading-full" style="min-height:100vh"><div class="spinner"></div><p>Loading AI report...</p></div>`;
+
+  const { sessionId } =
+    params || Router.params;
+
+  let analysis =
+    (params || Router.params).analysis;
+
+  document.getElementById('app').innerHTML = `
+    <div class="loading-full" style="min-height:100vh">
+      <div class="spinner"></div>
+      <p>Loading AI report...</p>
+    </div>
+  `;
 
   try {
-    if (!analysis) {
-      const res = await API.tests.result(sessionId);
-      analysis = {
-        overallScore: res.overall_score,
-        totalQuestions: res.total_questions,
-        correctAnswers: res.correct_answers,
-        wrongAnswers: res.total_questions - res.correct_answers,
-        performanceLevel: res.performance_level,
-        topicScores: res.topic_scores || [],
-        priorityTopics: res.priority_topics || [],
-        gapSummary: res.gap_summary || '',
-        studyPlan: typeof res.recommendations === 'object' ? res.recommendations : {},
-        insights: [],
-        performanceEmoji: getPerfEmoji(res.overall_score),
-        performanceColor: scoreColor(res.overall_score)
-      };
+
+    if (!sessionId) {
+      throw new Error('Missing test session. Open your report from the dashboard history.');
     }
 
-    const score = analysis.overallScore;
+    // =========================================
+    // FETCH RESULT FROM BACKEND
+    // =========================================
+    if (!analysis) {
+      const cached = sessionStorage.getItem(`kg-results-${sessionId}`);
+      if (cached) {
+        try {
+          analysis = JSON.parse(cached);
+          sessionStorage.removeItem(`kg-results-${sessionId}`);
+        } catch (_) { /* ignore bad cache */ }
+      }
+    }
+
+    if (!analysis) {
+
+      const res =
+        await API.tests.result(sessionId);
+
+      const totalQuestions =
+        res.totalQuestions || 0;
+
+      const correctAnswers =
+        res.correctAnswers || 0;
+
+      const wrongAnswers =
+        res.wrongAnswers || 0;
+
+      const overallScore =
+        res.scorePercentage ||
+        res.overall_score ||
+        Math.round(
+          (correctAnswers / Math.max(totalQuestions, 1)) * 100
+        );
+
+        analysis = {
+          overallScore,
+
+          totalQuestions,
+
+          correctAnswers,
+
+          wrongAnswers,
+
+          performanceLevel:
+            res.performanceLevel || 'Beginner',
+
+          topicScores:
+            res.topicScores || [],
+
+          priorityTopics:
+            res.priorityTopics || [],
+
+          gapSummary:
+            res.gapSummary || 'Analysis complete.',
+
+          studyPlan:
+            typeof res.recommendations === 'object'
+              ? res.recommendations
+              : {},
+
+          insights: [],
+
+          performanceEmoji:
+            getPerfEmoji(overallScore),
+
+          performanceColor:
+            scoreColor(overallScore)
+        };
+    }
+
+    analysis = normalizeResultsAnalysis(analysis);
+
+    const score = analysis.overallScore || 0;
     const degPct = Math.round(score * 3.6);
+    const color = scoreColor(score);
+    const priority = getPriorityTopics(analysis);
+    const recTopics = getRecommendationTopics(analysis);
+    const studyPlan = analysis.studyPlan;
 
     document.getElementById('app').innerHTML = `
-      <nav class="navbar">
-        <div class="container">
-          <span class="navbar-brand" style="cursor:pointer" onclick="Router.go('student')">knowGap</span>
-          <div class="navbar-links">
-            <button class="btn btn-secondary btn-sm" onclick="window.location.href='/student.html'">📈 All Results</button>
-            <button class="btn btn-primary btn-sm" onclick="Router.go('student')">Dashboard</button>
-          </div>
-        </div>
-      </nav>
+      <div class="results-page animate-up">
 
-      <div style="max-width:900px;margin:0 auto;padding:100px 24px 60px" class="animate-up">
-
-        <!-- HERO SCORE -->
-        <div class="card" style="text-align:center;padding:48px;margin-bottom:24px;background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(6,182,212,.05));border-color:rgba(99,102,241,.3)">
+        <div class="results-card results-hero">
           <div style="font-size:1rem;color:var(--text-muted);margin-bottom:8px">🤖 AI Gap Analysis Report</div>
           <h2 style="margin-bottom:32px">Your Performance Breakdown</h2>
+
           <div style="display:flex;align-items:center;justify-content:center;gap:60px;flex-wrap:wrap">
             <div>
-              <div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(${scoreColor(score)} ${degPct * 1}%, var(--bg-input) 0%);display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto">
-                <div style="width:120px;height:120px;border-radius:50%;background:var(--bg-card);display:flex;flex-direction:column;align-items:center;justify-content:center">
-                  <div style="font-size:2rem;font-weight:900;color:${scoreColor(score)}">${score}%</div>
+              <div class="results-score-ring" style="background:conic-gradient(${color} ${degPct}%, var(--bg-input) 0%)">
+                <div class="results-score-inner">
+                  <div style="font-size:2rem;font-weight:900;color:${color}">${score}%</div>
                   <div style="font-size:.7rem;color:var(--text-muted)">Overall</div>
                 </div>
               </div>
               <div style="margin-top:16px">
                 <span style="font-size:1.5rem">${analysis.performanceEmoji || getPerfEmoji(score)}</span>
-                <div style="font-weight:700;font-size:1.1rem;margin-top:4px;color:${scoreColor(score)}">${analysis.performanceLevel}</div>
+                <div style="font-weight:700;font-size:1.1rem;margin-top:4px;color:${color}">${analysis.performanceLevel}</div>
               </div>
             </div>
-            <div style="text-align:left">
+
+            <div class="results-stats">
               ${[
                 ['📝 Total Questions', analysis.totalQuestions],
                 ['✅ Correct Answers', analysis.correctAnswers],
                 ['❌ Wrong Answers', analysis.wrongAnswers],
                 ['🎯 Score', score + '%']
               ].map(([label, val]) => `
-                <div style="display:flex;justify-content:space-between;gap:40px;padding:10px 0;border-bottom:1px solid var(--border)">
+                <div class="results-stat-row">
                   <span style="color:var(--text-secondary)">${label}</span>
-                  <strong>${val}</strong>
+                  <strong>${val ?? '—'}</strong>
                 </div>
               `).join('')}
             </div>
           </div>
-          <div style="margin-top:28px;padding:16px 24px;background:var(--bg-card2);border-radius:12px;border-left:3px solid ${scoreColor(score)}">
-            <p style="color:var(--text-secondary);line-height:1.7">${analysis.gapSummary || 'Analysis complete. Review your topic scores below.'}</p>
+
+          <div class="results-summary" style="border-left-color:${color}">
+            <p>${escapeHtml(analysis.gapSummary || 'Analysis complete.')}</p>
           </div>
         </div>
 
-        <!-- AI INSIGHTS -->
-        ${analysis.insights && analysis.insights.length ? `
-          <div style="margin-bottom:24px">
-            <h3 style="margin-bottom:16px">🔍 AI Insights</h3>
-            <div style="display:flex;flex-direction:column;gap:10px">
-              ${analysis.insights.map(ins => `
-                <div class="insight-card ${ins.type}">
-                  <span class="insight-icon">${ins.icon}</span>
-                  <div>
-                    <div style="font-weight:600;margin-bottom:4px">${ins.title}</div>
-                    <div style="font-size:.9rem;color:var(--text-secondary)">${ins.message}</div>
-                  </div>
+        ${priority.length ? `
+        <div class="results-card">
+          <h3 class="results-card-title">🚨 Priority Study Areas</h3>
+          <p class="results-card-sub">Topics requiring immediate attention based on AI analysis</p>
+          <div class="priority-list">
+            ${priority.map((t, i) => `
+              <div class="priority-item">
+                <div class="priority-rank">#${i + 1}</div>
+                <div class="priority-body">
+                  <div class="priority-topic">${escapeHtml(t.name)}</div>
+                  <div class="priority-meta">${escapeHtml(t.urgencyLabel)} · ${t.score}% mastery</div>
                 </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        <!-- TOPIC BREAKDOWN -->
-        ${analysis.topicScores && analysis.topicScores.length ? `
-          <div class="card" style="margin-bottom:24px">
-            <h3 style="margin-bottom:20px">📊 Topic-by-Topic Analysis</h3>
-            ${analysis.topicScores.map(t => `
-              <div class="topic-row">
-                <div>
-                  <div class="topic-name">${t.name}</div>
-                  <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px">${t.correct}/${t.total} correct · <span style="color:${t.gapColor}">${t.gapSeverity}</span></div>
-                </div>
-                <div class="topic-bar-container">
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width:${t.score}%;background:${t.gapColor}"></div>
-                  </div>
-                </div>
-                <div style="text-align:right;min-width:60px">
-                  <div style="font-size:1.2rem;font-weight:800;color:${t.gapColor}">${t.score}%</div>
-                  ${t.mastered ? '<div style="font-size:.7rem;color:var(--success)">✅ Mastered</div>' : ''}
+                <div class="priority-stats">
+                  <div class="priority-pct">${t.score}%</div>
+                  <div class="priority-hours">~${t.studyHours}h needed</div>
                 </div>
               </div>
             `).join('')}
           </div>
+        </div>
         ` : ''}
 
-        <!-- PRIORITY GAPS -->
-        ${analysis.priorityTopics && analysis.priorityTopics.length ? `
-          <div class="card" style="margin-bottom:24px;border-color:rgba(239,68,68,.3)">
-            <h3 style="margin-bottom:4px">🚨 Priority Study Areas</h3>
-            <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:20px">Topics requiring immediate attention based on AI analysis</p>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              ${analysis.priorityTopics.map((t, i) => `
-                <div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-input);border-radius:12px;border-left:3px solid ${t.color}">
-                  <div style="width:32px;height:32px;border-radius:50%;background:${t.color}22;color:${t.color};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">#${i+1}</div>
-                  <div style="flex:1">
-                    <div style="font-weight:600">${t.name}</div>
-                    <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px">${t.urgency} · ${t.score}% mastery</div>
+        ${studyPlan.weeks && studyPlan.weeks.length ? `
+        <div class="results-card">
+          <h3 class="results-card-title">🗓️ AI-Generated Study Plan</h3>
+          <p class="results-card-sub">Estimated total: ${studyPlan.totalEstimatedHours || 0} hours</p>
+          <div class="study-week-list">
+            ${studyPlan.weeks.map(w => `
+              <div class="study-week-card">
+                <div class="study-week-head">
+                  <div class="study-week-title">
+                    Week ${w.week}<span class="study-week-focus"> · ${escapeHtml(w.focus)}</span>
                   </div>
-                  <div style="text-align:right;flex-shrink:0">
-                    <div style="font-weight:700;color:${t.color}">${t.score}%</div>
-                    ${t.studyHours > 0 ? `<div style="font-size:.75rem;color:var(--text-muted)">~${t.studyHours}h needed</div>` : ''}
-                  </div>
+                  <span class="study-time-badge">⏱ ${formatDailyGoal(w.dailyGoal)}</span>
                 </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        <!-- STUDY PLAN -->
-        ${analysis.studyPlan && analysis.studyPlan.weeks && analysis.studyPlan.weeks.length ? `
-          <div class="card" style="margin-bottom:24px">
-            <h3 style="margin-bottom:4px">📅 AI-Generated Study Plan</h3>
-            <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:20px">Estimated total: ${analysis.studyPlan.totalEstimatedHours || 0} hours</p>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              ${analysis.studyPlan.weeks.map(w => `
-                <div style="padding:20px;background:var(--bg-input);border-radius:12px;border:1px solid var(--border)">
-                  <div style="display:flex;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-                    <div>
-                      <span style="font-weight:700">Week ${w.week}</span>
-                      <span style="color:var(--text-muted);margin-left:8px">· ${w.focus}</span>
-                    </div>
-                    <span class="badge badge-info">⏱ ${w.dailyGoal}</span>
-                  </div>
-                  <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    ${(w.activities || []).map(a => `<span class="badge badge-warning">${a}</span>`).join('')}
-                  </div>
+                <div class="study-tags">
+                  ${(w.activities || []).map(a => `<span class="study-tag">${escapeHtml(a)}</span>`).join('')}
                 </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        <!-- TOPIC RECOMMENDATIONS -->
-        ${analysis.topicScores && analysis.topicScores.some(t => !t.mastered) ? `
-          <div class="card" style="margin-bottom:32px">
-            <h3 style="margin-bottom:20px">💡 AI Study Recommendations</h3>
-            ${analysis.topicScores.filter(t => !t.mastered).slice(0, 4).map(t => `
-              <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-                  <span style="font-weight:700">${t.name}</span>
-                  <span class="badge" style="background:${t.gapColor}22;color:${t.gapColor};border-color:${t.gapColor}44">${t.gapSeverity}</span>
-                  <span style="color:${t.gapColor};font-weight:700">${t.score}%</span>
-                </div>
-                <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
-                  ${(t.recommendations || []).slice(0, 3).map(r => `
-                    <li style="display:flex;gap:8px;font-size:.875rem;color:var(--text-secondary)">
-                      <span style="color:var(--primary);flex-shrink:0">→</span>${r}
-                    </li>
-                  `).join('')}
-                </ul>
               </div>
             `).join('')}
           </div>
+        </div>
         ` : ''}
 
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
+        ${recTopics.length ? `
+        <div class="results-card">
+          <h3 class="results-card-title">💡 AI Study Recommendations</h3>
+          <p class="results-card-sub">Personalized actions for your weakest topics</p>
+          ${recTopics.map(t => `
+            <div class="rec-topic-block">
+              <div class="rec-topic-head">
+                <div class="rec-topic-name">${escapeHtml(t.name)}</div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <span class="rec-gap-badge">${escapeHtml(t.gapLabel)}</span>
+                  <span class="rec-score-pct">${t.score}%</span>
+                </div>
+              </div>
+              <ul class="rec-list">
+                ${t.recommendations.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+        ` : ''}
+
+        <div class="results-actions">
           <button class="btn btn-primary btn-lg" onclick="Router.go('student')">📚 Take Another Test</button>
-          <button class="btn btn-secondary" onclick="window.location.href='/student.html'">📈 View All Results</button>
+          <button class="btn btn-secondary" onclick="window.location.href='student.html'">📈 View All Results</button>
           <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Report</button>
         </div>
-      </div>`;
-  } catch(e) {
-    document.getElementById('app').innerHTML = `<div class="loading-full"><p>⚠️ ${e.message}</p><button class="btn btn-primary" onclick="Router.go('student')">Go Back</button></div>`;
+      </div>
+    `;
+
+  } catch (e) {
+
+    document.getElementById('app').innerHTML = `
+
+      <div class="loading-full">
+
+        <p>⚠️ ${e.message}</p>
+
+        <button
+          class="btn btn-primary"
+          onclick="Router.go('student')"
+        >
+          Go Back
+        </button>
+
+      </div>
+    `;
   }
+}
+
+
+function normalizeResultsAnalysis(analysis) {
+  const topicScores = (analysis.topicScores || []).map(normalizeTopic);
+  let studyPlan = analysis.studyPlan;
+
+  if (!studyPlan || !studyPlan.weeks) {
+    const rec = analysis.studyPlan || analysis.recommendations;
+    if (rec && typeof rec === 'object' && rec.weeks) studyPlan = rec;
+    else studyPlan = { weeks: [], totalEstimatedHours: 0 };
+  }
+
+  if (!studyPlan.totalEstimatedHours && studyPlan.weeks?.length) {
+    const topics = studyPlan.weeks.flatMap(w => w.topics || []);
+    studyPlan.totalEstimatedHours = topics.reduce((s, t) => s + (t.studyHours || 0), 0)
+      || (analysis.priorityTopics || []).reduce((s, t) => s + (t.studyHours || 0), 0);
+  }
+
+  return {
+    ...analysis,
+    topicScores,
+    priorityTopics: (analysis.priorityTopics || []).map(normalizeTopic),
+    studyPlan
+  };
+}
+
+function normalizeTopic(t) {
+  const name = t.name || t.topicName || 'Topic';
+  const score = t.score ?? t.overall_score ?? 0;
+  return {
+    name,
+    score,
+    studyHours: t.studyHours ?? estimateHoursFromScore(score),
+    gapSeverity: t.gapSeverity || t.urgency || gapLabelFromScore(score),
+    urgency: t.urgency,
+    recommendations: t.recommendations || defaultRecommendations(name, score)
+  };
+}
+
+function gapLabelFromScore(score) {
+  if (score < 40) return 'Critical Gap';
+  if (score < 60) return 'Significant Gap';
+  if (score < 75) return 'Moderate Gap';
+  return 'Minor Gap';
+}
+
+function estimateHoursFromScore(score) {
+  if (score >= 80) return 0;
+  if (score < 40) return 4;
+  if (score < 60) return 3;
+  return 2;
+}
+
+function defaultRecommendations(name, score) {
+  const topic = `"${name}"`;
+  if (score < 40) {
+    return [
+      `Start from the very basics of ${topic}`,
+      'Watch video tutorials before attempting problems',
+      `Practice at least 20 questions daily on ${topic}`
+    ];
+  }
+  if (score < 60) {
+    return [
+      `Review core concepts and definitions in ${topic}`,
+      'Work through example problems step-by-step',
+      `Practice 10–15 questions per day on ${topic}`
+    ];
+  }
+  return [
+    `Review weak areas within ${topic}`,
+    'Take mini-quizzes to self-assess progress',
+    'Focus on understanding why, not just what'
+  ];
+}
+
+function getPriorityTopics(analysis) {
+  const fromPriority = (analysis.priorityTopics || [])
+    .filter(t => (t.score ?? 100) < 75)
+    .map(t => ({
+      name: t.name,
+      score: t.score ?? 0,
+      studyHours: t.studyHours ?? estimateHoursFromScore(t.score),
+      urgencyLabel: formatUrgency(t.gapSeverity || t.urgency || gapLabelFromScore(t.score))
+    }));
+
+  if (fromPriority.length) return fromPriority.slice(0, 5);
+
+  return (analysis.topicScores || [])
+    .filter(t => t.score < 75)
+    .slice(0, 5)
+    .map(t => ({
+      name: t.name,
+      score: t.score,
+      studyHours: t.studyHours,
+      urgencyLabel: formatUrgency(t.gapSeverity)
+    }));
+}
+
+function getRecommendationTopics(analysis) {
+  const weak = (analysis.topicScores || []).filter(t => t.score < 75);
+  return weak.slice(0, 6).map(t => ({
+    name: t.name,
+    score: t.score,
+    gapLabel: formatUrgency(t.gapSeverity).toUpperCase(),
+    recommendations: t.recommendations
+  }));
+}
+
+function formatUrgency(label) {
+  if (!label) return 'Gap';
+  if (label.includes('Gap')) return label;
+  return label + ' Gap';
+}
+
+function formatDailyGoal(goal) {
+  if (!goal) return '1 HOUR/DAY';
+  const m = String(goal).match(/(\d+)/);
+  const n = m ? m[1] : '1';
+  return `${n} HOUR${n === '1' ? '' : 'S'}/DAY`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function getPerfEmoji(score) {
