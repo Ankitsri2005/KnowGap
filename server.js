@@ -91,10 +91,34 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server Error' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+function printServerUrls() {
+  const local = `http://localhost:${PORT}`;
+  const loopback = `http://127.0.0.1:${PORT}`;
+  const mode = isProduction ? 'production' : 'development';
+
+  console.log('');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log(`  knowGap — ${mode}`);
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log(`  Open in browser:  ${local}`);
+  console.log(`  Alternate:        ${loopback}`);
+  console.log(`  API health:       ${local}/api/health`);
+  console.log(`  Login:            ${local}/login.html`);
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('');
+}
 
 const startServer = async () => {
+  const localPreview = `http://localhost:${PORT}`;
+  console.log('');
+  console.log(`Starting knowGap → ${localPreview}`);
+  console.log('(URL is active after MongoDB connects)\n');
+
   try {
+    console.log('Connecting to MongoDB...');
     await connectDB();
 
     if (process.env.AUTO_SEED !== 'false') {
@@ -107,11 +131,12 @@ const startServer = async () => {
     }
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
+    console.error('Fix MONGO_URI in .env (see .env.example), then run npm start again.');
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} (${isProduction ? 'production' : 'development'})`);
+  app.listen(PORT, HOST, () => {
+    printServerUrls();
   });
 };
 
