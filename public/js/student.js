@@ -46,7 +46,7 @@ async function renderStudent() {
 
       <h3 style="margin-bottom:20px">📚 Choose a Subject to Test</h3>
       <div class="grid-3" style="margin-bottom:40px">
-        ${subjects.length === 0 ? '<div class="empty-state"><div class="empty-icon">📭</div><p>No subjects available yet. Ask your teacher to add some!</p></div>' :
+        ${subjects.length === 0 ? '<div class="empty-state"><div class="empty-icon">📭</div><p>No subjects in the database yet.</p><p style="color:var(--text-muted);font-size:.9rem;margin-top:8px">If you just deployed, redeploy or run <code>npm run seed</code> on the server. Teachers can also add subjects from the teacher dashboard.</p></div>' :
           subjects.map(s => `
           <div class="card" style="cursor:pointer;position:relative;overflow:hidden" onclick="window.location.href='taketest.html?subjectId=${s._id}&subjectName=${s.name}'">
             <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary-light))"></div>

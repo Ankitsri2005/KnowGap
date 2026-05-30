@@ -33,7 +33,9 @@ AI-powered learning gap analysis — Express API + static frontend, MongoDB via 
 
 4. **MongoDB Atlas**
    - Allow access from your host’s IP or use `0.0.0.0/0` for managed platforms.
-   - Run `npm run seed` once against production if the database is empty.
+   - On first deploy the server **auto-seeds** 4 demo subjects if the database is empty (`AUTO_SEED` is on by default).
+   - Or run `npm run seed` manually in the Render shell (this **wipes** existing subjects/questions first).
+   - Check `GET /api/health` — `subjectCount` should be greater than 0 after seeding.
 
 5. **Health check**
    - `GET /api/health` → `{ "ok": true }`

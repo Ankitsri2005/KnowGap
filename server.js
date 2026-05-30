@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const connectDB = require('./config/db');
 const { validateEnv } = require('./config/env');
+const { seedIfEmpty } = require('./database/seedContent');
 
 dotenv.config();
 validateEnv();
@@ -41,11 +42,18 @@ app.use(cors(getCorsOptions()));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/api/health', (req, res) => {
-  res.json({
-    ok: true,
-    uptime: process.uptime(),
-  });
+app.get('/api/health', async (req, res) => {
+  try {
+    const Subject = require('./models/Subject');
+    const subjectCount = await Subject.countDocuments();
+    res.json({
+      ok: true,
+      uptime: process.uptime(),
+      subjectCount,
+    });
+  } catch {
+    res.json({ ok: true, uptime: process.uptime() });
+  }
 });
 
 const authRoutes = require('./routes/auth');
@@ -88,6 +96,15 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     await connectDB();
+
+    if (process.env.AUTO_SEED !== 'false') {
+      const result = await seedIfEmpty();
+      if (result.seeded) {
+        console.log(
+          `Seeded ${result.subjectCount} subjects (empty database on startup).`
+        );
+      }
+    }
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
     process.exit(1);

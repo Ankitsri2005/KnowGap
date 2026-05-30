@@ -4,173 +4,41 @@ require('dotenv').config({
 });
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const Subject = require('../models/Subject');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
-const User = require('../models/User');
+const {
+  ensureSeedTeacher,
+  createSubjectsAndQuestions,
+} = require('./seedContent');
 
-
-// ======================================
-// CONNECT DB
-// ======================================
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 
-
-// ======================================
-// SEED FUNCTION
-// ======================================
-const seedDatabase = async () => {
-
+async function seedDatabase() {
   try {
-
-    // Clear old data
     await Subject.deleteMany();
     await Topic.deleteMany();
     await Question.deleteMany();
+    console.log('Old subjects, topics, and questions cleared');
 
-    console.log('Old data cleared');
+    const teacher = await ensureSeedTeacher();
+    console.log('Using teacher:', teacher.email);
 
+    await createSubjectsAndQuestions(teacher._id);
 
-    // ======================================
-    // CREATE TEACHER
-    // ======================================
-    let teacher = await User.findOne({
-      email: 'teacher@gmail.com'
-    });
-
-    if (!teacher) {
-
-      const hashedPassword =
-        await bcrypt.hash('123456', 10);
-
-      teacher = await User.create({
-        name: 'Teacher',
-        email: 'teacher@gmail.com',
-        password: hashedPassword,
-        role: 'teacher'
-      });
-
-      console.log('Teacher created');
-    }
-
-
-    // ======================================
-    // SUBJECTS
-    // ======================================
-    const subjectsData = [
-
-      {
-        name: 'Mathematics',
-        description: 'Math Subject',
-        topics: ['Algebra', 'Geometry']
-      },
-
-      {
-        name: 'Science',
-        description: 'Science Subject',
-        topics: ['Physics', 'Chemistry']
-      },
-
-      {
-        name: 'English',
-        description: 'English Subject',
-        topics: ['Grammar', 'Literature']
-      },
-
-      {
-        name: 'Computer Science',
-        description: 'CS Subject',
-        topics: ['Programming', 'DBMS']
-      }
-    ];
-
-
-    // ======================================
-    // CREATE SUBJECTS & TOPICS
-    // ======================================
-    for (const sub of subjectsData) {
-
-      const subject = await Subject.create({
-        name: sub.name,
-        description: sub.description,
-        created_by: teacher._id
-      });
-
-      console.log(`${sub.name} created`);
-
-      const topicDocs = [];
-
-      for (const topicName of sub.topics) {
-
-        const topic = await Topic.create({
-          name: topicName,
-          subject_id: subject._id
-        });
-
-        topicDocs.push(topic);
-      }
-
-
-      // ======================================
-      // CREATE 15 QUESTIONS
-      // ======================================
-      for (let i = 1; i <= 15; i++) {
-
-        const topic =
-          topicDocs[i % topicDocs.length];
-
-        await Question.create({
-
-          question_text:
-            `${sub.name} Question ${i}`,
-
-          option_a: 'Option A',
-
-          option_b: 'Option B',
-
-          option_c: 'Option C',
-
-          option_d: 'Option D',
-
-          correct_answer: 'A',
-
-          difficulty:
-            i <= 5
-              ? 'easy'
-              : i <= 10
-              ? 'medium'
-              : 'hard',
-
-          topic_id: topic._id,
-
-          subject_id: subject._id,
-
-          created_by: teacher._id
-        });
-      }
-
-      console.log(
-        `15 Questions added for ${sub.name}`
-      );
-    }
-
-
-    console.log('Database Seeded Successfully');
-
-    process.exit();
-
+    console.log('Database seeded successfully');
+    process.exit(0);
   } catch (error) {
-
-    console.log(error);
-
+    console.error(error);
     process.exit(1);
   }
-};
+}
 
-
-// RUN
 seedDatabase();
