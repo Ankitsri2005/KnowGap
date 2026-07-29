@@ -14,14 +14,14 @@
   <div class="dashboard-layout" style="display: block; min-height: 100vh;">
     <!-- Top Navigation for Results -->
     <div class="app-top-bar">
-      <div class="app-top-bar-title">knowGap Results</div>
-      <button class="btn btn-secondary btn-sm" onclick="window.location.href='student.html'">Back to Dashboard</button>
+      <div class="app-top-bar-title" data-i18n="results_title">knowGap Results</div>
+      <button class="btn btn-secondary btn-sm" onclick="window.location.href='student.html'" data-i18n="results_back_btn">Back to Dashboard</button>
     </div>
 
     <!-- Main Content for the Results -->
     <main class="container app-main app-main--wide" id="app">
       <!-- JavaScript will load the AI report here! -->
-      <div class="loading-full"><div class="spinner"></div><p>AI is analyzing your learning gaps...</p></div>
+      <div class="loading-full"><div class="spinner"></div><p data-i18n="results_loading">AI is analyzing your learning gaps...</p></div>
     </main>
   </div>
 
@@ -29,6 +29,7 @@
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/results.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));

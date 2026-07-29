@@ -29,9 +29,9 @@
   <!-- Hero -->
   <section class="contact-hero">
     <div class="container animate-up">
-      <div class="badge badge-info" style="margin-bottom: 16px;">💬 Reach Out</div>
-      <h1 class="hero-title">Get in <span class="gradient-text">Touch</span></h1>
-      <p class="hero-sub" style="max-width: 600px; margin: 16px auto 0;">
+      <div class="badge badge-info" style="margin-bottom: 16px;" data-i18n="contact_badge">💬 Reach Out</div>
+      <h1 class="hero-title" data-i18n="contact_title">Get in <span class="gradient-text">Touch</span></h1>
+      <p class="hero-sub" style="max-width: 600px; margin: 16px auto 0;" data-i18n="contact_sub">
         Have questions about the forensic analysis? We're here to help your learning journey.
       </p>
     </div>
@@ -42,22 +42,22 @@
     <div class="contact-container animate-up">
       <form id="contactForm">
         <div class="contact-group">
-          <label>Full Name</label>
-          <input type="text" class="contact-control" placeholder="John Doe" required>
+          <label data-i18n="contact_name_label">Full Name</label>
+          <input type="text" class="contact-control" placeholder="John Doe" data-i18n="contact_name_placeholder" required>
         </div>
         <div class="contact-group">
-          <label>Email Address</label>
-          <input type="email" class="contact-control" placeholder="john@example.com" required>
+          <label data-i18n="contact_email_label">Email Address</label>
+          <input type="email" class="contact-control" placeholder="john@example.com" data-i18n="contact_email_placeholder" required>
         </div>
         <div class="contact-group">
-          <label>Subject</label>
-          <input type="text" class="contact-control" placeholder="What's this about?">
+          <label data-i18n="contact_subject_label">Subject</label>
+          <input type="text" class="contact-control" placeholder="What's this about?" data-i18n="contact_subject_placeholder">
         </div>
         <div class="contact-group">
-          <label>Message</label>
-          <textarea class="contact-control" placeholder="How can we help your learning journey?"></textarea>
+          <label data-i18n="contact_message_label">Message</label>
+          <textarea class="contact-control" placeholder="How can we help your learning journey?" data-i18n="contact_message_placeholder"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-full btn-lg">✉️ Send Message</button>
+        <button type="submit" class="btn btn-primary btn-full btn-lg" data-i18n="contact_submit_btn">✉️ Send Message</button>
       </form>
     </div>
 
@@ -65,17 +65,17 @@
     <div class="contact-info" style="margin-bottom: 60px;">
       <div class="contact-info-card">
         <div style="font-size: 2rem; margin-bottom: 12px;">📧</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Email</h3>
+        <h3 style="margin-bottom: 6px; font-size: 1rem;" data-i18n="contact_info_email_title">Email</h3>
         <p style="color: var(--text-muted); font-size: 0.85rem;">support@knowgap.ai</p>
       </div>
       <div class="contact-info-card">
         <div style="font-size: 2rem; margin-bottom: 12px;">📍</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Location</h3>
+        <h3 style="margin-bottom: 6px; font-size: 1rem;" data-i18n="contact_info_location_title">Location</h3>
         <p style="color: var(--text-muted); font-size: 0.85rem;">IEM, Kolkata, India</p>
       </div>
       <div class="contact-info-card">
         <div style="font-size: 2rem; margin-bottom: 12px;">⏰</div>
-        <h3 style="margin-bottom: 6px; font-size: 1rem;">Response Time</h3>
+        <h3 style="margin-bottom: 6px; font-size: 1rem;" data-i18n="contact_info_response_title">Response Time</h3>
         <p style="color: var(--text-muted); font-size: 0.85rem;">Within 24 hours</p>
       </div>
     </div>
@@ -84,8 +84,8 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <span class="site-footer-brand">know<span class="brand-accent">Gap</span></span>
-      <span class="site-footer-copy">IEM kolkata knowGap Forensic System</span>
+      <span class="site-footer-brand" data-i18n="brand_name">know<span class="brand-accent">Gap</span></span>
+      <span class="site-footer-copy" data-i18n="footer_copy">IEM kolkata knowGap Forensic System</span>
     </div>
   </footer>
 

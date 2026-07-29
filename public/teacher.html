@@ -28,29 +28,29 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
-      <div class="sidebar-section">Main Menu</div>
+      <div class="sidebar-section" data-i18n="teacher_menu_section">Main Menu</div>
 
-      <button class="sidebar-link active" id="nav-dashboard" onclick="switchTeacherTab('dashboard'); closeSidebar();">
+      <button class="sidebar-link active" id="nav-dashboard" onclick="switchTeacherTab('dashboard'); closeSidebar();" data-i18n="teacher_nav_dashboard">
         <span class="icon">📊</span> Dashboard
       </button>
 
-      <button class="sidebar-link" id="nav-students" onclick="switchTeacherTab('students'); closeSidebar();">
+      <button class="sidebar-link" id="nav-students" onclick="switchTeacherTab('students'); closeSidebar();" data-i18n="teacher_nav_students">
         <span class="icon">👨‍🎓</span> Students
       </button>
 
-      <button class="sidebar-link" id="nav-questionbank" onclick="switchTeacherTab('questionbank'); closeSidebar();">
+      <button class="sidebar-link" id="nav-questionbank" onclick="switchTeacherTab('questionbank'); closeSidebar();" data-i18n="teacher_nav_questionbank">
         <span class="icon">❓</span> Question Bank
       </button>
 
-      <button class="sidebar-link" id="nav-reports" onclick="switchTeacherTab('reports'); closeSidebar();">
+      <button class="sidebar-link" id="nav-reports" onclick="switchTeacherTab('reports'); closeSidebar();" data-i18n="teacher_nav_reports">
         <span class="icon">📈</span> Detailed Reports
       </button>
 
       <div class="sidebar-spacer"></div>
       <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
         <div id="teacher-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">Teacher Account</div>
-        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()">Logout</button>
+        <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="teacher_account_label">Teacher Account</div>
+        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()" data-i18n="teacher_logout_btn">Logout</button>
       </div>
     </aside>
 
@@ -64,7 +64,7 @@
         <div class="top-bar-center">
           <div class="top-bar-search">
             <span class="top-bar-search-icon">🔍</span>
-            <input type="text" class="top-bar-search-input" placeholder="Search student name or test ID..." id="global-search" oninput="handleGlobalSearch(this.value)">
+            <input type="text" class="top-bar-search-input" placeholder="Search student name or test ID..." id="global-search" oninput="handleGlobalSearch(this.value)" data-i18n="teacher_search_placeholder">
           </div>
         </div>
         <div class="top-bar-right">
@@ -87,16 +87,16 @@
               </div>
             </div>
             <div class="profile-dropdown-divider"></div>
-            <button class="profile-dropdown-item" onclick="switchTeacherTab('settings'); closeProfileDropdown()">⚙️ Settings</button>
+            <button class="profile-dropdown-item" onclick="switchTeacherTab('settings'); closeProfileDropdown()" data-i18n="teacher_settings">⚙️ Settings</button>
             <button class="profile-dropdown-item" onclick="logout()">🚪 Logout</button>
           </div>
           <!-- Notification Panel -->
           <div class="notification-panel" id="notification-panel">
             <div class="notification-panel-header">
-              <h4>🔔 Notifications</h4>
+              <h4 data-i18n="teacher_notif_title">🔔 Notifications</h4>
             </div>
             <div class="notification-panel-body" id="notification-body">
-              <div class="notification-empty">No new notifications</div>
+              <div class="notification-empty" data-i18n="teacher_notif_empty">No new notifications</div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
 
       <!-- Main Content -->
       <main class="main-content" id="main-content">
-        <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
+        <div class="loading-full"><div class="spinner"></div><p data-i18n="teacher_loading">Loading teacher dashboard...</p></div>
       </main>
 
       <!-- Footer -->
@@ -112,10 +112,10 @@
         <div class="footer-left">
           <span class="footer-brand">know<span class="brand-accent">Gap</span></span>
           <span class="footer-separator">|</span>
-          <span class="footer-sync" id="footer-sync">Last synced: just now</span>
+          <span class="footer-sync" id="footer-sync" data-i18n="teacher_sync_text">Last synced: just now</span>
         </div>
         <div class="footer-right">
-          <span class="footer-badge">🇮🇳 NEP 2020 Aligned</span>
+          <span class="footer-badge" data-i18n="teacher_nep_badge">🇮🇳 NEP 2020 Aligned</span>
         </div>
       </footer>
     </div>
@@ -123,11 +123,11 @@
     <!-- Right Sidebar (Collapsible) -->
     <aside class="right-sidebar" id="right-sidebar">
       <div class="right-sidebar-header">
-        <h4>Student Details</h4>
+        <h4 data-i18n="teacher_right_title">Student Details</h4>
         <button class="right-sidebar-close" onclick="closeRightSidebar()">✕</button>
       </div>
       <div class="right-sidebar-body" id="right-sidebar-body">
-        <div class="right-sidebar-empty">Select a student or data point to view details</div>
+        <div class="right-sidebar-empty" data-i18n="teacher_right_empty">Select a student or data point to view details</div>
       </div>
     </aside>
   </div>
@@ -138,13 +138,13 @@
       <span class="fab-icon">⚡</span>
     </button>
     <div class="fab-menu" id="fab-menu">
-      <button class="fab-menu-item" onclick="generateClassReport()">
+      <button class="fab-menu-item" onclick="generateClassReport()" data-i18n="teacher_fab_report">
         <span class="fab-menu-icon">📄</span> Generate Class Report (PDF)
       </button>
-      <button class="fab-menu-item" onclick="startLiveQuiz()">
+      <button class="fab-menu-item" onclick="startLiveQuiz()" data-i18n="teacher_fab_quiz">
         <span class="fab-menu-icon">🎯</span> Start Live Quiz
       </button>
-      <button class="fab-menu-item" onclick="openAIHelp()">
+      <button class="fab-menu-item" onclick="openAIHelp()" data-i18n="teacher_fab_ai">
         <span class="fab-menu-icon">🤖</span> Open AI Help
       </button>
     </div>
@@ -154,6 +154,7 @@
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/teacher.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));

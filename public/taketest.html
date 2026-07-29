@@ -17,15 +17,15 @@
   <div class="dashboard-layout" style="display: block; min-height: 100vh;">
     <!-- Top Navigation for Test -->
     <div class="app-top-bar">
-      <div class="app-top-bar-title">knowGap Validation</div>
-      <button class="btn btn-secondary btn-sm" onclick="window.location.href='student.html'">Exit Test</button>
+      <div class="app-top-bar-title" data-i18n="test_title">knowGap Validation</div>
+      <button class="btn btn-secondary btn-sm" onclick="window.location.href='student.html'" data-i18n="test_exit_btn">Exit Test</button>
     </div>
 
     <!-- Main Content for the Test -->
     <main class="container app-main app-main--narrow" id="app">
       <div class="loading-full">
         <div class="spinner"></div>
-        <p>Preparing your evaluation...</p>
+        <p data-i18n="test_loading">Preparing your evaluation...</p>
       </div>
     </main>
   </div>
@@ -34,6 +34,7 @@
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/test.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));

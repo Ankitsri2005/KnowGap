@@ -19,55 +19,55 @@
       <div class="auth-logo">
         <div style="font-size: 2.5rem; margin-bottom: 8px;"></div>
         <h1 class="gradient-text">knowGap </h1>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px;">AI-Powered Learning Gap Analysis</p>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px;" data-i18n="login_tagline">AI-Powered Learning Gap Analysis</p>
       </div>
 
       <!-- Tab Buttons -->
       <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
-        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')" data-i18n="login_tab_login">Login</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')" data-i18n="login_tab_register">Register</button>
       </div>
 
       <!-- LOGIN FORM -->
       <div id="form-login">
         <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input id="login-email" type="email" class="form-input" placeholder="you@example.com"/>
+          <label class="form-label" data-i18n="login_email_label">Email Address</label>
+          <input id="login-email" type="email" class="form-input" placeholder="you@example.com" data-i18n="login_email_placeholder"/>
         </div>
         <div class="form-group">
-          <label class="form-label">Password</label>
-          <input id="login-password" type="password" class="form-input" placeholder="Your password"/>
+          <label class="form-label" data-i18n="login_password_label">Password</label>
+          <input id="login-password" type="password" class="form-input" placeholder="Your password" data-i18n="login_password_placeholder"/>
         </div>
-        <button class="btn btn-primary btn-full btn-lg" id="btn-login" onclick="doLogin()">🔐 Login to knowGap</button>
+        <button class="btn btn-primary btn-full btn-lg" id="btn-login" onclick="doLogin()" data-i18n="login_btn">🔐 Login to knowGap</button>
         
       </div>
 
       <!-- REGISTER FORM -->
       <div id="form-register" style="display: none;">
         <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input id="reg-name" type="text" class="form-input" placeholder="Your full name"/>
+          <label class="form-label" data-i18n="login_name_label">Full Name</label>
+          <input id="reg-name" type="text" class="form-input" placeholder="Your full name" data-i18n="login_name_placeholder"/>
         </div>
         <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input id="reg-email" type="email" class="form-input" placeholder="you@example.com"/>
+          <label class="form-label" data-i18n="login_reg_email_label">Email Address</label>
+          <input id="reg-email" type="email" class="form-input" placeholder="you@example.com" data-i18n="login_reg_email_placeholder"/>
         </div>
         <div class="form-group">
-          <label class="form-label">Password</label>
-          <input id="reg-password" type="password" class="form-input" placeholder="Min 6 characters"/>
+          <label class="form-label" data-i18n="login_reg_password_label">Password</label>
+          <input id="reg-password" type="password" class="form-input" placeholder="Min 6 characters" data-i18n="login_reg_password_placeholder"/>
         </div>
         <div class="form-group">
-          <label class="form-label">I am a...</label>
+          <label class="form-label" data-i18n="login_role_label">I am a...</label>
           <select id="reg-role" class="form-input form-select">
-            <option value="student">👨‍🎓 Student</option>
-            <option value="teacher">👩‍🏫 Teacher</option>
+            <option value="student" data-i18n="login_role_student">👨‍🎓 Student</option>
+            <option value="teacher" data-i18n="login_role_teacher">👩‍🏫 Teacher</option>
           </select>
         </div>
-        <button class="btn btn-primary btn-full btn-lg" id="btn-register" onclick="doRegister()">🚀 Create My Account</button>
+        <button class="btn btn-primary btn-full btn-lg" id="btn-register" onclick="doRegister()" data-i18n="login_register_btn">🚀 Create My Account</button>
       </div>
 
       <p style="text-align: center; margin-top: 20px;">
-        <a href="index.html" style="color: var(--primary-light); text-decoration: none; font-size: 0.85rem;">← Back to Home</a>
+        <a href="index.html" style="color: var(--primary-light); text-decoration: none; font-size: 0.85rem;" data-i18n="login_back_link">← Back to Home</a>
       </p>
 
     </div>
@@ -75,6 +75,7 @@
 
   <div id="toast-container"></div>
 
+  <script src="js/i18n.js"></script>
   <!-- Traditional page logic scripts -->
   <script>
     function switchAuthTab(tab) {

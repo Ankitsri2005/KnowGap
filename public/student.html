@@ -24,35 +24,35 @@
   <div class="dashboard-layout">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
-      <div class="sidebar-section">Student Menu</div>
+      <div class="sidebar-section" data-i18n="student_menu_section">Student Menu</div>
 
-      <button class="sidebar-link active" id="nav-student-dashboard" onclick="switchStudentTab('dashboard'); closeSidebar();">
+      <button class="sidebar-link active" id="nav-student-dashboard" onclick="switchStudentTab('dashboard'); closeSidebar();" data-i18n="student_nav_dashboard">
         <span class="icon">📊</span> Dashboard
       </button>
 
-      <button class="sidebar-link" id="nav-student-reports" onclick="switchStudentTab('reports'); closeSidebar();">
+      <button class="sidebar-link" id="nav-student-reports" onclick="switchStudentTab('reports'); closeSidebar();" data-i18n="student_nav_reports">
         <span class="icon">📄</span> My Gap Reports
       </button>
 
-      <button class="sidebar-link" id="nav-student-plans" onclick="switchStudentTab('plans'); closeSidebar();">
+      <button class="sidebar-link" id="nav-student-plans" onclick="switchStudentTab('plans'); closeSidebar();" data-i18n="student_nav_plans">
         <span class="icon">📚</span> Study Plans
       </button>
 
-      <button class="sidebar-link" id="nav-student-retests" onclick="switchStudentTab('retests'); closeSidebar();">
+      <button class="sidebar-link" id="nav-student-retests" onclick="switchStudentTab('retests'); closeSidebar();" data-i18n="student_nav_retests">
         <span class="icon">📅</span> Retests
       </button>
 
       <div class="sidebar-spacer"></div>
       <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
         <div id="student-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">Student Account</div>
-        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()">Logout</button>
+        <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="student_account_label">Student Account</div>
+        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()" data-i18n="student_logout_btn">Logout</button>
       </div>
     </aside>
 
     <div class="main-wrapper">
       <main class="main-content" id="main-content">
-        <div class="loading-full"><div class="spinner"></div><p>Loading your dashboard...</p></div>
+        <div class="loading-full"><div class="spinner"></div><p data-i18n="student_loading">Loading your dashboard...</p></div>
       </main>
     </div>
   </div>
@@ -60,6 +60,7 @@
   <div id="toast-container"></div>
 
   <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/student.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
