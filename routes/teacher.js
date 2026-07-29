@@ -57,13 +57,17 @@ router.get('/overview', auth, teacherOnly, async (req, res) => {
       .limit(10)
       .lean();
 
-    // Critical Students
+    // Critical / High-Risk Students (low score, high retest risk, or hidden gaps)
     const criticalStudents = await GapAnalysis.find({
-      overall_score: { $lt: 40 }
+      $or: [
+        { overall_score: { $lt: 60 } },
+        { retest_risk_percentage: { $gt: 40 } },
+        { hidden_gaps_count: { $gt: 0 } }
+      ]
     })
       .populate('student_id', 'name email')
       .populate('subject_id', 'name')
-      .sort({ overall_score: 1 })
+      .sort({ retest_risk_percentage: -1, overall_score: 1 })
       .limit(10)
       .lean();
 
@@ -307,5 +311,115 @@ router.get('/stats/distribution', auth, teacherOnly, async (req, res) => {
   }
 });
 
+
+// ======================================
+// COGNITIVE PROFILE DISTRIBUTION
+// ======================================
+router.get('/stats/cognitive', auth, teacherOnly, async (req, res) => {
+  try {
+    const analyses = await GapAnalysis.find()
+      .populate('student_id', 'name')
+      .lean();
+
+    let trulyKnows = 0;
+    let hiddenGap = 0;
+    let misconception = 0;
+    let normalGap = 0;
+
+    analyses.forEach(a => {
+      const fm = a.forensic_matrix || {};
+      trulyKnows += fm.trulyKnows || 0;
+      hiddenGap += fm.hiddenGap || 0;
+      misconception += fm.misconception || 0;
+      normalGap += fm.normalGap || 0;
+    });
+
+    const total = trulyKnows + hiddenGap + misconception + normalGap || 1;
+
+    res.json({
+      distribution: [
+        { label: 'Truly Knows', value: trulyKnows, percentage: Math.round((trulyKnows / total) * 100), color: '#10b981' },
+        { label: 'Hidden Gap', value: hiddenGap, percentage: Math.round((hiddenGap / total) * 100), color: '#e05d44' },
+        { label: 'Misconception', value: misconception, percentage: Math.round((misconception / total) * 100), color: '#dd6b20' },
+        { label: 'Normal Gap', value: normalGap, percentage: Math.round((normalGap / total) * 100), color: '#3b82f6' }
+      ],
+      totalStudents: analyses.length,
+      hiddenGapCount: analyses.filter(a => (a.forensic_matrix?.hiddenGap || 0) > 0).length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ======================================
+// TOPIC-WISE GAP HEATMAP DATA
+// ======================================
+router.get('/stats/heatmap', auth, teacherOnly, async (req, res) => {
+  try {
+    const Subject = require('../models/Subject');
+    const subjects = await Subject.find().lean();
+    const analyses = await GapAnalysis.find()
+      .populate('subject_id', 'name')
+      .populate('student_id', 'name email')
+      .lean();
+
+    const heatmap = subjects.map(subject => {
+      const subjectAnalyses = analyses.filter(
+        a => a.subject_id && a.subject_id._id.toString() === subject._id.toString()
+      );
+
+      const topicMap = {};
+      subjectAnalyses.forEach(a => {
+        (a.topic_scores || []).forEach(ts => {
+          if (!topicMap[ts.name]) {
+            topicMap[ts.name] = { scores: [], studentCount: 0 };
+          }
+          topicMap[ts.name].scores.push(ts.score || 0);
+          topicMap[ts.name].studentCount++;
+        });
+
+        (a.priority_topics || []).forEach(pt => {
+          if (!topicMap[pt.name]) {
+            topicMap[pt.name] = { scores: [], studentCount: 0 };
+          }
+          topicMap[pt.name].scores.push(pt.score !== undefined ? (100 - pt.score) / 100 : 0.5);
+          topicMap[pt.name].studentCount++;
+        });
+      });
+
+      const topics = Object.entries(topicMap).map(([name, data]) => ({
+        name,
+        gapScore: data.scores.length > 0
+          ? Number((data.scores.reduce((s, v) => s + v, 0) / data.scores.length).toFixed(2))
+          : 0,
+        students: data.studentCount
+      }));
+
+      return {
+        subject: subject.name,
+        topics
+      };
+    });
+
+    // Also compute overall LGS per subject
+    const lgsData = subjects.map(subject => {
+      const subjectAnalyses = analyses.filter(
+        a => a.subject_id && a.subject_id._id.toString() === subject._id.toString()
+      );
+      const avgLgs = subjectAnalyses.length > 0
+        ? Number((subjectAnalyses.reduce((s, a) => s + (a.retest_risk_percentage || 0) / 100, 0) / subjectAnalyses.length).toFixed(2))
+        : 0;
+      return {
+        subject: subject.name,
+        lgs: avgLgs,
+        studentCount: subjectAnalyses.length
+      };
+    });
+
+    res.json({ heatmap, lgsData });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

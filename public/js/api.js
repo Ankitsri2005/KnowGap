@@ -14,7 +14,16 @@ const API = {
     if (body) opts.body = JSON.stringify(body);
     const res = await fetch(this.base + path, opts);
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Request failed');
+    if (!res.ok) {
+      if (res.status === 401 && !path.startsWith('/auth/login')) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        if (typeof window !== 'undefined' && !window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('index.html')) {
+          window.location.href = 'login.html';
+        }
+      }
+      throw new Error(data.error || 'Request failed');
+    }
     return data;
   },
 
@@ -52,7 +61,18 @@ const API = {
     students: () => API.get('/teacher/students'),
     student: (id) => API.get(`/teacher/students/${id}`),
     subjectStats: () => API.get('/teacher/stats/subjects'),
-    distribution: () => API.get('/teacher/stats/distribution')
+    distribution: () => API.get('/teacher/stats/distribution'),
+    cognitive: () => API.get('/teacher/stats/cognitive'),
+    heatmap: () => API.get('/teacher/stats/heatmap')
+  },
+  classroom: {
+    all: () => API.get('/classroom'),
+    get: (id) => API.get(`/classroom/${id}`),
+    create: (b) => API.post('/classroom', b),
+    addStudent: (id, b) => API.post(`/classroom/${id}/students`, b),
+    removeStudent: (id, sid) => API.delete(`/classroom/${id}/students/${sid}`),
+    addSubject: (id, b) => API.post(`/classroom/${id}/subjects`, b),
+    removeSubject: (id, subid) => API.delete(`/classroom/${id}/subjects/${subid}`)
   }
 };
 

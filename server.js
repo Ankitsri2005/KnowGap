@@ -61,12 +61,14 @@ const subjectRoutes = require('./routes/subjects');
 const questionRoutes = require('./routes/questions');
 const teacherRoutes = require('./routes/teacher');
 const testRoutes = require('./routes/tests');
+const classroomRoutes = require('./routes/classroom');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/tests', testRoutes);
+app.use('/api/classroom', classroomRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

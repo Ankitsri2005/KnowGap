@@ -22,6 +22,17 @@ const testAnswerSchema = new mongoose.Schema(
     is_correct: {
       type: Boolean,
       default: false
+    },
+
+    confidence_tag: {
+      type: String,
+      enum: ['sure', 'guessed', 'unsure', null],
+      default: null
+    },
+
+    response_time_ms: {
+      type: Number,
+      default: null
     }
   },
   {

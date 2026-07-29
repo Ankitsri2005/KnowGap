@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>knowGap | Test Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .setup-page { max-width: 640px; margin: 0 auto; padding: 40px 24px; }
+    .topic-option {
+      display:flex;align-items:center;gap:14px;padding:14px 18px;
+      background:var(--bg-input);border:1.5px solid var(--border);
+      border-radius:12px;cursor:pointer;transition:all .2s;
+    }
+    .topic-option.checked { border-color:var(--primary); background:var(--accent-soft); }
+    .topic-option input[type="checkbox"] { width:18px;height:18px;accent-color:var(--primary); }
+    .slider-wrap { margin-bottom:24px; }
+    .slider-wrap input[type="range"] { width:100%;accent-color:var(--primary); }
+    .btn-start { padding:16px;font-size:1.1rem;border-radius:12px; }
+    .btn-start:disabled { opacity:.45;cursor:not-allowed; }
+    .q-badge { font-size:.8rem;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(179,84,30,.1);color:var(--primary);white-space:nowrap; }
+    @media(max-width:480px){ .setup-page { padding:24px 16px; } }
+  </style>
+</head>
+<body>
+
+  <div class="app-top-bar">
+    <div class="app-top-bar-title">knowGap <span style="color:var(--primary)">Validation</span></div>
+    <button class="btn btn-secondary btn-sm" onclick="window.location.href='student.html'">Exit Test</button>
+  </div>
+
+  <div class="setup-page" id="app">
+    <div class="loading-full"><div class="spinner"></div><p>Loading topics...</p></div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/student-test-setup.js"></script>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+    if (!user || !token) window.location.href = "login.html";
+
+    const params = new URLSearchParams(window.location.search);
+    const subjectId = params.get('subjectId');
+    const subjectName = params.get('subjectName');
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!subjectId) { document.getElementById('app').innerHTML = '<div class="empty-state" style="margin-top:40px"><p>No subject selected.</p><button class="btn btn-primary btn-sm" onclick="window.location.href=\'student.html\'">Go Back</button></div>'; return; }
+      renderSetup(subjectId, subjectName);
+    });
+  </script>
+</body>
+</html>

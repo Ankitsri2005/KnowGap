@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>knowGap | Gap Analysis Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .report-hero {
+      background:linear-gradient(135deg,rgba(179,84,30,.1),rgba(179,84,30,.03));
+      border:1px solid rgba(179,84,30,.2);
+      border-radius:16px;padding:28px 32px;margin-bottom:28px;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+    }
+    .report-hero .hero-score { font-size:2.5rem;font-weight:800; }
+    .report-hero .hero-tags { display:flex;gap:10px;flex-wrap:wrap; }
+    .report-hero .hero-tags span {
+      padding:6px 14px;border-radius:8px;font-size:.85rem;font-weight:600;
+    }
+    .donut-wrap { display:flex;flex-direction:column;align-items:center; }
+    .donut-chart {
+      width:180px;height:180px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      position:relative;
+    }
+    .donut-chart .donut-inner {
+      width:120px;height:120px;border-radius:50%;
+      background:var(--bg-card);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+    }
+    .donut-chart .donut-inner .val { font-size:2rem;font-weight:800;line-height:1; }
+    .donut-chart .donut-inner .lbl { font-size:.75rem;color:var(--text-muted);margin-top:4px; }
+    .conf-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+    .conf-grid .conf-item {
+      padding:14px 18px;border-radius:12px;border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .conf-grid .conf-item .conf-label { font-size:.85rem;font-weight:600; }
+    .conf-grid .conf-item .conf-count { font-size:1.3rem;font-weight:800; }
+    .rt-box {
+      padding:20px;border-radius:12px;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+    }
+    .critical-alert {
+      background:linear-gradient(135deg,rgba(231,76,60,.12),rgba(231,76,60,.06));
+      border:1px solid rgba(231,76,60,.3);border-left:5px solid #e74c3c;
+      border-radius:14px;padding:24px 28px;
+    }
+    .critical-alert h3 { color:#e74c3c;margin-bottom:12px; }
+    .topic-bar-item { margin-bottom:16px; }
+    .topic-bar-item .bar-track {
+      height:12px;background:var(--surface);border-radius:99px;overflow:hidden;
+    }
+    .topic-bar-item .bar-fill { height:100%;border-radius:99px;transition:width .6s ease; }
+    .action-row { display:flex;gap:12px;flex-wrap:wrap;justify-content:center; }
+    @media(max-width:600px){
+      .report-hero{flex-direction:column;text-align:center}
+      .conf-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="mobile-header" id="mobile-header">
+    <div class="mobile-header-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
+    <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
+      <div class="sidebar-section">Student Menu</div>
+
+      <button class="sidebar-link" onclick="window.location.href='student.html'; closeSidebar();">
+        <span class="icon">📊</span> Dashboard
+      </button>
+      <button class="sidebar-link" onclick="window.location.href='student.html'; closeSidebar();">
+        <span class="icon">📄</span> My Gap Reports
+      </button>
+      <button class="sidebar-link" onclick="window.location.href='student.html'; closeSidebar();">
+        <span class="icon">📚</span> Study Plans
+      </button>
+      <button class="sidebar-link" onclick="window.location.href='student.html'; closeSidebar();">
+        <span class="icon">🔄</span> Retests
+      </button>
+
+      <div class="sidebar-spacer"></div>
+      <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
+        <div id="student-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Student Account</div>
+        <button class="btn btn-secondary btn-sm btn-full" style="margin-top: 12px;" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <main class="main-content" id="main-content">
+        <div class="loading-full"><div class="spinner"></div><p>Loading report...</p></div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/student-report.js"></script>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+    if (!user || user.role !== 'student' || !token) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById('student-name').innerText = user.name;
+    }
+
+    function logout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const hamburger = document.getElementById('mob-hamburger');
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-backdrop').classList.remove('open');
+      document.getElementById('mob-hamburger').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const testId = params.get('testId') || params.get('sessionId');
+      if (!testId) {
+        document.getElementById('main-content').innerHTML = `
+          <div class="empty-state" style="margin-top:40px">
+            <p>No test session specified.</p>
+            <button class="btn btn-primary" onclick="window.location.href='student.html'">Go to Dashboard</button>
+          </div>`;
+        return;
+      }
+      renderStudentReport(testId);
+    });
+  </script>
+</body>
+</html>

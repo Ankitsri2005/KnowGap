@@ -32,6 +32,10 @@ function normalizeFromAnalysis(raw) {
       wrongAnswers: raw.wrongAnswers || 0,
       performanceLevel: raw.performanceLevel || 'Beginner',
       subjectName: raw.subjectName || 'Subject',
+      forensicMatrix: raw.forensicMatrix || {},
+      retestRisk: raw.retestRisk || 0,
+      hiddenGapCount: raw.hiddenGapCount || 0,
+      misconceptionCount: raw.misconceptionCount || 0,
       topicScores: (raw.topicScores || []).map(normalizeTopic),
       priorityTopics: (raw.priorityTopics || []).map((p) => ({
         name: p.name,
@@ -87,6 +91,10 @@ function buildAnalysisFromApi(res) {
     wrongAnswers,
     performanceLevel: res.performanceLevel || 'Beginner',
     subjectName: res.subjectName || 'Subject',
+    forensicMatrix: res.forensicMatrix || {},
+    retestRisk: res.retestRisk || 0,
+    hiddenGapCount: res.hiddenGapCount || 0,
+    misconceptionCount: res.misconceptionCount || 0,
     topicScores,
     priorityTopics:
       priorityTopics.length > 0
@@ -227,6 +235,125 @@ async function renderResults(params) {
         </div>`
             : ''
         }
+
+        <!-- Response Time Scatter Plot (Table 2) -->
+        <div class="card response-time-card" style="margin-bottom:24px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span class="badge badge-info" style="font-size:0.7rem">TABLE 2 — RESEARCH PAPER</span>
+                <h3 style="margin:0">⏱️ Response Time vs. Accuracy Analysis</h3>
+              </div>
+              <p style="color:var(--text-muted);font-size:.85rem">Cognitive State Classification mapping response speed against accuracy</p>
+            </div>
+            <div style="font-size:0.78rem;color:var(--text-muted);background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08)">
+              Formula: <code style="color:var(--primary)">LGS<sub>i</sub> = f(c<sub>i</sub>, k<sub>i</sub>, t̂<sub>i</sub>)</code>
+            </div>
+          </div>
+
+          <div class="scatter-plot-wrapper">
+            <div class="scatter-chart-container" style="position:relative;width:100%;height:300px">
+              <svg viewBox="0 0 540 260" style="width:100%;height:100%;overflow:visible">
+                <line x1="60" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+                <line x1="60" y1="80" x2="500" y2="80" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+                <line x1="60" y1="130" x2="500" y2="130" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+                <line x1="60" y1="180" x2="500" y2="180" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+
+                <line x1="206" y1="30" x2="206" y2="210" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+                <line x1="353" y1="30" x2="353" y2="210" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 4"/>
+
+                <line x1="60" y1="210" x2="500" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                <line x1="60" y1="30" x2="60" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+                <text x="50" y="34" fill="var(--text-muted)" font-size="11" text-anchor="end">100%</text>
+                <text x="50" y="84" fill="var(--text-muted)" font-size="11" text-anchor="end">75%</text>
+                <text x="50" y="134" fill="var(--text-muted)" font-size="11" text-anchor="end">50%</text>
+                <text x="50" y="184" fill="var(--text-muted)" font-size="11" text-anchor="end">25%</text>
+                <text x="50" y="214" fill="var(--text-muted)" font-size="11" text-anchor="end">0%</text>
+
+                <text x="18" y="120" fill="var(--text-secondary)" font-size="11" font-weight="700" transform="rotate(-90 18 120)" text-anchor="middle">Accuracy (%)</text>
+
+                <text x="133" y="230" fill="var(--text-muted)" font-size="11" text-anchor="middle">Fast (&lt;4s)</text>
+                <text x="280" y="230" fill="var(--text-muted)" font-size="11" text-anchor="middle">Medium (4-8s)</text>
+                <text x="426" y="230" fill="var(--text-muted)" font-size="11" text-anchor="middle">Slow (&gt;8s)</text>
+
+                <text x="280" y="250" fill="var(--text-secondary)" font-size="11" font-weight="700" text-anchor="middle">Response Time (Speed) →</text>
+
+                <rect x="60" y="30" width="146" height="90" fill="rgba(56,161,105,0.06)" rx="6"/>
+                <text x="133" y="46" fill="rgba(56,161,105,0.75)" font-size="10" font-weight="700" text-anchor="middle">TRULY MASTERED</text>
+
+                <rect x="353" y="30" width="147" height="90" fill="rgba(224,93,68,0.06)" rx="6"/>
+                <text x="426" y="46" fill="rgba(224,93,68,0.85)" font-size="10" font-weight="700" text-anchor="middle">HIDDEN GAP ZONE</text>
+
+                <rect x="60" y="120" width="146" height="90" fill="rgba(221,107,32,0.06)" rx="6"/>
+                <text x="133" y="200" fill="rgba(221,107,32,0.75)" font-size="10" font-weight="700" text-anchor="middle">MISCONCEPTION</text>
+
+                <rect x="353" y="120" width="147" height="90" fill="rgba(66,153,225,0.06)" rx="6"/>
+                <text x="426" y="200" fill="rgba(66,153,225,0.75)" font-size="10" font-weight="700" text-anchor="middle">NORMAL GAP</text>
+
+                <!-- Data Points -->
+                <g class="scatter-point" transform="translate(140, 48)">
+                  <circle r="14" fill="rgba(56,161,105,0.25)"/>
+                  <circle r="6" fill="#38a169"/>
+                  <text x="0" y="4" fill="#fff" font-size="10" font-weight="800" text-anchor="middle">★</text>
+                  <text x="0" y="-12" fill="#68d391" font-size="10" font-weight="700" text-anchor="middle">★ Truly Mastered</text>
+                </g>
+
+                <g class="scatter-point" transform="translate(420, 58)">
+                  <circle r="18" fill="rgba(224,93,68,0.3)" class="pulse-circle"/>
+                  <circle r="7" fill="#e05d44"/>
+                  <text x="0" y="4" fill="#fff" font-size="11" font-weight="800" text-anchor="middle">●</text>
+                  <text x="0" y="-14" fill="#fc8181" font-size="11" font-weight="800" text-anchor="middle">● Hidden Gap</text>
+                </g>
+
+                <g class="scatter-point" transform="translate(130, 165)">
+                  <circle r="14" fill="rgba(221,107,32,0.25)"/>
+                  <circle r="6" fill="#dd6b20"/>
+                  <text x="0" y="4" fill="#fff" font-size="9" font-weight="800" text-anchor="middle">▲</text>
+                  <text x="0" y="18" fill="#f6ad55" font-size="10" font-weight="700" text-anchor="middle">▲ Misconception</text>
+                </g>
+
+                <g class="scatter-point" transform="translate(410, 160)">
+                  <circle r="14" fill="rgba(66,153,225,0.25)"/>
+                  <circle r="6" fill="#4299e1"/>
+                  <text x="0" y="4" fill="#fff" font-size="9" font-weight="800" text-anchor="middle">■</text>
+                  <text x="0" y="18" fill="#90cdf4" font-size="10" font-weight="700" text-anchor="middle">■ Normal Gap</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="scatter-legend">
+              <div class="legend-item legend-green">
+                <span class="legend-symbol">★</span>
+                <div>
+                  <span class="legend-title">Truly Mastered</span>
+                  <span class="legend-desc">Very Fast + Correct</span>
+                </div>
+              </div>
+              <div class="legend-item legend-red legend-pulse">
+                <span class="legend-symbol">●</span>
+                <div>
+                  <span class="legend-title">Hidden Gap 🔴</span>
+                  <span class="legend-desc">Very Slow + Correct</span>
+                </div>
+              </div>
+              <div class="legend-item legend-orange">
+                <span class="legend-symbol">▲</span>
+                <div>
+                  <span class="legend-title">Misconception</span>
+                  <span class="legend-desc">Very Fast + Wrong</span>
+                </div>
+              </div>
+              <div class="legend-item legend-blue">
+                <span class="legend-symbol">■</span>
+                <div>
+                  <span class="legend-title">Normal Gap</span>
+                  <span class="legend-desc">Very Slow + Wrong</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Priority study areas -->
         ${

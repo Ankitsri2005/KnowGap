@@ -71,15 +71,55 @@ function analyzeGaps(rawAnswers, subject) {
     topicName: a.topicName || a.topic_name || 'General',
     isCorrect: a.isCorrect ?? a.is_correct ?? false,
     questionText: a.questionText || a.question_text || '',
-    difficulty: a.difficulty || 'medium'
+    difficulty: a.difficulty || 'medium',
+    confidence: a.confidence || a.confidence_tag || null
   }));
 
-  // 1. Calculate overall performance
+  // 1. Calculate overall performance & forensic matrix
   const totalQuestions = answers.length;
   const correctAnswers = answers.filter(
-    a => a.isCorrect ?? a.is_correct
+    a => a.isCorrect
   ).length;
   const overallScore = Math.round((correctAnswers / totalQuestions) * 100);
+
+  // Forensic matrix counts
+  let masteredCount = 0;
+  let hiddenGapCount = 0; // Correct + Guessed (Lucky Guess)
+  let misconceptionCount = 0; // Wrong + Sure (Overconfident)
+  let recognizedGapCount = 0; // Wrong + Guessed/Unsure (Known Weakness)
+
+  answers.forEach((a) => {
+    if (a.isCorrect) {
+      if (a.confidence === 'guessed') {
+        hiddenGapCount++;
+      } else {
+        masteredCount++;
+      }
+    } else {
+      if (a.confidence === 'sure') {
+        misconceptionCount++;
+      } else {
+        recognizedGapCount++;
+      }
+    }
+  });
+
+  const retestRisk = Math.min(
+    100,
+    Math.round(
+      ((hiddenGapCount * 1.5 + misconceptionCount * 2 + (totalQuestions - correctAnswers)) /
+        Math.max(1, totalQuestions)) *
+        100
+    )
+  );
+
+  const forensicMatrix = {
+    masteredCount,
+    hiddenGapCount,
+    misconceptionCount,
+    recognizedGapCount,
+    retestRisk
+  };
 
   // 2. Group answers by topic
   const topicMap = {};
@@ -191,6 +231,10 @@ function analyzeGaps(rawAnswers, subject) {
     performanceLevel: performanceLevel.label,
     performanceColor: performanceLevel.color,
     performanceEmoji: performanceLevel.emoji,
+    forensicMatrix,
+    retestRisk,
+    hiddenGapCount,
+    misconceptionCount,
     topicScores,
     criticalGaps,
     significantGaps,

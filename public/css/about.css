@@ -10,6 +10,9 @@
 .about-feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; transition: var(--transition); }
 .about-feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-glow); border-color: var(--accent-border); }
 .about-feature-icon { font-size: 2.5rem; margin-bottom: 16px; }
+@media (max-width: 1024px) {
+  .about-feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 768px) {
   .mission-grid { grid-template-columns: 1fr; gap: 28px; margin-top: 28px; }
   .about-feature-grid { grid-template-columns: 1fr; }
@@ -17,3 +20,4 @@
   .about-stat-card { padding: 20px; }
   .about-feature { padding: 48px 0; }
 }
+

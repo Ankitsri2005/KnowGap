@@ -24,6 +24,26 @@ const gapAnalysisSchema = new mongoose.Schema(
 
     gap_summary: String,
 
+    hidden_gaps_count: {
+      type: Number,
+      default: 0
+    },
+
+    misconceptions_count: {
+      type: Number,
+      default: 0
+    },
+
+    retest_risk_percentage: {
+      type: Number,
+      default: 0
+    },
+
+    forensic_matrix: {
+      type: Object,
+      default: {}
+    },
+
     topic_scores: {
       type: Array,
       default: []

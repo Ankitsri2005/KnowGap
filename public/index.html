@@ -20,10 +20,10 @@
       <a class="navbar-brand" href="index.html">know<span class="brand-accent">Gap</span></a>
 
       <div class="navbar-menu">
-        <a href="index.html" class="nav-item active">Home</a>
-        <a href="about.html" class="nav-item">About</a>
-        <a href="contact.html" class="nav-item">Contact</a>
-        <a href="developers.html" class="nav-item">Developers</a>
+        <a href="index.html" class="nav-item active" data-i18n="nav_home">Home</a>
+        <a href="about.html" class="nav-item" data-i18n="nav_about">About</a>
+        <a href="contact.html" class="nav-item" data-i18n="nav_contact">Contact</a>
+        <a href="developers.html" class="nav-item" data-i18n="nav_devs">Developers</a>
       </div>
 
       <div class="navbar-links" id="home-nav-links"></div>
@@ -39,79 +39,337 @@
 
       <!-- Left Side -->
       <div class="hero-content animate-up">
-        <div class="hero-eyebrow">— AI-POWERED LEARNING</div>
-        <h1 class="hero-title">Know Your Gaps. <em class="text-accent">Fix Them.</em></h1>
-        <p class="hero-sub">
-          knowGap forensically analyzes your test performance using AI to pinpoint exactly where your knowledge gaps are
-          — and builds a personalized study plan to fix them.
+        <div class="hero-eyebrow" data-i18n="hero_eyebrow">— RESEARCH-BACKED FORENSIC LEARNING</div>
+        <h1 class="hero-title" data-i18n="hero_title">Two students scored 100%. <em class="text-accent">Only one truly knew.</em></h1>
+        <p class="hero-sub" data-i18n="hero_sub">
+          Traditional grading can't tell the difference between knowledge and a lucky guess.
+          knowGap can — and builds a personalized plan to close the hidden gap.
         </p>
 
         <div class="hero-actions">
-          <button class="btn btn-primary btn-lg" onclick="window.location.href='login.html'">🚀 Start Your
+          <button class="btn btn-primary btn-lg" onclick="window.location.href='login.html'" data-i18n="btn_start">🚀 Start Your
             Assessment</button>
           <button class="btn btn-outline btn-lg"
-            onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+            onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" data-i18n="btn_how">See How It Works</button>
         </div>
 
         <div style="display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap;">
           <div>
             <div class="hero-stat-value">500+</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Questions</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat_questions">Questions</div>
           </div>
           <div>
             <div class="hero-stat-value">AI</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Analysis</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat_analysis">Analysis</div>
           </div>
           <div>
             <div class="hero-stat-value">Real-time</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Results</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat_results">Results</div>
           </div>
           <div>
             <div class="hero-stat-value">Free</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Forever</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat_free">Forever</div>
           </div>
         </div>
       </div>
 
-      <!-- Right Side (Visual Cards) -->
+      <!-- Right Side (Visual Cards) — Research-specific metrics -->
       <div class="hero-visual" style="display: flex; flex-direction: column; gap: 16px;">
-        <div class="floating-card animate-float" style="animation-delay: 0.2s;">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-            <div class="hero-card-icon">📊</div>
-            <div>
-              <div style="font-weight: 700;">AI Gap Report</div>
-              <div class="hero-card-muted" style="font-size: 0.8rem;">Computer Science • 10 Questions</div>
-            </div>
-          </div>
-          <div class="hero-card-muted" style="margin-bottom: 8px; font-size: 0.85rem;">Topic Scores</div>
 
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 0.85rem; width: 70px;">Aptitude</span>
-            <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px;">
-              <div style="height: 6px; width: 85%; background: var(--success); border-radius: 3px;"></div>
+        <!-- Card 1: Forensic report -->
+        <div class="floating-card hc-report animate-float" style="animation-delay: 0.2s;">
+          <div class="hc-report-header">
+            <div class="hero-card-icon">🧠</div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;" data-i18n="card_forensic_report">Forensic Gap Report</div>
+              <div class="hero-card-muted" style="font-size: 0.75rem;">Maths • Q7 — Quadratic Equations</div>
             </div>
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--success);">85%</span>
+            <span class="hc-profile-badge" data-i18n="card_hidden_gap_tag">Hidden Gap</span>
           </div>
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 0.85rem; width: 70px;">DSA</span>
-            <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px;">
-              <div style="height: 6px; width: 42%; background: var(--danger); border-radius: 3px;"></div>
+
+          <div class="hc-metrics">
+            <!-- Cognitive Profile -->
+            <div class="hc-metric-row">
+              <span class="hc-metric-icon">🧠</span>
+              <div class="hc-metric-body">
+                <span class="hc-metric-label" data-i18n="card_cog_profile">Cognitive Profile</span>
+                <span class="hc-metric-val hc-val--red" data-i18n="card_hidden_gap_detected">Hidden Gap Detected</span>
+              </div>
             </div>
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--danger);">42%</span>
+            <!-- Confidence-Correctness Mismatch -->
+            <div class="hc-metric-row">
+              <span class="hc-metric-icon">📉</span>
+              <div class="hc-metric-body">
+                <span class="hc-metric-label" data-i18n="card_mismatch">Confidence–Correctness Mismatch</span>
+                <div class="hc-metric-score-row">
+                  <div class="hc-score-track">
+                    <div class="hc-score-fill" style="width: 73%;"></div>
+                  </div>
+                  <span class="hc-metric-val hc-val--orange">0.73</span>
+                </div>
+              </div>
+            </div>
+            <!-- Response Time -->
+            <div class="hc-metric-row">
+              <span class="hc-metric-icon">⏱️</span>
+              <div class="hc-metric-body">
+                <span class="hc-metric-label" data-i18n="card_resp_time">Response Time</span>
+                <span class="hc-metric-val hc-val--orange">4.2 s <span class="hc-tag" data-i18n="card_above_median">above median</span></span>
+              </div>
+            </div>
+            <!-- Recommended -->
+            <div class="hc-metric-row">
+              <span class="hc-metric-icon">🎯</span>
+              <div class="hc-metric-body">
+                <span class="hc-metric-label" data-i18n="card_recommended_focus">Recommended Focus</span>
+                <span class="hc-metric-val hc-val--primary">Quadratic Equations Drill</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="floating-card" style="animation: glow 3s ease-in-out 1s infinite;">
-          <div class="hero-card-muted" style="font-size: 0.85rem; margin-bottom: 8px;">🚨 Critical Gap Detected</div>
-          <div style="font-weight: 700; margin-bottom: 4px;">DSA — Integration</div>
-          <div class="hero-card-muted" style="font-size: 0.85rem;">Study 1 hr/day for 2 weeks to close this gap</div>
-          <div style="margin-top: 12px; display: flex; gap: 8px;">
-            <span class="badge badge-danger">Critical</span>
-            <span class="badge badge-info">Priority #1</span>
+        <!-- Card 2: Study plan -->
+        <div class="floating-card hc-plan" style="animation: glow 3s ease-in-out 1s infinite;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+            <span style="font-size: 1.2rem;">📚</span>
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem;" data-i18n="card_study_plan_title">Personalised Study Plan</div>
+              <div class="hero-card-muted" style="font-size: 0.75rem;" data-i18n="card_study_plan_sub">Generated from your gap score</div>
+            </div>
+          </div>
+          <div class="hc-plan-row">
+            <span class="hc-plan-dot hc-plan-dot--red"></span>
+            <span class="hero-card-muted" style="font-size: 0.82rem; flex:1;" data-i18n="card_daily_commitment">Daily commitment</span>
+            <strong style="font-size: 0.88rem; color: #fc8181;">45 min / day</strong>
+          </div>
+          <div class="hc-plan-row">
+            <span class="hc-plan-dot hc-plan-dot--blue"></span>
+            <span class="hero-card-muted" style="font-size: 0.82rem; flex:1;" data-i18n="card_duration">Duration</span>
+            <strong style="font-size: 0.88rem; color: #90cdf4;">5 days</strong>
+          </div>
+          <div class="hc-plan-row">
+            <span class="hc-plan-dot hc-plan-dot--green"></span>
+            <span class="hero-card-muted" style="font-size: 0.82rem; flex:1;" data-i18n="card_retest_score">Expected retest score</span>
+            <strong style="font-size: 0.88rem; color: #68d391;">↑ 82%</strong>
+          </div>
+          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="badge badge-danger" data-i18n="card_hidden_gap_tag">Hidden Gap</span>
+            <span class="badge badge-info" data-i18n="badge_priority">Priority #1</span>
+            <span class="badge badge-success" data-i18n="badge_plan_ready">Plan Ready</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Proof Block -->
+  <section class="proof-section">
+    <div class="container">
+      <div class="proof-wrapper">
+
+        <!-- Text side -->
+        <div class="proof-text">
+          <div class="proof-eyebrow" data-i18n="proof_eyebrow">THE HIDDEN GAP</div>
+          <h2 class="proof-heading" data-i18n="proof_heading">Same score. <span class="gradient-text">Very different knowledge.</span></h2>
+          <p class="proof-body" data-i18n="proof_body">
+            Two students both get 100% on a test. Student A was confident. Student B guessed.
+            When retested weeks later, their true understanding reveals a <strong>32.8% gap</strong>
+            — invisible to every traditional grading system.
+          </p>
+          <div class="proof-cite" data-i18n="proof_cite">Based on Fig. 4 — KnowGap Research Paper, IEM Kolkata</div>
+        </div>
+
+        <!-- Chart side -->
+        <div class="proof-chart-box">
+          <div class="proof-chart-header">
+            <span class="proof-chart-title" data-i18n="proof_chart_title">Retest Score After Same Initial Mark</span>
+            <span class="proof-gap-badge">32.8% GAP ↓</span>
+          </div>
+
+          <div class="proof-bars">
+            <!-- Student A -->
+            <div class="proof-row">
+              <div class="proof-label">
+                <div class="proof-student-name" data-i18n="proof_student_a">Student A</div>
+                <div class="proof-student-sub"><span data-i18n="tag_correct">Correct</span> + <span class="sure-tag" data-i18n="proof_tag_sure">Sure</span></div>
+              </div>
+              <div class="proof-bar-track">
+                <div class="proof-bar proof-bar--a" style="--target-width: 90%"></div>
+                <span class="proof-bar-pct">90%</span>
+              </div>
+            </div>
+
+            <!-- Student B -->
+            <div class="proof-row">
+              <div class="proof-label">
+                <div class="proof-student-name" data-i18n="proof_student_b">Student B</div>
+                <div class="proof-student-sub"><span data-i18n="tag_correct">Correct</span> + <span class="guess-tag" data-i18n="proof_tag_guessed">Guessed</span></div>
+              </div>
+              <div class="proof-bar-track">
+                <div class="proof-bar proof-bar--b" style="--target-width: 57.2%"></div>
+                <span class="proof-bar-pct">57%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gap annotation -->
+          <div class="proof-gap-annotation">
+            <div class="proof-gap-line"></div>
+            <div class="proof-gap-label" data-i18n="proof_gap_annotation">32.8% knowledge gap hidden by identical scores</div>
+          </div>
+
+          <div class="proof-chart-footer" data-i18n="proof_chart_footer">
+            knowGap detects this gap <em>before</em> it costs you in the real exam.
           </div>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- Cognitive Profiles Section -->
+  <section class="profiles-section">
+    <div class="container">
+
+      <div class="profiles-header">
+        <div class="profiles-eyebrow" data-i18n="profiles_eyebrow">TABLE 1 — RESEARCH PAPER</div>
+        <h2 class="profiles-title" data-i18n="profiles_title">The 4 Cognitive Profiles <span class="gradient-text">knowGap Detects</span></h2>
+        <p class="profiles-sub" data-i18n="profiles_sub">
+          Every answer you give is tagged with two signals — correctness &amp; confidence —
+          yielding one of four diagnostic profiles. Traditional grading sees none of this.
+        </p>
+      </div>
+
+      <!-- Formula strip -->
+      <div class="profiles-formula">
+        <span class="formula-label" data-i18n="rule_label">Classification rule</span>
+        <code class="formula-code">P<sub>i</sub> = f(c<sub>i</sub> ∈ {0,1},&nbsp;k<sub>i</sub> ∈ {0,1})</code>
+        <span class="formula-ref">Eq. (1), KnowGap Paper</span>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="profiles-grid">
+
+        <!-- 1. Truly Knows -->
+        <div class="profile-card profile-card--green">
+          <div class="profile-card-top">
+            <div class="profile-icon profile-icon--green">✅</div>
+            <div class="profile-badges">
+              <span class="profile-answer-badge answer-correct" data-i18n="tag_correct">Correct</span>
+              <span class="profile-conf-badge conf-sure" data-i18n="proof_tag_sure">Sure</span>
+            </div>
+          </div>
+          <div class="profile-name" data-i18n="p1_title">Truly Knows</div>
+          <div class="profile-formula-line">c<sub>i</sub>=1, k<sub>i</sub>=1</div>
+          <p class="profile-desc" data-i18n="p1_desc">Student answered correctly and was confident. Genuine mastery — no intervention needed.</p>
+          <div class="profile-action action-maintain">
+            <span class="action-dot action-dot--green"></span>
+            <span data-i18n="p1_action">Maintain</span>
+          </div>
+        </div>
+
+        <!-- 2. Hidden Gap — BRAND CARD (pulsing) -->
+        <div class="profile-card profile-card--red profile-card--featured">
+          <div class="profile-featured-ribbon">⚠ YOUR BRAND</div>
+          <div class="profile-card-top">
+            <div class="profile-icon profile-icon--red">✅</div>
+            <div class="profile-badges">
+              <span class="profile-answer-badge answer-correct" data-i18n="tag_correct">Correct</span>
+              <span class="profile-conf-badge conf-guessed" data-i18n="proof_tag_guessed">Guessed</span>
+            </div>
+          </div>
+          <div class="profile-name profile-name--featured" data-i18n="p2_title">Hidden Gap</div>
+          <div class="profile-formula-line">c<sub>i</sub>=1, k<sub>i</sub>=0</div>
+          <p class="profile-desc" data-i18n="p2_desc">
+            Scored correctly <em>but admitted guessing</em>. Traditional grading gives full marks.
+            KnowGap flags this as <strong>high-risk</strong> — a 32.8% retest drop awaits.
+          </p>
+          <div class="profile-action action-urgent">
+            <span class="action-dot action-dot--red"></span>
+            <span data-i18n="p2_action">URGENT — Intervene Now</span>
+          </div>
+        </div>
+
+        <!-- 3. Misconception -->
+        <div class="profile-card profile-card--orange">
+          <div class="profile-card-top">
+            <div class="profile-icon profile-icon--orange">❌</div>
+            <div class="profile-badges">
+              <span class="profile-answer-badge answer-wrong" data-i18n="tag_wrong">Wrong</span>
+              <span class="profile-conf-badge conf-sure" data-i18n="proof_tag_sure">Sure</span>
+            </div>
+          </div>
+          <div class="profile-name" data-i18n="p3_title">Misconception</div>
+          <div class="profile-formula-line">c<sub>i</sub>=0, k<sub>i</sub>=1</div>
+          <p class="profile-desc" data-i18n="p3_desc">Wrong but confident. The student has a false belief hardwired in — most dangerous if uncorrected.</p>
+          <div class="profile-action action-remediate">
+            <span class="action-dot action-dot--orange"></span>
+            <span data-i18n="p3_action">Remediate</span>
+          </div>
+        </div>
+
+        <!-- 4. Normal Gap -->
+        <div class="profile-card profile-card--blue">
+          <div class="profile-card-top">
+            <div class="profile-icon profile-icon--blue">❌</div>
+            <div class="profile-badges">
+              <span class="profile-answer-badge answer-wrong" data-i18n="tag_wrong">Wrong</span>
+              <span class="profile-conf-badge conf-guessed" data-i18n="proof_tag_guessed">Guessed</span>
+            </div>
+          </div>
+          <div class="profile-name" data-i18n="p4_title">Normal Gap</div>
+          <div class="profile-formula-line">c<sub>i</sub>=0, k<sub>i</sub>=0</div>
+          <p class="profile-desc" data-i18n="p4_desc">Wrong and knew it. Standard knowledge gap — addressable with focused review and practice.</p>
+          <div class="profile-action action-review">
+            <span class="action-dot action-dot--blue"></span>
+            <span data-i18n="p4_action">Review</span>
+          </div>
+        </div>
+
+      </div><!-- /profiles-grid -->
+
+      <!-- Summary table (compact, paper-style) -->
+      <div class="profiles-table-wrap">
+        <table class="profiles-table">
+          <thead>
+            <tr>
+              <th data-i18n="tbl_th_answer">Answer</th>
+              <th data-i18n="tbl_th_confidence">Confidence</th>
+              <th data-i18n="tbl_th_profile">Profile</th>
+              <th data-i18n="tbl_th_risk">Risk</th>
+              <th data-i18n="tbl_th_action">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="pt-row pt-row--green">
+              <td>✅ <span data-i18n="tag_correct">Correct</span></td><td data-i18n="proof_tag_sure">Sure</td>
+              <td><strong data-i18n="p1_title">Truly Knows</strong></td>
+              <td><span class="risk-pill risk-low" data-i18n="risk_low">Low</span></td>
+              <td data-i18n="p1_action">Maintain</td>
+            </tr>
+            <tr class="pt-row pt-row--red pt-row--pulse">
+              <td>✅ <span data-i18n="tag_correct">Correct</span></td><td data-i18n="proof_tag_guessed">Guessed</td>
+              <td><strong data-i18n="p2_title">Hidden Gap 🔴</strong></td>
+              <td><span class="risk-pill risk-critical" data-i18n="risk_critical">Critical</span></td>
+              <td><strong data-i18n="p2_action">URGENT</strong></td>
+            </tr>
+            <tr class="pt-row pt-row--orange">
+              <td>❌ <span data-i18n="tag_wrong">Wrong</span></td><td data-i18n="proof_tag_sure">Sure</td>
+              <td><strong data-i18n="p3_title">Misconception</strong></td>
+              <td><span class="risk-pill risk-high" data-i18n="risk_high">High</span></td>
+              <td data-i18n="p3_action">Remediate</td>
+            </tr>
+            <tr class="pt-row pt-row--blue">
+              <td>❌ <span data-i18n="tag_wrong">Wrong</span></td><td data-i18n="proof_tag_guessed">Guessed</td>
+              <td><strong data-i18n="p4_title">Normal Gap</strong></td>
+              <td><span class="risk-pill risk-medium" data-i18n="risk_medium">Medium</span></td>
+              <td data-i18n="p4_action">Review</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </section>
 
@@ -119,28 +377,28 @@
   <section id="features" class="page-section features-section" style="background: var(--bg-card);">
     <div class="container">
       <div class="features-header" style="text-align: center; margin-bottom: 60px;">
-        <h2>How <span class="gradient-text">knowGap</span> Works</h2>
-        <p style="color: var(--text-secondary); margin-top: 12px; font-size: 1.05rem;">Three steps to understand your
+        <h2 data-i18n="how_title">How <span class="gradient-text">knowGap</span> Works</h2>
+        <p style="color: var(--text-secondary); margin-top: 12px; font-size: 1.05rem;" data-i18n="how_sub">Three steps to understand your
           learning gaps completely</p>
       </div>
 
       <div class="grid-3">
         <div class="card" style="text-align: center;">
           <div class="feature-icon" style="margin: 0 auto 16px;">📝</div>
-          <h3 style="margin-bottom: 12px;">Take the Test</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Choose your subject and answer AI-curated
+          <h3 style="margin-bottom: 12px;" data-i18n="step1_title">Take the Test</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;" data-i18n="step1_desc">Choose your subject and answer AI-curated
             questions.</p>
         </div>
         <div class="card" style="text-align: center;">
           <div class="feature-icon" style="margin: 0 auto 16px;">🤖</div>
-          <h3 style="margin-bottom: 12px;">AI Analysis</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Our engine maps every wrong answer to a specific
+          <h3 style="margin-bottom: 12px;" data-i18n="step2_title">AI Analysis</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;" data-i18n="step2_desc">Our engine maps every wrong answer to a specific
             knowledge gap.</p>
         </div>
         <div class="card" style="text-align: center;">
           <div class="feature-icon" style="margin: 0 auto 16px;">📈</div>
-          <h3 style="margin-bottom: 12px;">Get Your Plan</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem;">Receive a forensic report and a week-by-week
+          <h3 style="margin-bottom: 12px;" data-i18n="step3_title">Get Your Plan</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;" data-i18n="step3_desc">Receive a forensic report and a week-by-week
             study plan.</p>
         </div>
       </div>
@@ -151,15 +409,33 @@
   <footer class="site-footer">
     <div class="container">
       <span class="site-footer-brand">know<span class="brand-accent">Gap</span></span>
-      <span class="site-footer-copy">IEM kolkata knowGap Forensic System</span>
+      <span class="site-footer-copy" data-i18n="footer_copy">IEM kolkata knowGap Forensic System</span>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script src="js/mobile-nav.js"></script>
   <script src="js/nav.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       initSiteNav({ navContainerId: 'home-nav-links', activePage: 'home' });
+
+      // Animate proof bars when the section enters the viewport
+      const proofSection = document.querySelector('.proof-section');
+      if (proofSection) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                proofSection.classList.add('in-view');
+                observer.disconnect();
+              }
+            });
+          },
+          { threshold: 0.25 }
+        );
+        observer.observe(proofSection);
+      }
     });
   </script>
 </body>

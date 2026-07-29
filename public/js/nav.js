@@ -84,4 +84,9 @@ function initNavigation(navContainerId) {
       mobileActions.appendChild(mStart);
     }
   }
+
+  if (typeof injectLangSelectors === 'function') {
+    injectLangSelectors();
+  }
 }
+

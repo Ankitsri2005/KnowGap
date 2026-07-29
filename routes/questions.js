@@ -235,6 +235,24 @@ res.json(formatted);
 });
 
 
+// CHECK SINGLE ANSWER (used by quiz interface for navigator colors)
+router.post('/check', auth, async (req, res) => {
+  try {
+    const { questionId, selectedAnswer } = req.body;
+    if (!questionId || !selectedAnswer) {
+      return res.status(400).json({ error: 'questionId and selectedAnswer required' });
+    }
+    const q = await Question.findById(questionId).lean();
+    if (!q) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+    const isCorrect = q.correct_answer === selectedAnswer;
+    res.json({ isCorrect });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // DELETE QUESTION
 router.delete('/:id', auth, teacherOnly, async (req, res) => {
 

@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- Mobile Header (visible only on small screens) -->
+  <!-- Mobile Header -->
   <header class="mobile-header" id="mobile-header">
     <div class="mobile-header-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
     <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
@@ -22,15 +22,26 @@
   <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
   <div class="dashboard-layout">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
       <div class="sidebar-section">Student Menu</div>
-      
-      <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
+
+      <button class="sidebar-link active" id="nav-student-dashboard" onclick="switchStudentTab('dashboard'); closeSidebar();">
         <span class="icon">📊</span> Dashboard
       </button>
-      
+
+      <button class="sidebar-link" id="nav-student-reports" onclick="switchStudentTab('reports'); closeSidebar();">
+        <span class="icon">📄</span> My Gap Reports
+      </button>
+
+      <button class="sidebar-link" id="nav-student-plans" onclick="switchStudentTab('plans'); closeSidebar();">
+        <span class="icon">📚</span> Study Plans
+      </button>
+
+      <button class="sidebar-link" id="nav-student-retests" onclick="switchStudentTab('retests'); closeSidebar();">
+        <span class="icon">📅</span> Retests
+      </button>
+
       <div class="sidebar-spacer"></div>
       <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
         <div id="student-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
@@ -39,26 +50,27 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
-      <div class="loading-full"><div class="spinner"></div><p>Loading your dashboard...</p></div>
-    </main>
+    <div class="main-wrapper">
+      <main class="main-content" id="main-content">
+        <div class="loading-full"><div class="spinner"></div><p>Loading your dashboard...</p></div>
+      </main>
+    </div>
   </div>
 
   <div id="toast-container"></div>
 
-  <!-- Scripts -->
   <script src="js/api.js"></script>
   <script src="js/student.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    
-    if (!user || user.role !== 'student') {
+    const token = localStorage.getItem('token');
+
+    if (!user || user.role !== 'student' || !token) {
       window.location.href = "login.html";
     } else {
       document.getElementById('student-name').innerText = user.name;
     }
-    
+
     function logout() {
       localStorage.removeItem('user');
       localStorage.removeItem('token');

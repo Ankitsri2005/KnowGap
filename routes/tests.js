@@ -166,6 +166,10 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
       const selected =
         answer.selectedAnswer || null;
 
+      const conf = answer.confidence || null;
+
+      const rt = answer.responseTimeMs || null;
+
       const is_correct =
         selected !== null &&
         q.correct_answer === selected;
@@ -181,7 +185,11 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
 
         student_answer: selected || 'SKIPPED',
 
-        is_correct: is_correct
+        is_correct: is_correct,
+
+        confidence_tag: conf,
+
+        response_time_ms: rt
       });
 
       // Analysis Data (camelCase for gapAnalyzer)
@@ -206,7 +214,11 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
         correctAnswer:
           q.correct_answer,
 
-        isCorrect: is_correct
+        isCorrect: is_correct,
+
+        confidence: conf,
+
+        responseTimeMs: rt
       });
     }
 
@@ -275,6 +287,18 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
 
         gap_summary:
           analysisResult.gapSummary,
+
+        hidden_gaps_count:
+          analysisResult.hiddenGapCount || 0,
+
+        misconceptions_count:
+          analysisResult.misconceptionCount || 0,
+
+        retest_risk_percentage:
+          analysisResult.retestRisk || 0,
+
+        forensic_matrix:
+          analysisResult.forensicMatrix || {},
 
         topic_scores:
           analysisResult.topicScores,
@@ -367,6 +391,38 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
     console.log('SESSION DATA');
     console.log(session);
 
+    // RESPONSE TIME
+    let avgResponseTime = null;
+    let classMedianResponse = 2.1;
+    try {
+      const answers = await TestAnswer.find({ session_id: req.params.sessionId }).sort({ createdAt: 1 });
+      if (answers && answers.length >= 2) {
+        const first = new Date(answers[0].createdAt).getTime();
+        const last = new Date(answers[answers.length - 1].createdAt).getTime();
+        const totalMs = last - first;
+        avgResponseTime = totalMs > 0 ? Math.round((totalMs / answers.length) / 100) / 10 : null;
+      }
+      // Compute class median from all sessions for this subject
+      if (session.subject_id) {
+        const allSessions = await TestSession.find({ subject_id: session.subject_id, status: 'completed' }).sort({ completed_at: -1 }).limit(50).lean();
+        const medians = [];
+        for (const s of allSessions) {
+          const ans = await TestAnswer.find({ session_id: s._id }).sort({ createdAt: 1 });
+          if (ans && ans.length >= 2) {
+            const f = new Date(ans[0].createdAt).getTime();
+            const l = new Date(ans[ans.length - 1].createdAt).getTime();
+            const ms = l - f;
+            if (ms > 0) medians.push(ms / ans.length);
+          }
+        }
+        if (medians.length > 0) {
+          medians.sort((a, b) => a - b);
+          const mid = Math.floor(medians.length / 2);
+          classMedianResponse = Math.round((medians.length % 2 ? medians[mid] : (medians[mid - 1] + medians[mid]) / 2) / 100) / 10;
+        }
+      }
+    } catch (_) { /* response time data not available */ }
+
     // RESPONSE FOR FRONTEND
     res.json({
 
@@ -378,6 +434,18 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
 
       gapSummary:
         result.gap_summary || '',
+
+      forensicMatrix:
+        result.forensic_matrix || {},
+
+      retestRisk:
+        result.retest_risk_percentage || 0,
+
+      hiddenGapCount:
+        result.hidden_gaps_count || 0,
+
+      misconceptionCount:
+        result.misconceptions_count || 0,
 
       topicScores:
         result.topic_scores || [],
@@ -402,7 +470,13 @@ router.post('/:sessionId/submit', auth, async (req, res) => {
         session.score_percentage || 0,
 
       subjectName:
-        result.subject_id?.name || 'Subject'
+        result.subject_id?.name || 'Subject',
+
+      subjectId:
+        result.subject_id?._id || null,
+
+      avgResponseTime,
+      classMedianResponse
     });
 
   } catch (error) {
@@ -445,6 +519,18 @@ router.get('/history', auth, async (req, res) => {
             session_id: session._id
           });
 
+        const fm = analysis?.forensic_matrix || {};
+        const m = fm.masteredCount || 0;
+        const h = fm.hiddenGapCount || 0;
+        const r = fm.recognizedGapCount || 0;
+        const mc = fm.misconceptionCount || 0;
+        const max = Math.max(m, h, r, mc);
+        let cognitiveProfile = 'normal';
+        if (max > 0 && max === h) cognitiveProfile = 'hiddenGap';
+        else if (max > 0 && max === mc) cognitiveProfile = 'misconception';
+        else if (max > 0 && max === r) cognitiveProfile = 'recognizedGap';
+        else if (max > 0 && max === m) cognitiveProfile = 'mastered';
+
         return {
           ...session,
           subject_name:
@@ -452,7 +538,9 @@ router.get('/history', auth, async (req, res) => {
           performance_level:
             analysis?.performance_level,
           overall_score:
-            analysis?.overall_score
+            analysis?.overall_score,
+          forensic_matrix: analysis?.forensic_matrix || {},
+          cognitive_profile: cognitiveProfile
         };
       })
     );

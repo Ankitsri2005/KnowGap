@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- Mobile Header (visible only on small screens) -->
+  <!-- Mobile Header -->
   <header class="mobile-header" id="mobile-header">
     <div class="mobile-header-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
     <button class="mobile-hamburger" id="mob-hamburger" onclick="toggleSidebar()">
@@ -21,16 +21,31 @@
   <!-- Sidebar Backdrop -->
   <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
+  <!-- Right Sidebar Backdrop -->
+  <div class="right-sidebar-backdrop" id="right-sidebar-backdrop" onclick="closeRightSidebar()"></div>
+
   <div class="dashboard-layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo" onclick="window.location.href='index.html'">know<span class="brand-accent">Gap</span></div>
-      <div class="sidebar-section">Teacher Menu</div>
-      
-      <button class="sidebar-link active" onclick="window.location.reload(); closeSidebar();">
-        <span class="icon">📊</span> Class Overview
+      <div class="sidebar-section">Main Menu</div>
+
+      <button class="sidebar-link active" id="nav-dashboard" onclick="switchTeacherTab('dashboard'); closeSidebar();">
+        <span class="icon">📊</span> Dashboard
       </button>
-      
+
+      <button class="sidebar-link" id="nav-students" onclick="switchTeacherTab('students'); closeSidebar();">
+        <span class="icon">👨‍🎓</span> Students
+      </button>
+
+      <button class="sidebar-link" id="nav-questionbank" onclick="switchTeacherTab('questionbank'); closeSidebar();">
+        <span class="icon">❓</span> Question Bank
+      </button>
+
+      <button class="sidebar-link" id="nav-reports" onclick="switchTeacherTab('reports'); closeSidebar();">
+        <span class="icon">📈</span> Detailed Reports
+      </button>
+
       <div class="sidebar-spacer"></div>
       <div style="padding: 16px 12px; border-top: 1px solid var(--border);">
         <div id="teacher-name" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Loading...</div>
@@ -39,10 +54,100 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
-      <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
-    </main>
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Top Bar -->
+      <header class="top-bar" id="top-bar">
+        <div class="top-bar-left">
+          <div class="top-bar-logo">know<span class="brand-accent">Gap</span></div>
+        </div>
+        <div class="top-bar-center">
+          <div class="top-bar-search">
+            <span class="top-bar-search-icon">🔍</span>
+            <input type="text" class="top-bar-search-input" placeholder="Search student name or test ID..." id="global-search" oninput="handleGlobalSearch(this.value)">
+          </div>
+        </div>
+        <div class="top-bar-right">
+          <button class="top-bar-btn" id="bell-btn" onclick="toggleNotificationPanel()">
+            <span class="top-bar-bell">🔔</span>
+            <span class="top-bar-bell-dot" id="bell-dot"></span>
+          </button>
+          <div class="top-bar-profile" id="profile-dropdown-trigger" onclick="toggleProfileDropdown()">
+            <div class="top-bar-avatar" id="top-bar-avatar">P</div>
+            <span class="top-bar-name" id="top-bar-name">Prof.</span>
+            <span class="top-bar-chevron">▾</span>
+          </div>
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown" id="profile-dropdown">
+            <div class="profile-dropdown-header">
+              <div class="profile-dropdown-avatar" id="dropdown-avatar">P</div>
+              <div>
+                <div class="profile-dropdown-name" id="dropdown-name">Prof. Naveen</div>
+                <div class="profile-dropdown-role">Teacher</div>
+              </div>
+            </div>
+            <div class="profile-dropdown-divider"></div>
+            <button class="profile-dropdown-item" onclick="switchTeacherTab('settings'); closeProfileDropdown()">⚙️ Settings</button>
+            <button class="profile-dropdown-item" onclick="logout()">🚪 Logout</button>
+          </div>
+          <!-- Notification Panel -->
+          <div class="notification-panel" id="notification-panel">
+            <div class="notification-panel-header">
+              <h4>🔔 Notifications</h4>
+            </div>
+            <div class="notification-panel-body" id="notification-body">
+              <div class="notification-empty">No new notifications</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content" id="main-content">
+        <div class="loading-full"><div class="spinner"></div><p>Loading teacher dashboard...</p></div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="dashboard-footer" id="dashboard-footer">
+        <div class="footer-left">
+          <span class="footer-brand">know<span class="brand-accent">Gap</span></span>
+          <span class="footer-separator">|</span>
+          <span class="footer-sync" id="footer-sync">Last synced: just now</span>
+        </div>
+        <div class="footer-right">
+          <span class="footer-badge">🇮🇳 NEP 2020 Aligned</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Right Sidebar (Collapsible) -->
+    <aside class="right-sidebar" id="right-sidebar">
+      <div class="right-sidebar-header">
+        <h4>Student Details</h4>
+        <button class="right-sidebar-close" onclick="closeRightSidebar()">✕</button>
+      </div>
+      <div class="right-sidebar-body" id="right-sidebar-body">
+        <div class="right-sidebar-empty">Select a student or data point to view details</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="fab-container" id="fab-container">
+    <button class="fab-btn" id="fab-btn" onclick="toggleFAB()">
+      <span class="fab-icon">⚡</span>
+    </button>
+    <div class="fab-menu" id="fab-menu">
+      <button class="fab-menu-item" onclick="generateClassReport()">
+        <span class="fab-menu-icon">📄</span> Generate Class Report (PDF)
+      </button>
+      <button class="fab-menu-item" onclick="startLiveQuiz()">
+        <span class="fab-menu-icon">🎯</span> Start Live Quiz
+      </button>
+      <button class="fab-menu-item" onclick="openAIHelp()">
+        <span class="fab-menu-icon">🤖</span> Open AI Help
+      </button>
+    </div>
   </div>
 
   <div id="toast-container"></div>
@@ -52,13 +157,18 @@
   <script src="js/teacher.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    
-    if (!user || user.role !== 'teacher') {
+    const token = localStorage.getItem('token');
+
+    if (!user || user.role !== 'teacher' || !token) {
       window.location.href = "login.html";
     } else {
       document.getElementById('teacher-name').innerText = user.name;
+      document.getElementById('top-bar-name').innerText = user.name;
+      document.getElementById('top-bar-avatar').innerText = user.name.charAt(0).toUpperCase();
+      document.getElementById('dropdown-avatar').innerText = user.name.charAt(0).toUpperCase();
+      document.getElementById('dropdown-name').innerText = user.name;
     }
-    
+
     function logout() {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
@@ -83,6 +193,8 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       renderTeacher();
+      updateSyncTime();
+      setInterval(updateSyncTime, 30000);
     });
   </script>
 </body>

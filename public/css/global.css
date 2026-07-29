@@ -173,6 +173,39 @@ h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; line-h
 .navbar-auth { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .nav-greeting { color: var(--text-secondary); font-size: 0.9rem; white-space: nowrap; }
 
+/* ── Language Selector Toggle ── */
+.lang-selector-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 20px;
+  transition: var(--transition);
+}
+.lang-selector-wrap:hover {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(179, 84, 30, 0.15);
+}
+.lang-select {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding-right: 4px;
+}
+.lang-select option {
+  background: #ffffff;
+  color: var(--text);
+}
+
+
 /* ── Page sections (marketing pages) ── */
 .page-hero {
   padding: clamp(88px, 14vw, 120px) 0 clamp(32px, 6vw, 60px);

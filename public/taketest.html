@@ -37,7 +37,8 @@
   <script src="js/test.js"></script>
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) window.location.href = "login.html";
+    const token = localStorage.getItem('token');
+    if (!user || !token) window.location.href = "login.html";
 
     const urlParams = new URLSearchParams(window.location.search);
     const subjectId = urlParams.get('subjectId');
@@ -46,8 +47,10 @@
     //console.log(46, subjectId+" "+subjectName)
 
     document.addEventListener("DOMContentLoaded", () => {
-      Router.params = { subjectId, subjectName };
-      renderTakeTest({ subjectId, subjectName });
+      const topics = urlParams.get('topics');
+      const limit = urlParams.get('limit');
+      Router.params = { subjectId, subjectName, topics, limit };
+      renderTakeTest({ subjectId, subjectName, topics, limit });
     });
   </script>
 
